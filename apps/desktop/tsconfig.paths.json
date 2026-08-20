@@ -9,7 +9,8 @@
       "@pi-gui/catalogs/dev-reload-probe": ["../../packages/catalogs/src/dev-reload-probe.ts"],
       "@pi-gui/session-driver": ["../../packages/session-driver/src/index.ts"],
       "@pi-gui/session-driver/runtime-types": ["../../packages/session-driver/src/runtime-types.ts"],
-      "@pi-gui/session-driver/dev-reload-probe": ["../../packages/session-driver/src/dev-reload-probe.ts"]
+      "@pi-gui/session-driver/dev-reload-probe": ["../../packages/session-driver/src/dev-reload-probe.ts"],
+      "@/*": ["./src/*"]
     }
   }
 }

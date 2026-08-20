@@ -1,0 +1,99 @@
+/* =============================================================================
+ * shadcn/ui token bridge (Tailwind v4)
+ *
+ * Maps shadcn's semantic tokens onto the existing desktop design tokens
+ * (tokens.css / base.css) so shadcn components inherit the current theme,
+ * dark mode (:root.dark), and theme presets without a second palette.
+ *
+ * Preflight is intentionally NOT imported: the app already ships its own
+ * reset (base.css: universal box-sizing, html/body, button/svg resets in the
+ * `app` layer, tokenized focus rings). Importing Tailwind's preflight would
+ * re-reset margins/padding/line-height for elements the app styles implicitly,
+ * shifting existing surfaces.
+ *
+ * Cascade contract (declared in styles.css):
+ *   base < app (global element resets in base.css)
+ *   < components < utilities (shadcn classes)
+ * Everything else in the app stays unlayered and keeps winning, so existing
+ * surfaces are unaffected unless they opt in to utility classes.
+ *
+ * App vocabulary below exposes the desktop token set as Tailwind color
+ * utilities (bg-sidebar, text-muted-soft, ...) so migrated surfaces can use
+ * semantic classes instead of raw var() values.
+ * ========================================================================== */
+
+@import "tailwindcss/theme.css";
+@import "tailwindcss/utilities.css";
+@import "tw-animate-css";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --shad-background: var(--main);
+  --shad-foreground: var(--text);
+  --shad-card: var(--surface);
+  --shad-card-foreground: var(--text);
+  --shad-popover: var(--surface-overlay);
+  --shad-popover-foreground: var(--text);
+  --shad-primary: var(--button-primary-bg);
+  --shad-primary-foreground: var(--button-primary-ink);
+  --shad-secondary: var(--surface-muted);
+  --shad-secondary-foreground: var(--text-strong);
+  --shad-muted: var(--surface-muted);
+  --shad-muted-foreground: var(--muted);
+  --shad-accent: var(--surface-overlay-hover);
+  --shad-accent-foreground: var(--text-strong);
+  --shad-destructive: var(--error);
+  --shad-destructive-foreground: #ffffff;
+  --shad-border: var(--line);
+  --shad-input: var(--line-strong);
+  --shad-ring: var(--accent);
+}
+
+@theme inline {
+  --color-background: var(--shad-background);
+  --color-foreground: var(--shad-foreground);
+  --color-card: var(--shad-card);
+  --color-card-foreground: var(--shad-card-foreground);
+  --color-popover: var(--shad-popover);
+  --color-popover-foreground: var(--shad-popover-foreground);
+  --color-primary: var(--shad-primary);
+  --color-primary-foreground: var(--shad-primary-foreground);
+  --color-secondary: var(--shad-secondary);
+  --color-secondary-foreground: var(--shad-secondary-foreground);
+  --color-muted: var(--shad-muted);
+  --color-muted-foreground: var(--shad-muted-foreground);
+  --color-accent: var(--shad-accent);
+  --color-accent-foreground: var(--shad-accent-foreground);
+  --color-destructive: var(--shad-destructive);
+  --color-destructive-foreground: var(--shad-destructive-foreground);
+  --color-border: var(--shad-border);
+  --color-input: var(--shad-input);
+  --color-ring: var(--shad-ring);
+  --font-sans: var(--font-ui);
+  --font-mono: var(--font-mono);
+
+  /* App design-token vocabulary (tokens.css / base.css) as color utilities. */
+  --color-window: var(--window);
+  --color-sidebar: var(--sidebar);
+  --color-foreground-strong: var(--text-strong);
+  --color-muted-strong: var(--muted-strong);
+  --color-muted-soft: var(--muted-soft);
+  --color-muted-subtle: var(--muted-subtle);
+  --color-muted-icon: var(--muted-icon);
+  --color-line-strong: var(--line-strong);
+  --color-success: var(--success);
+  --color-success-ink: var(--success-ink);
+  --color-warning: var(--warning);
+  --color-warning-ink: var(--warning-ink);
+  --color-error-ink: var(--error-ink);
+  --color-overlay-subtle: var(--overlay-subtle);
+  --color-overlay-hover: var(--overlay-hover);
+  --color-overlay-active: var(--overlay-active);
+  --color-accent-tint: var(--accent-tint-bg);
+  --color-accent-tint-strong: var(--accent-tint-bg-strong);
+  --color-accent-tint-border: var(--accent-tint-border);
+  --color-danger-tint-bg: var(--danger-tint-bg);
+  --color-danger-tint-border: var(--danger-tint-border);
+  --color-status-neutral: var(--status-neutral);
+}

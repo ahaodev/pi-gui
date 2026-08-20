@@ -151,21 +151,28 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-button,
-textarea {
-  font: inherit;
-}
+/* Global element resets live in the `app` layer (see styles.css layer order):
+ * Tailwind preflight (`base`) stays beneath them, and shadcn utility classes
+ * (`utilities`) can override them on components that opt in. */
+@layer app {
+  button,
+  textarea,
+  input,
+  select {
+    font: inherit;
+  }
 
-button {
-  border: 0;
-  background: none;
-  color: inherit;
-  cursor: pointer;
-}
+  button {
+    border: 0;
+    background: none;
+    color: inherit;
+    cursor: pointer;
+  }
 
-svg {
-  width: 16px;
-  height: 16px;
+  svg {
+    width: 16px;
+    height: 16px;
+  }
 }
 
 .loading-card {
