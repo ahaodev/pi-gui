@@ -71,7 +71,7 @@ export class GitWorktreeManager {
     const repoRoot = await resolveRepositoryRoot(workspace.path);
     const normalizedPath = input.path.trim();
     if (!normalizedPath) {
-      throw new Error("Worktree path cannot be empty.");
+      throw new Error("工作树路径不能为空。");
     }
     const worktreePath = resolve(normalizedPath);
 
@@ -108,7 +108,7 @@ export class GitWorktreeManager {
     const existing = await this.options.catalogStorage.worktrees.getWorktree(resolvedId);
     const targetPath = await canonicalPath(existing?.path ? existing.path : resolvedId);
     if (existing?.kind === "primary" || (!existing && targetPath === await canonicalPath(workspace.path))) {
-      throw new Error("The primary workspace cannot be removed as a git worktree.");
+      throw new Error("主工作区不能作为 git 工作树移除。");
     }
 
     try {

@@ -146,7 +146,7 @@ export function applyTimelineEvent(
 
   switch (event.type) {
     case "sessionOpened":
-      transcript.push(makeActivityItem("Resumed session", { metadata: relativeDetail(event.timestamp) }));
+      transcript.push(makeActivityItem("已恢复会话", { metadata: relativeDetail(event.timestamp) }));
       break;
     case "sessionUpdated":
       if (event.snapshot.status === "running" && event.snapshot.runningRunId && !state.runningSinceBySession.has(key)) {
@@ -157,7 +157,7 @@ export function applyTimelineEvent(
           searchCount: 0,
           fileCount: 0,
         });        
-        const activity = makeActivityItem("Working…");
+        const activity = makeActivityItem("工作中……");
         state.activeWorkingActivityBySession.set(key, activity.id);
         transcript.push(activity);
       }
@@ -210,7 +210,7 @@ export function applyTimelineEvent(
         }
         transcript.push(makeSummaryItem(workedForLabel(metrics.startedAt, event.timestamp), { presentation: "divider" }));
       } else {
-        transcript.push(makeSummaryItem("Completed", {
+        transcript.push(makeSummaryItem("已完成", {
           presentation: "divider",
           metadata: relativeDetail(event.timestamp),
         }));
@@ -265,7 +265,7 @@ function upsertToolRow(
     callId,
     toolName ?? (existingTool?.toolName ?? "tool"),
     status ?? (existingTool?.status ?? "running"),
-    label ?? (existingTool?.label ?? "Working"),
+    label ?? (existingTool?.label ?? "工作中"),
     {
       detail: detail ?? existingTool?.detail,
       metadata: existingTool?.metadata,
@@ -311,27 +311,27 @@ function clearRunState(
 function toolLabel(toolName: string, input: unknown): string {
   const detail = inputLabel(input);
   if (toolName === createChildThreadToolName) {
-    return detail ? `Started child thread: ${detail}` : "Started child thread";
+    return detail ? `已启动子对话：${detail}` : "已启动子对话";
   }
   if (toolName === listThreadsToolName) {
-    return "Listed threads";
+    return "已列出对话";
   }
   if (toolName === readThreadToolName) {
-    return detail ? `Read thread: ${detail}` : "Read thread";
+    return detail ? `已读取对话：${detail}` : "已读取对话";
   }
   if (toolName === sendMessageToThreadToolName) {
-    return detail ? `Sent message to thread: ${detail}` : "Sent message to thread";
+    return detail ? `已发送消息至对话：${detail}` : "已发送消息至对话";
   }
   if (looksLikeSearch(toolName, input)) {
-    return detail ? `Searched ${detail}` : `Searched with ${toolName}`;
+    return detail ? `已搜索 ${detail}` : `使用 ${toolName} 搜索`;
   }
   if (looksLikeFileExplore(toolName, input)) {
     if (toolName.toLowerCase() === "read") {
-      return detail ? `Read ${detail}` : "Read a file";
+      return detail ? `已读取 ${detail}` : "已读取文件";
     }
-    return detail ? `Explored ${detail}` : `Explored files with ${toolName}`;
+    return detail ? `已浏览 ${detail}` : `使用 ${toolName} 浏览文件`;
   }
-  return detail ? `Ran ${toolName}: ${detail}` : `Ran ${toolName}`;
+  return detail ? `运行 ${toolName}：${detail}` : `运行 ${toolName}`;
 }
 
 function progressLabel(progress: number | undefined): string | undefined {
@@ -387,23 +387,23 @@ function looksLikeFileExplore(toolName: string, input: unknown): boolean {
 function summaryLabel(metrics: RunMetrics): string | undefined {
   const parts: string[] = [];
   if (metrics.fileCount > 0) {
-    parts.push(`Explored ${metrics.fileCount} file${metrics.fileCount === 1 ? "" : "s"}`);
+    parts.push(`浏览了 ${metrics.fileCount} 个文件`);
   }
   if (metrics.searchCount > 0) {
-    parts.push(`${metrics.searchCount} search${metrics.searchCount === 1 ? "" : "es"}`);
+    parts.push(`${metrics.searchCount} 次搜索`);
   }
   if (parts.length === 0 && metrics.toolCount > 0) {
-    parts.push(`Used ${metrics.toolCount} tool${metrics.toolCount === 1 ? "" : "s"}`);
+    parts.push(`使用了 ${metrics.toolCount} 个工具`);
   }
   return parts.length > 0 ? parts.join(", ") : undefined;
 }
 
 function workedForLabel(startedAt: string, endedAt: string): string {
-  return `Worked for ${formatElapsedDuration(startedAt, endedAt)}`;
+  return `用时 ${formatElapsedDuration(startedAt, endedAt)}`;
 }
 
 function relativeDetail(timestamp: string): string {
-  return new Date(timestamp).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+  return new Date(timestamp).toLocaleTimeString("zh-CN", { hour: "numeric", minute: "2-digit" });
 }
 
 function truncate(value: string, limit = 160): string {

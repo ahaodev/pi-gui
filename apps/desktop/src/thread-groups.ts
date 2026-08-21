@@ -65,7 +65,7 @@ function buildRootGroup(
       session,
       environment: {
         kind: "local" as const,
-        label: "Local",
+        label: "本地",
       },
       contextLabel: rootWorkspace.name,
     })),

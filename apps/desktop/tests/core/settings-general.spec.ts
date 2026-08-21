@@ -46,10 +46,10 @@ test("ignores persisted multiple app instance opt-in and hides the setting", asy
 
     await window.keyboard.press(desktopShortcut(","));
     await expect(window.getByTestId("settings-surface")).toBeVisible();
-    await window.getByRole("button", { name: "General", exact: true }).click();
-    await expect(window.getByLabel("Shell of integrated terminal")).toBeVisible();
-    await expect(window.getByText("Allow multiple app instances")).toHaveCount(0);
-    await expect(window.getByLabel("Allow multiple app instances")).toHaveCount(0);
+    await window.getByRole("button", { name: "通用", exact: true }).click();
+    await expect(window.getByLabel("集成终端的 Shell")).toBeVisible();
+    await expect(window.getByText("允许多个应用实例")).toHaveCount(0);
+    await expect(window.getByLabel("允许多个应用实例")).toHaveCount(0);
   } finally {
     if (secondProcess && secondProcess.exitCode === null && secondProcess.signalCode === null) {
       secondProcess.kill();

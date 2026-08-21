@@ -43,15 +43,15 @@ test("keeps Changes visible when the integrated terminal is open and maximized",
     await waitForWorkspaceByPath(window, workspacePath);
     await createNamedThread(window, "Terminal and Changes layout");
 
-    await window.getByLabel("Toggle changes").click();
+    await window.getByLabel("切换变更").click();
     const diffPanel = window.locator(".diff-panel");
-    await expect(diffPanel.locator(".diff-panel__title")).toContainText("Changes");
+    await expect(diffPanel.locator(".diff-panel__title")).toContainText("变更");
 
-    await window.getByLabel("Toggle terminal").click();
+    await window.getByLabel("切换终端").click();
     await expectTerminalAndChangesSplit(window);
 
     const beforeTakeover = await window.getByTestId("integrated-terminal").boundingBox();
-    await window.getByLabel("Maximize terminal").click();
+    await window.getByLabel("最大化终端").click();
     await expect(window.getByTestId("integrated-terminal")).toHaveClass(/terminal-panel--takeover/);
     await expect(window.getByTestId("composer")).toHaveCount(0);
     await expectTerminalAndChangesSplit(window);
@@ -59,7 +59,7 @@ test("keeps Changes visible when the integrated terminal is open and maximized",
     const takeover = await window.getByTestId("integrated-terminal").boundingBox();
     expect(takeover?.height ?? 0).toBeGreaterThan(beforeTakeover?.height ?? 0);
 
-    await window.getByLabel("Restore terminal").click();
+    await window.getByLabel("还原终端").click();
     await expect(window.getByTestId("integrated-terminal")).not.toHaveClass(/terminal-panel--takeover/);
     await expect(window.getByTestId("composer")).toBeVisible();
     await expectTerminalAndChangesSplit(window);

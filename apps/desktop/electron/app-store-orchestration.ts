@@ -72,7 +72,7 @@ async function createChildThreadRecord(
   await store.initialize();
   const prompt = input.prompt.trim();
   if (!prompt) {
-    throw new Error("Child thread prompt cannot be empty.");
+    throw new Error("子对话提示词不能为空。");
   }
 
   const parent = store.sessionFromState({
@@ -80,23 +80,23 @@ async function createChildThreadRecord(
     sessionId: input.parentSessionId,
   });
   if (!parent) {
-    throw new Error("Select a parent thread before spawning a child.");
+    throw new Error("生成子对话前请先选择父对话。");
   }
 
   const workspace = store.workspaceRefFromState(input.parentWorkspaceId);
   if (!workspace) {
-    throw new Error(`Unknown workspace: ${input.parentWorkspaceId}`);
+    throw new Error(`未知工作区：${input.parentWorkspaceId}`);
   }
 
   const pendingKey = input.sourceToolCallId ? childToolCallKey(input) : undefined;
   if (pendingKey && pendingCreateChildThreadToolCalls.has(pendingKey)) {
-    throw new Error("Child thread creation is already in progress.");
+    throw new Error("子对话创建正在进行中。");
   }
 
   const existing = input.sourceToolCallId ? childForToolCall(store, input) : undefined;
   if (existing) {
     if (existing.status === "failed") {
-      throw new Error(existing.latestTranscript || "Failed to start child thread.");
+      throw new Error(existing.latestTranscript || "启动子对话失败。");
     }
     const childRef = childSessionRef(existing);
     await store.ensureSessionReady(childRef);
@@ -293,7 +293,7 @@ export async function sendChildThreadFollowUp(
   await store.initialize();
   const text = input.text.trim();
   if (!text) {
-    return store.withError("Child thread follow-up cannot be empty.");
+    return store.withError("子对话后续消息不能为空。");
   }
 
   const child = store.state.orchestrationChildren.find((entry) => entry.id === input.childThreadId);
@@ -812,7 +812,7 @@ function initialPromptDeliveryStatus(
 
   const session = store.sessionFromState(childRef);
   if (session?.status === "failed") {
-    throw new Error(`Failed to start child thread: ${session.preview || "the child session failed."}`);
+    throw new Error(`Failed to start child thread: ${session.preview || "子会话执行失败。"}`);
   }
 
   const transcript = store.sessionState.transcriptCache.get(key) ?? [];
@@ -1059,7 +1059,7 @@ function updateCreateChildThreadToolOutput(
   deliveryStatus: CreatedChildThreadResult["deliveryStatus"],
 ): void {
   updateThreadToolOutput(store, event, {
-    detail: `Created child thread: ${child.title}`,
+    detail: `已创建子对话：${child.title}`,
     text: `Created child thread: ${child.title}`,
     details: {
       action: createChildThreadAction,
@@ -1243,7 +1243,7 @@ function detailFromThreadToolDetails(details: Readonly<Record<string, unknown>>)
   }
   if (details.action === listThreadsAction) {
     const count = Array.isArray(details.threads) ? details.threads.length : 0;
-    return `Listed ${count} thread${count === 1 ? "" : "s"}`;
+    return `已列出 ${count} 个对话`;
   }
   if (details.action === createChildThreadAction) {
     const title = typeof details.title === "string"
@@ -1251,7 +1251,7 @@ function detailFromThreadToolDetails(details: Readonly<Record<string, unknown>>)
       : typeof details.prompt === "string"
         ? details.prompt
         : "unknown";
-    return `Created child thread: ${title}`;
+    return `已创建子对话：${title}`;
   }
   if (details.action === readThreadAction) {
     const title = typeof details.title === "string"
@@ -1259,13 +1259,13 @@ function detailFromThreadToolDetails(details: Readonly<Record<string, unknown>>)
       : typeof details.threadId === "string"
         ? details.threadId
         : "unknown";
-    return `Read thread: ${title}`;
+    return `读取对话：${title}`;
   }
   if (details.action === sendMessageToThreadAction) {
-    const verb = details.status === "queued" ? "Queued" : "Sent";
-    return `${verb} message to thread: ${typeof details.threadId === "string" ? details.threadId : "unknown"}`;
+    const threadId = typeof details.threadId === "string" ? details.threadId : "未知";
+    return details.status === "queued" ? `消息已排队至对话：${threadId}` : `消息已发送至对话：${threadId}`;
   }
-  return "Thread tool result";
+  return "对话工具结果";
 }
 
 function textFromAgentToolResult(result: AgentToolResult<unknown>): string {
@@ -1454,9 +1454,9 @@ function formatCreateChildThreadResult(result: CreateChildThreadToolDetails): st
 }
 
 function formatSendMessageToThreadResult(result: SendMessageToThreadToolDetails): string {
-  const verb = result.status === "queued" ? "Queued" : "Sent";
-  return `${verb} message to thread ${result.threadId}.` +
-    (result.queuedMessageCount && result.queuedMessageCount > 0 ? ` Pending messages: ${result.queuedMessageCount}.` : "");
+  const verb = result.status === "queued" ? "排队" : "发送";
+  return `消息已${verb}至对话 ${result.threadId}。` +
+    (result.queuedMessageCount && result.queuedMessageCount > 0 ? ` 待处理消息：${result.queuedMessageCount}。` : "");
 }
 
 function toThreadReadMessages(transcript: readonly TranscriptMessage[]): readonly OrchestrationChildTranscriptMessage[] {

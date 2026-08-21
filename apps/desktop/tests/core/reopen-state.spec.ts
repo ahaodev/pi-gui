@@ -31,7 +31,7 @@ test("reopens persisted folders and thread state while a saved running session k
     const composer = window.getByTestId("composer");
     await composer.fill("/status");
     await composer.press("Enter");
-    await expect(window.getByTestId("transcript")).toContainText(/Model |No session overrides set/);
+    await expect(window.getByTestId("transcript")).toContainText(/模型 |未设置会话覆盖/);
 
     const state = await getDesktopState(window);
     workspaceId = state.selectedWorkspaceId;

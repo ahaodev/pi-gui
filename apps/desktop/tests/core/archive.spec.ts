@@ -22,7 +22,7 @@ test("archives a hovered thread into a restorable sidebar section", async () => 
     await expect(window.locator(".topbar__session")).toHaveText("Thread two");
 
     const activeRow = window.locator(".session-list > .session-row").filter({ hasText: "Thread two" }).first();
-    const archiveButton = activeRow.getByLabel("Archive Thread two");
+    const archiveButton = activeRow.getByLabel("归档 Thread two");
     const timeLabel = activeRow.locator(".session-row__time");
 
     await expect(archiveButton).toHaveCSS("opacity", "0");
@@ -33,7 +33,7 @@ test("archives a hovered thread into a restorable sidebar section", async () => 
     await expect(window.locator(".topbar__session")).toHaveText("Thread one");
     const archivedGroup = window.locator(".archived-thread-group");
     const archivedToggle = archivedGroup.locator(".archived-thread-group__toggle");
-    await expect(archivedGroup).toContainText("Archived");
+    await expect(archivedGroup).toContainText("已归档");
     await expect(archivedToggle).toHaveAttribute("aria-expanded", "false");
     await expect(window.locator(".session-list--archived")).toHaveCount(0);
 
@@ -49,7 +49,7 @@ test("archives a hovered thread into a restorable sidebar section", async () => 
     await expect(window.locator(".session-list--archived")).toContainText("Thread two");
 
     const archivedRow = window.locator(".session-list--archived .session-row").filter({ hasText: "Thread two" }).first();
-    const restoreButton = archivedRow.getByLabel("Restore Thread two");
+    const restoreButton = archivedRow.getByLabel("恢复 Thread two");
     await archivedRow.hover();
     await restoreButton.click();
 

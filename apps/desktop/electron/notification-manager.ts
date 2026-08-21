@@ -133,7 +133,7 @@ export class NotificationManager {
         }
         this.completedRunKeys.delete(oldest);
       }
-      await this.showNotification(event.sessionRef, event.snapshot.title, "Agent finished responding");
+      await this.showNotification(event.sessionRef, event.snapshot.title, "代理已完成回复");
       return;
     }
 
@@ -349,7 +349,7 @@ export class NotificationManager {
   }
 
   private titleForSession(sessionRef: SessionRef): string {
-    return this.sessionFromLatestState(sessionRef)?.title ?? "pi session";
+    return this.sessionFromLatestState(sessionRef)?.title ?? "pi 会话";
   }
 }
 
@@ -361,7 +361,7 @@ function hostUiBody(event: Extract<SessionDriverEvent, { type: "hostUiRequest" }
   if (event.request.kind === "confirm" || event.request.kind === "input" || event.request.kind === "select") {
     return event.request.title;
   }
-  return "Needs your input";
+  return "需要你输入";
 }
 
 function sameSessionRef(left: SessionRef | undefined, right: SessionRef | undefined): boolean {

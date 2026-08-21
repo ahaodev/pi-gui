@@ -12,9 +12,9 @@ interface SettingsAppearanceSectionProps {
 }
 
 const THEME_OPTIONS: { mode: ThemeMode; label: string; description: string }[] = [
-  { mode: "system", label: "System", description: "Follow your OS appearance setting" },
-  { mode: "light", label: "Light", description: "Always use the light theme" },
-  { mode: "dark", label: "Dark", description: "Always use the dark theme" },
+  { mode: "system", label: "系统", description: "跟随操作系统外观设置" },
+  { mode: "light", label: "浅色", description: "始终使用浅色主题" },
+  { mode: "dark", label: "深色", description: "始终使用深色主题" },
 ];
 
 export function SettingsAppearanceSection({
@@ -27,7 +27,7 @@ export function SettingsAppearanceSection({
 }: SettingsAppearanceSectionProps) {
   return (
     <>
-      <SettingsGroup title="Theme preset">
+      <SettingsGroup title="主题预设">
         <div className="theme-preset-grid">
           {themePresets.map((preset) => (
             <label
@@ -58,7 +58,7 @@ export function SettingsAppearanceSection({
         </div>
       </SettingsGroup>
 
-      <SettingsGroup title="Theme">
+      <SettingsGroup title="主题">
         {THEME_OPTIONS.map((option) => (
           <SettingsRow key={option.mode} title={option.label} description={option.description}>
             <input
@@ -71,13 +71,13 @@ export function SettingsAppearanceSection({
         ))}
       </SettingsGroup>
 
-      <SettingsGroup title="Visuals">
+      <SettingsGroup title="视觉效果">
         <SettingsRow
-          title="Window transparency"
-          description="Let desktop colors show through supported surfaces."
+          title="窗口透明"
+          description="让桌面颜色在支持的界面上透出。"
         >
           <input
-            aria-label="Window transparency"
+            aria-label="窗口透明"
             type="checkbox"
             checked={enableTransparency}
             onChange={(event) => onSetEnableTransparency(event.currentTarget.checked)}

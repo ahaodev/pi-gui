@@ -18,7 +18,7 @@ export function formatRelativeTime(value: string): string {
 
   const diffMs = Date.now() - timestamp;
   const diffMinutes = Math.max(0, Math.floor(diffMs / 60000));
-  if (diffMinutes < 1) return "now";
+  if (diffMinutes < 1) return "现在";
   if (diffMinutes < 60) return `${diffMinutes}m`;
   const diffHours = Math.floor(diffMinutes / 60);
   if (diffHours < 24) return `${diffHours}h`;

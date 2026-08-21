@@ -33,11 +33,11 @@ export async function getChangedFiles(
       { cwd: workspacePath, maxBuffer: 2 * 1024 * 1024 },
     );
   } catch {
-    return gitStatusUnavailable("git-status-failed", "Git status is unavailable for this workspace.");
+    return gitStatusUnavailable("git-status-failed", "此工作区的 Git 状态不可用。");
   }
 
   if (result.error) {
-    return gitStatusUnavailable("git-status-failed", "Git status is unavailable for this workspace.");
+    return gitStatusUnavailable("git-status-failed", "此工作区的 Git 状态不可用。");
   }
 
   try {
@@ -46,7 +46,7 @@ export async function getChangedFiles(
       files: parseGitStatusPorcelainV1Z(result.stdout),
     };
   } catch {
-    return gitStatusUnavailable("git-status-invalid", "Git returned an unreadable changed-file status.");
+    return gitStatusUnavailable("git-status-invalid", "Git 返回了无法读取的变更文件状态。");
   }
 }
 
@@ -55,7 +55,7 @@ export function parseGitStatusPorcelainV1Z(output: string): ChangedFileEntry[] {
     return [];
   }
   if (!output.endsWith("\0")) {
-    throw new Error("NUL-delimited Git status output is missing its terminator");
+    throw new Error("NUL 分隔的 Git 状态输出缺少结束符");
   }
 
   const fields = output.slice(0, -1).split("\0");
@@ -63,7 +63,7 @@ export function parseGitStatusPorcelainV1Z(output: string): ChangedFileEntry[] {
   for (let index = 0; index < fields.length; index += 1) {
     const record = fields[index];
     if (!record || record.length < 4 || record[2] !== " ") {
-      throw new Error("Malformed Git status record");
+      throw new Error("Git 状态记录格式错误");
     }
 
     const xy = record.slice(0, 2);
@@ -75,7 +75,7 @@ export function parseGitStatusPorcelainV1Z(output: string): ChangedFileEntry[] {
 
     const previousPath = fields[index + 1];
     if (!previousPath) {
-      throw new Error("Git rename or copy record is missing its source path");
+      throw new Error("Git 重命名或复制记录缺少源路径");
     }
     entries.push(toChangedFileEntry(xy, filePath, previousPath));
     index += 1;

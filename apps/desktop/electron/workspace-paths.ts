@@ -23,5 +23,5 @@ function assertInsideWorkspace(workspaceRoot: string, candidate: string): void {
   if (relative === "" || (!relative.startsWith("..") && !path.isAbsolute(relative))) {
     return;
   }
-  throw new Error("Path escapes workspace");
+  throw new Error("路径超出工作区范围");
 }

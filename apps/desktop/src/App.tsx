@@ -585,8 +585,8 @@ export default function App() {
       <div className="shell shell--loading">
         <main className="loading-card">
           <div className="loading-card__eyebrow">pi-gui</div>
-          <h1>Loading sessions</h1>
-          <p>The desktop shell is restoring folder and thread state from the main process.</p>
+          <h1>加载会话中</h1>
+          <p>桌面应用正在从主进程恢复文件夹与对话状态。</p>
         </main>
       </div>
     );
@@ -815,12 +815,12 @@ export default function App() {
 
         {snapshot.startupDiagnostics.length > 0 ? (
           <div className="startup-diagnostics" role="status" data-testid="startup-diagnostics">
-            <strong>Some saved workspaces could not be refreshed.</strong>
+            <strong>部分已保存的工作区无法刷新。</strong>
             <span>
               {snapshot.startupDiagnostics
                 .map((diagnostic) => {
                   const workspaceName = diagnostic.workspacePath?.split(/[\\/]/).filter(Boolean).at(-1);
-                  return workspaceName ? `${workspaceName} is unavailable.` : diagnostic.message;
+                  return workspaceName ? `${workspaceName} 不可用。` : diagnostic.message;
                 })
                 .join(" ")}
             </span>
@@ -883,9 +883,9 @@ export default function App() {
           ) : (
             <section className="canvas canvas--empty">
               <div className="empty-panel">
-                <div className="session-header__eyebrow">Workspace</div>
-                <h1>Open a folder to start</h1>
-                <p>Add a project folder before creating a new thread.</p>
+                <div className="session-header__eyebrow">工作区</div>
+                <h1>打开文件夹以开始</h1>
+                <p>创建新对话前，请先添加一个项目文件夹。</p>
               </div>
             </section>
           )
@@ -896,8 +896,8 @@ export default function App() {
                 <div className="chat-header">
                   <div className="chat-header__eyebrow">
                     {selectedWorkspace.kind === "worktree"
-                      ? `${rootWorkspace?.name ?? selectedWorkspace.name} · ${selectedWorktree?.name ?? selectedWorkspace.branchName ?? "Worktree"}`
-                      : `${selectedWorkspace.name} · Local`}
+                      ? `${rootWorkspace?.name ?? selectedWorkspace.name} · ${selectedWorktree?.name ?? selectedWorkspace.branchName ?? "工作树"}`
+                      : `${selectedWorkspace.name} · 本地`}
                   </div>
                   <div className="chat-header__row">
                     <h1 className="chat-header__title">{displayedSessionTitle}</h1>
@@ -910,16 +910,15 @@ export default function App() {
                 {showSchemaSkewNotice ? (
                   <div className="schema-skew-notice" role="status" data-testid="schema-skew-notice">
                     <span className="schema-skew-notice__text">
-                      This session was written by a newer version of pi — some content may not display. Update pi-gui
-                      (or open it with the pi CLI) to see everything.
+                      该会话由更新版本的 pi 写入——部分内容可能无法显示。请更新 pi-gui（或使用 pi CLI 打开）以查看全部内容。
                     </span>
                     <button
                       type="button"
                       className="schema-skew-notice__dismiss"
-                      aria-label="Dismiss notice"
+                      aria-label="忽略提示"
                       onClick={() => dismissSchemaSkewNotice(selectedSessionKey)}
                     >
-                      Dismiss
+                      忽略
                     </button>
                   </div>
                 ) : null}
@@ -1026,16 +1025,16 @@ export default function App() {
         ) : selectedWorkspace ? (
           <section className="canvas canvas--empty">
             <div className="empty-panel">
-              <div className="session-header__eyebrow">Workspace</div>
+              <div className="session-header__eyebrow">工作区</div>
               <h1>{selectedWorkspace.name}</h1>
-              <p>Create a thread for this folder, then jump between sessions from the sidebar.</p>
+              <p>为这个文件夹创建对话，之后可以从侧边栏在不同会话之间切换。</p>
               <div className="empty-panel__actions">
                 <button
                   className="button button--primary"
                   type="button"
                   onClick={() => newThread.openSurface(selectedWorkspace?.rootWorkspaceId ?? selectedWorkspace?.id)}
                 >
-                  New thread
+                  新建对话
                 </button>
               </div>
             </div>
@@ -1043,9 +1042,9 @@ export default function App() {
         ) : (
           <section className="canvas canvas--empty">
             <div className="empty-panel">
-              <div className="session-header__eyebrow">Workspace</div>
-              <h1>Open a folder to start</h1>
-              <p>Add project folders, group sessions under them, and jump between threads from the sidebar.</p>
+              <div className="session-header__eyebrow">工作区</div>
+              <h1>打开文件夹以开始</h1>
+              <p>添加项目文件夹，在其下分组会话，并从侧边栏在不同对话之间切换。</p>
             </div>
           </section>
         )}

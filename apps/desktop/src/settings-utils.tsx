@@ -16,39 +16,49 @@ export function settingsPill(active: boolean): string {
 }
 
 export function labelForThinking(level: NonNullable<RuntimeSettingsSnapshot["defaultThinkingLevel"]>): string {
-  if (level === "xhigh") {
-    return "Extra High";
+  switch (level) {
+    case "low":
+      return "低";
+    case "medium":
+      return "中";
+    case "high":
+      return "高";
+    case "xhigh":
+      return "超高";
+    case "max":
+      return "最大";
+    default:
+      return level;
   }
-  return level.charAt(0).toUpperCase() + level.slice(1);
 }
 
 export function sectionTitle(section: SettingsSection): string {
   switch (section) {
     case "appearance":
-      return "Appearance";
+      return "外观";
     case "providers":
-      return "Providers";
+      return "供应商";
     case "models":
-      return "Models";
+      return "模型";
     case "notifications":
-      return "Notifications";
+      return "通知";
     default:
-      return "General";
+      return "通用";
   }
 }
 
 export function sectionDescription(section: SettingsSection, workspaceName: string): string {
   switch (section) {
     case "appearance":
-      return "Choose a preset palette and light, dark, or automatic system mode.";
+      return "选择预设配色以及浅色、深色或跟随系统的模式。";
     case "providers":
-      return `Connect providers and manage auth for ${workspaceName}.`;
+      return `为 ${workspaceName} 连接供应商并管理认证。`;
     case "models":
-      return "Choose the default model and which models appear in pickers.";
+      return "选择默认模型，以及在各选取器中显示哪些模型。";
     case "notifications":
-      return "Manage both macOS notification access and which background events should alert you.";
+      return "管理 macOS 通知权限，以及哪些后台事件需要你提醒。";
     default:
-      return "Keep the high-value app and runtime controls close to hand.";
+      return "把常用的应用与运行时控制放在手边。";
   }
 }
 
@@ -170,21 +180,21 @@ export function ProviderRow({
 function describeProviderStatus(provider: RuntimeSnapshot["providers"][number]): string {
   switch (provider.authSource) {
     case "oauth":
-      return "OAuth · connected";
+      return "OAuth · 已连接";
     case "auth_file":
-      return "API key · connected";
+      return "API 密钥 · 已连接";
     case "env":
-      return "Environment variable · connected";
+      return "环境变量 · 已连接";
     case "external":
-      return provider.hasAuth ? "Configured externally · connected" : "Configure externally";
+      return provider.hasAuth ? "外部配置 · 已连接" : "需外部配置";
     default:
       if (provider.oauthSupported) {
         return "OAuth";
       }
       if (provider.apiKeySetupSupported) {
-        return "API key";
+        return "API 密钥";
       }
-      return provider.authType === "api_key" ? "API key" : "Built in";
+      return provider.authType === "api_key" ? "API 密钥" : "内置";
   }
 }
 
@@ -203,7 +213,7 @@ function resolveProviderAction(
   if (provider.authSource === "oauth") {
     return {
       disabled: false,
-      label: "Logout",
+      label: "登出",
       onClick: () => onLogoutProvider(provider.id),
     };
   }
@@ -211,7 +221,7 @@ function resolveProviderAction(
   if (provider.oauthSupported && provider.authSource === "none") {
     return {
       disabled: false,
-      label: "Login",
+      label: "登录",
       onClick: () => onLoginProvider(provider.id),
     };
   }
@@ -219,7 +229,7 @@ function resolveProviderAction(
   if (provider.apiKeySetupSupported && (provider.authSource === "none" || provider.authSource === "auth_file")) {
     return {
       disabled: false,
-      label: provider.authSource === "auth_file" ? "Manage" : "Set API key",
+      label: provider.authSource === "auth_file" ? "管理" : "设置 API 密钥",
       onClick: () => onConfigureApiKey(provider),
     };
   }
@@ -230,6 +240,6 @@ function resolveProviderAction(
 
   return {
     disabled: true,
-    label: "Configure externally",
+    label: "需外部配置",
   };
 }

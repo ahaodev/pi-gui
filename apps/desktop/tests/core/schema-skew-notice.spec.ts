@@ -59,9 +59,9 @@ test("shows a version-skew notice for a session written by a newer pi, dismissib
 
     const notice = window.getByTestId("schema-skew-notice");
     await expect(notice).toBeVisible({ timeout: 15_000 });
-    await expect(notice).toContainText("written by a newer version of pi");
+    await expect(notice).toContainText("由更新版本的 pi 写入");
 
-    await notice.getByRole("button", { name: "Dismiss notice" }).click();
+    await notice.getByRole("button", { name: "忽略提示" }).click();
     await expect(notice).toHaveCount(0);
   } finally {
     await secondRun.close();

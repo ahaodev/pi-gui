@@ -13,11 +13,11 @@ import { SettingsView, type SettingsSection } from "../settings-view";
 import { SecondarySurface } from "../secondary-surface";
 
 const settingsNav = [
-  { id: "appearance", label: "Appearance" },
-  { id: "general", label: "General" },
-  { id: "providers", label: "Providers" },
-  { id: "models", label: "Models" },
-  { id: "notifications", label: "Notifications" },
+  { id: "appearance", label: "外观" },
+  { id: "general", label: "通用" },
+  { id: "providers", label: "供应商" },
+  { id: "models", label: "模型" },
+  { id: "notifications", label: "通知" },
 ] as const;
 
 interface SecondarySurfacesProps {
@@ -151,7 +151,7 @@ export function SecondarySurfaces({
 
   const handleSetProviderApiKey = async (providerId: string, apiKey: string): Promise<string | undefined> => {
     if (!settingsWorkspace) {
-      return "Select a workspace first.";
+      return "请先选择工作区。";
     }
     const state = await updateSnapshot(api, setSnapshot, () =>
       api.setProviderApiKey(settingsWorkspace.id, providerId, apiKey),
@@ -161,7 +161,7 @@ export function SecondarySurfaces({
 
   const handleRemoveProviderApiKey = async (providerId: string): Promise<string | undefined> => {
     if (!settingsWorkspace) {
-      return "Select a workspace first.";
+      return "请先选择工作区。";
     }
     const state = await updateSnapshot(api, setSnapshot, () => api.logoutProvider(settingsWorkspace.id, providerId));
     return state.lastError;
@@ -169,7 +169,7 @@ export function SecondarySurfaces({
 
   const handleSaveCustomProvider = async (config: CustomProviderConfig): Promise<string | undefined> => {
     if (!settingsWorkspace) {
-      return "Select a workspace first.";
+      return "请先选择工作区。";
     }
     const state = await updateSnapshot(api, setSnapshot, () => api.setCustomProvider(settingsWorkspace.id, config));
     return state.lastError;
@@ -177,7 +177,7 @@ export function SecondarySurfaces({
 
   const handleDeleteCustomProvider = async (providerId: string): Promise<string | undefined> => {
     if (!settingsWorkspace) {
-      return "Select a workspace first.";
+      return "请先选择工作区。";
     }
     const state = await updateSnapshot(api, setSnapshot, () =>
       api.deleteCustomProvider(settingsWorkspace.id, providerId),
@@ -256,10 +256,10 @@ export function SecondarySurfaces({
 
   if (activeView === "skills") {
     return (
-      <SecondarySurface onBack={onBack} testId="skills-surface" title="Skills">
+      <SecondarySurface onBack={onBack} testId="skills-surface" title="技能">
         <div className="surface-toolbar">
           <label className="surface-toolbar__field">
-            <span>Workspace</span>
+            <span>工作区</span>
             <select
               value={skillsWorkspace?.id ?? ""}
               onChange={(event) => onSelectSkillsWorkspace(event.target.value)}
@@ -287,7 +287,7 @@ export function SecondarySurfaces({
             onTrySkill(
               skill.filePath
                 ? `${skill.slashCommand} `
-                : "Create a new skill for this workspace and explain which files you will add.",
+                : "为这个工作区创建新技能，并说明你将添加哪些文件。",
             )
           }
         />
@@ -297,10 +297,10 @@ export function SecondarySurfaces({
 
   if (activeView === "extensions") {
     return (
-      <SecondarySurface onBack={onBack} testId="extensions-surface" title="Extensions">
+      <SecondarySurface onBack={onBack} testId="extensions-surface" title="扩展">
         <div className="surface-toolbar">
           <label className="surface-toolbar__field">
-            <span>Workspace</span>
+            <span>工作区</span>
             <select
               value={extensionsWorkspace?.id ?? ""}
               onChange={(event) => onSelectExtensionsWorkspace(event.target.value)}
@@ -337,13 +337,13 @@ export function SecondarySurfaces({
       onBack={onBack}
       onSelectNav={(section) => onSelectSettingsSection(section as SettingsSection)}
       testId="settings-surface"
-      title="Settings"
+      title="设置"
     >
       {settingsSection === "providers" ||
       (settingsSection === "models" && snapshot.modelSettingsScopeMode === "per-repo") ? (
         <div className="surface-toolbar">
           <label className="surface-toolbar__field">
-            <span>Workspace</span>
+            <span>工作区</span>
             <select
               value={settingsWorkspace?.id ?? ""}
               onChange={(event) => onSelectSettingsWorkspace(event.target.value)}

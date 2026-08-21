@@ -231,7 +231,7 @@ export function useNewThreadController(params: UseNewThreadControllerParams) {
       return;
     }
     if (treeCommand?.type === "tree") {
-      setComposerError("/tree is only available inside an existing session.");
+      setComposerError("/tree 只能在已有会话中使用。");
       return;
     }
     const input: StartThreadInput = {

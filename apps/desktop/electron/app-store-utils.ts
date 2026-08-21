@@ -421,7 +421,7 @@ function mergeQueuedComposerAttachments(
       return {
         id: `${messageId}:image:${index}:${randomUUID()}`,
         kind: "image",
-        name: attachment.name ?? `Image ${index + 1}`,
+        name: attachment.name ?? `图片 ${index + 1}`,
         mimeType: attachment.mimeType,
         data: attachment.data,
       } satisfies ComposerAttachment;

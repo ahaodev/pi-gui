@@ -71,17 +71,17 @@ test("thread menu supports rename, archive/restore, mark read, copy id, and righ
 
     await row.click({ button: "right" });
     const menu = row.getByRole("menu");
-    await expect(menu.getByRole("button", { name: "Rename thread" })).toBeVisible();
-    await expect(menu.getByRole("button", { name: "Archive" })).toBeVisible();
-    await expect(menu.getByRole("button", { name: "Mark as read" })).toBeVisible();
-    await expect(menu.getByRole("button", { name: "Copy session id" })).toBeVisible();
+    await expect(menu.getByRole("button", { name: "重命名对话" })).toBeVisible();
+    await expect(menu.getByRole("button", { name: "归档" })).toBeVisible();
+    await expect(menu.getByRole("button", { name: "标记为已读" })).toBeVisible();
+    await expect(menu.getByRole("button", { name: "复制会话 ID" })).toBeVisible();
     await captureProof(window, "01-open-menu.png");
 
-    await menu.getByRole("button", { name: "Copy session id" }).click();
+    await menu.getByRole("button", { name: "复制会话 ID" }).click();
     await expect.poll(() => window.evaluate(() => navigator.clipboard.readText())).toBe(target!.sessionId);
 
     await row.click({ button: "right" });
-    await row.getByRole("menu").getByRole("button", { name: "Mark as read" }).click();
+    await row.getByRole("menu").getByRole("button", { name: "标记为已读" }).click();
     await expect(row).toHaveAttribute("data-sidebar-indicator", "none");
     await captureProof(window, "02-marked-read.png");
 
@@ -118,17 +118,17 @@ test("thread menu supports rename, archive/restore, mark read, copy id, and righ
 
     await row.hover();
     await row.locator(".session-row__menu-button").click();
-    await row.getByRole("menu").getByRole("button", { name: "Rename thread" }).click();
-    const renameInput = window.getByLabel(`Rename thread ${targetTitle}`);
+    await row.getByRole("menu").getByRole("button", { name: "重命名对话" }).click();
+    const renameInput = window.getByTestId("session-rename-input");
     await renameInput.fill(renamedTitle);
-    await window.getByRole("button", { name: "Save" }).click();
+    await window.getByRole("button", { name: "保存" }).click();
     row = window.locator(".session-row", { hasText: renamedTitle }).first();
     await expect(row).toBeVisible();
     await captureProof(window, "03-renamed.png");
 
     await row.hover();
     await row.locator(".session-row__menu-button").click();
-    await row.getByRole("menu").getByRole("button", { name: "Archive" }).click();
+    await row.getByRole("menu").getByRole("button", { name: "归档" }).click();
     await expect(window.locator(".session-list > .session-row", { hasText: renamedTitle })).toHaveCount(0);
     const archivedToggle = window.locator(".archived-thread-group__toggle");
     await expect(archivedToggle).toBeVisible();
@@ -137,7 +137,7 @@ test("thread menu supports rename, archive/restore, mark read, copy id, and righ
     await archivedToggle.click();
     const archivedRow = window.locator(".session-list--archived .session-row", { hasText: renamedTitle });
     await archivedRow.click({ button: "right" });
-    await archivedRow.getByRole("menu").getByRole("button", { name: "Restore" }).click();
+    await archivedRow.getByRole("menu").getByRole("button", { name: "恢复" }).click();
     await expect(window.locator(".session-list > .session-row", { hasText: renamedTitle })).toHaveCount(1);
   } finally {
     await harness.close();
@@ -165,19 +165,19 @@ test("rename shortcut hint shows in menu and Cmd+Shift+R renames current thread"
     const row = window.locator(".session-row", { hasText: targetTitle }).first();
     await row.hover();
     await row.locator(".session-row__menu-button").click();
-    const renameItem = row.getByRole("menu").getByRole("button", { name: "Rename thread" });
+    const renameItem = row.getByRole("menu").getByRole("button", { name: "重命名对话" });
     await expect(renameItem.locator(".workspace-menu__shortcut")).toHaveText(expectedHint);
     await captureProof(window, "07-rename-hint.png");
     await window.keyboard.press("Escape");
 
     // Fire the shortcut against the current thread; the inline rename opens.
     await window.keyboard.press(`${isMac ? "Meta" : "Control"}+Shift+R`);
-    const renameInput = window.getByLabel(`Rename thread ${targetTitle}`);
+    const renameInput = window.getByTestId("session-rename-input");
     await expect(renameInput).toBeVisible();
     await captureProof(window, "08-shortcut-opened-rename.png");
 
     await renameInput.fill(renamedTitle);
-    await window.getByRole("button", { name: "Save" }).click();
+    await window.getByRole("button", { name: "保存" }).click();
     await expect(window.locator(".session-row", { hasText: renamedTitle }).first()).toBeVisible();
   } finally {
     await harness.close();

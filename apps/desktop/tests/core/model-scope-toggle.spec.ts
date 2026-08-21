@@ -55,15 +55,15 @@ test("switches between app-global and per-repo model scope while worktrees inher
     });
 
     await openSettings(window);
-    await openSettingsSection(window, "Models");
+    await openSettingsSection(window, "模型");
     await expect(window.locator(".surface-toolbar__field")).toHaveCount(0);
     await expect(window.locator(".settings-select")).toHaveValue("openai:gpt-5");
 
-    await openSettingsSection(window, "General");
-    await window.getByRole("button", { name: "Per repo" }).click();
+    await openSettingsSection(window, "通用");
+    await window.getByRole("button", { name: "按仓库" }).click();
     await expect.poll(async () => (await getDesktopState(window)).modelSettingsScopeMode).toBe("per-repo");
 
-    await openSettingsSection(window, "Models");
+    await openSettingsSection(window, "模型");
     await expect(window.locator(".surface-toolbar__field")).toHaveCount(1);
     await expect(window.locator(".surface-toolbar__field option")).toHaveCount(2);
     await window.locator(".surface-toolbar__field select").selectOption({ label: rootWorkspaceA.name });
@@ -76,7 +76,7 @@ test("switches between app-global and per-repo model scope while worktrees inher
     await window.locator(".surface-toolbar__field select").selectOption({ label: rootWorkspaceB.name });
     await expect(window.locator(".settings-select")).toHaveValue("openai:gpt-5");
 
-    await window.getByRole("button", { name: "Back to app", exact: true }).click();
+    await window.getByRole("button", { name: "返回应用", exact: true }).click();
     await selectSession(window, "Repo B global session");
     await expectComposerModelState(window, {
       activeModel: "openai:gpt-5",
@@ -91,7 +91,7 @@ test("switches between app-global and per-repo model scope while worktrees inher
       provider: "openai",
       modelId: "gpt-4o",
     });
-    await expect(window.locator(".topbar__session")).toHaveText("New thread");
+    await expect(window.locator(".topbar__session")).toHaveText("新建对话");
     await expectComposerModelState(window, {
       activeModel: "openai:gpt-4o",
       visibleModelLabels: ["GPT-4o", "GPT-4 Turbo"],
@@ -112,14 +112,14 @@ test("switches between app-global and per-repo model scope while worktrees inher
     await expect(window.getByRole("button", { name: "openai:gpt-4-turbo" }).first()).toBeVisible();
 
     await openSettings(window);
-    await openSettingsSection(window, "Models");
+    await openSettingsSection(window, "模型");
     await expect(window.locator(".surface-toolbar__field option")).toHaveCount(2);
     expect((await window.locator(".surface-toolbar__field option").allTextContents()).every((text) => !/Worktree/i.test(text))).toBeTruthy();
     await setEnabledModels(window, ["openai/gpt-5", "openai/gpt-4-turbo"], ["openai/gpt-4o"]);
     await window.locator(".settings-select").selectOption("openai:gpt-5");
     await expect(window.locator(".settings-select")).toHaveValue("openai:gpt-5");
 
-    await window.getByRole("button", { name: "Back to app", exact: true }).click();
+    await window.getByRole("button", { name: "返回应用", exact: true }).click();
     await expect(window.getByRole("button", { name: "openai:gpt-4-turbo" }).first()).toBeVisible();
     await expectComposerModelOptions(window, {
       visibleModelLabels: ["GPT-5", "GPT-4 Turbo"],
@@ -143,26 +143,26 @@ async function openSettings(window: Page): Promise<void> {
   await expect(window.getByTestId("settings-surface")).toBeVisible();
 }
 
-async function openSettingsSection(window: Page, section: "General" | "Models"): Promise<void> {
+async function openSettingsSection(window: Page, section: "通用" | "模型"): Promise<void> {
   await window.getByRole("button", { name: section, exact: true }).click();
   await expect(window.locator(".view-header__title")).toContainText(section);
 }
 
 async function ensureEnabledModelsDisclosureOpen(window: Page): Promise<void> {
   const disclosure = window.locator(".settings-disclosure", {
-    has: window.locator(".settings-disclosure__summary", { hasText: "Edit enabled models" }),
+    has: window.locator(".settings-disclosure__summary", { hasText: "编辑已启用模型" }),
   }).first();
   const detailsOpen = await disclosure.evaluate((element) => (element as HTMLDetailsElement).open);
   if (!detailsOpen) {
     await disclosure.locator(".settings-disclosure__summary").click();
   }
-  await expect(window.getByLabel("Search enabled models")).toBeVisible();
+  await expect(window.getByLabel("搜索已启用模型")).toBeVisible();
 }
 
 async function setEnabledModel(window: Page, pattern: string, enabled: boolean): Promise<void> {
   await ensureEnabledModelsDisclosureOpen(window);
   const [, modelId = pattern] = pattern.split("/");
-  const searchInput = window.getByLabel("Search enabled models");
+  const searchInput = window.getByLabel("搜索已启用模型");
   await searchInput.fill(modelId);
   const row = window.locator("label.settings-toggle", { hasText: pattern }).first();
   await expect(row).toBeVisible();

@@ -27,17 +27,17 @@ export function SettingsNotificationsSection({
 
   return (
     <>
-      <SettingsGroup title="System" description="macOS decides whether pi-gui can show desktop notifications at all.">
-        <SettingsRow title="macOS notification access" description={statusDescription}>
+      <SettingsGroup title="系统" description="macOS 决定 pi-gui 能否显示桌面通知。">
+        <SettingsRow title="macOS 通知权限" description={statusDescription}>
           <span className="settings-row__value">{statusLabel}</span>
         </SettingsRow>
         {showRecoveryActions ? (
           <SettingsRow
-            title="Turn on notifications"
+            title="开启通知"
             description={
               showAskMacOs
-                ? "pi-gui asks macOS when active work first moves into the background. You can also ask now."
-                : "macOS notifications are already turned off for pi-gui. Open System Settings to enable them again."
+                ? "当任务首次进入后台时，pi-gui 会请求 macOS 授权。也可以立即请求。"
+                : "pi-gui 的 macOS 通知已关闭。请打开系统设置重新开启。"
             }
           >
             <div className="settings-row__actions">
@@ -48,7 +48,7 @@ export function SettingsNotificationsSection({
                   type="button"
                   onClick={onRequestNotificationPermission}
                 >
-                  Ask macOS
+                  请求 macOS
                 </button>
               ) : null}
               {showOpenSystemSettings ? (
@@ -58,7 +58,7 @@ export function SettingsNotificationsSection({
                   type="button"
                   onClick={onOpenSystemNotificationSettings}
                 >
-                  Open System Settings
+                  打开系统设置
                 </button>
               ) : null}
             </div>
@@ -66,26 +66,26 @@ export function SettingsNotificationsSection({
         ) : null}
       </SettingsGroup>
 
-      <SettingsGroup title="In-app alerts" description="Choose which background events should try to notify once macOS access is enabled.">
-        <SettingsRow title="Background completion" description="Notify when a background session finishes.">
+      <SettingsGroup title="应用内提醒" description="开启 macOS 权限后，选择哪些后台事件触发提醒。">
+        <SettingsRow title="后台完成" description="后台会话完成时通知。">
           <input
-            aria-label="Background completion"
+            aria-label="后台完成"
             checked={notificationPreferences.backgroundCompletion}
             type="checkbox"
             onChange={(event) => onSetNotificationPreferences({ backgroundCompletion: event.target.checked })}
           />
         </SettingsRow>
-        <SettingsRow title="Background failures" description="Notify when a background session fails.">
+        <SettingsRow title="后台失败" description="后台会话失败时通知。">
           <input
-            aria-label="Background failures"
+            aria-label="后台失败"
             checked={notificationPreferences.backgroundFailure}
             type="checkbox"
             onChange={(event) => onSetNotificationPreferences({ backgroundFailure: event.target.checked })}
           />
         </SettingsRow>
-        <SettingsRow title="Needs input or approval" description="Notify when input is needed to continue.">
+        <SettingsRow title="需要输入或批准" description="需要输入才能继续时通知。">
           <input
-            aria-label="Needs input or approval"
+            aria-label="需要输入或批准"
             checked={notificationPreferences.attentionNeeded}
             type="checkbox"
             onChange={(event) => onSetNotificationPreferences({ attentionNeeded: event.target.checked })}
@@ -99,29 +99,29 @@ export function SettingsNotificationsSection({
 function labelForPermissionStatus(status: DesktopNotificationPermissionStatus): string {
   switch (status) {
     case "granted":
-      return "Enabled";
+      return "已开启";
     case "denied":
-      return "Turned off";
+      return "已关闭";
     case "default":
-      return "Not enabled yet";
+      return "尚未开启";
     case "unsupported":
-      return "Unavailable";
+      return "不可用";
     default:
-      return "Checking…";
+      return "检查中……";
   }
 }
 
 function descriptionForPermissionStatus(status: DesktopNotificationPermissionStatus): string {
   switch (status) {
     case "granted":
-      return "macOS will allow pi-gui to show desktop notifications for background thread updates.";
+      return "macOS 已允许 pi-gui 为后台对话更新显示桌面通知。";
     case "denied":
-      return "macOS notifications are turned off for pi-gui. Enable them in System Settings to receive background completion alerts.";
+      return "pi-gui 的 macOS 通知已关闭。请在系统设置中开启，以接收后台完成提醒。";
     case "default":
-      return "pi-gui has not asked macOS for desktop notification access yet.";
+      return "pi-gui 尚未向 macOS 请求桌面通知权限。";
     case "unsupported":
-      return "Desktop notifications are unavailable on this system.";
+      return "本系统不支持桌面通知。";
     default:
-      return "Checking whether macOS notifications are available for pi-gui.";
+      return "正在检查 pi-gui 是否可用 macOS 通知。";
   }
 }

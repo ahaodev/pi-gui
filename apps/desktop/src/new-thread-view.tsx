@@ -123,9 +123,9 @@ export function NewThreadView({
     return (
       <section className="canvas canvas--empty">
         <div className="empty-panel">
-          <div className="session-header__eyebrow">New thread</div>
-          <h1>Open a folder to begin</h1>
-          <p>Select a repository from the sidebar first, then start a local or worktree-backed thread.</p>
+          <div className="session-header__eyebrow">新建对话</div>
+          <h1>打开文件夹以开始</h1>
+          <p>请先从侧边栏选择一个仓库，再开始本地或基于工作树的对话。</p>
         </div>
       </section>
     );
@@ -138,10 +138,10 @@ export function NewThreadView({
           <div className="new-thread__logo" data-testid="new-thread-logo">
             <PiLogoMark />
           </div>
-          <div className="new-thread__eyebrow">New thread</div>
-          <h1 className="new-thread__title">Let&apos;s build</h1>
+          <div className="new-thread__eyebrow">新建对话</div>
+          <h1 className="new-thread__title">开始构建</h1>
           <label className="new-thread__workspace-picker">
-            <span className="sr-only">Workspace</span>
+            <span className="sr-only">工作区</span>
             <select
               className="new-thread__workspace"
               value={workspace.id}
@@ -193,10 +193,10 @@ export function NewThreadView({
               selectedMentionIndex={selectedMentionIndex}
               onSelectMention={onSelectMention}
               onEnableMentionExtension={onEnableMentionExtension}
-              textareaLabel="New thread prompt"
+              textareaLabel="新建对话输入框"
               textareaTestId="new-thread-composer"
               textareaClassName="new-thread__textarea"
-              textareaPlaceholder="Ask pi anything, use / for commands and skills"
+              textareaPlaceholder="向 pi 提问，用 / 调用命令与技能"
               footer={(
                 <NewThreadComposerFooter
                   runtime={runtime}
@@ -264,14 +264,14 @@ function NewThreadComposerFooter({
                 type="button"
                 onClick={() => onSelectEnvironment("local")}
               >
-                <span>Local</span>
+                <span>本地</span>
               </button>
               <button
                 className={`new-thread__environment ${environment === "worktree" ? "new-thread__environment--active" : ""}`}
                 type="button"
                 onClick={() => onSelectEnvironment("worktree")}
               >
-                <span>Worktree</span>
+                <span>工作树</span>
               </button>
             </div>
             <span className="new-thread__hint-separator">·</span>
@@ -305,7 +305,7 @@ function NewThreadComposerFooter({
               }}
             />
             <button
-              aria-label="Attach files"
+              aria-label="附加文件"
               className="icon-button composer__attach"
               type="button"
               onClick={() => fileInputRef.current?.click()}
@@ -313,7 +313,7 @@ function NewThreadComposerFooter({
               <PlusIcon />
             </button>
             <button
-              aria-label="Start thread"
+              aria-label="开始对话"
               className="button button--primary button--cta-icon"
               type="button"
               disabled={!hasContent || modelOnboarding.requiresModelSelection}

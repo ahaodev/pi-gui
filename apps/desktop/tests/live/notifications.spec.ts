@@ -74,7 +74,7 @@ test("logs a completion notification and blue dot for a focused different sessio
 
     await expect.poll(() => readOptionalLog(notificationLogPath), { timeout: 30_000 }).toContain("Session A");
     await expect.poll(() => readOptionalLog(notificationLogPath), { timeout: 30_000 }).toContain(
-      '"body":"Agent finished responding"',
+      '"body":"代理已完成回复"',
     );
     await expect(window.locator(".session-row", { hasText: "Session A" })).toHaveAttribute(
       "data-sidebar-indicator",
@@ -119,7 +119,7 @@ test("logs a completion notification and blue dot for a selected session after t
 
     await expect.poll(() => readOptionalLog(notificationLogPath), { timeout: 30_000 }).toContain("Selected Session");
     await expect.poll(() => readOptionalLog(notificationLogPath), { timeout: 30_000 }).toContain(
-      '"body":"Agent finished responding"',
+      '"body":"代理已完成回复"',
     );
     await expect(row).toHaveAttribute("data-sidebar-indicator", "unseen");
   } finally {

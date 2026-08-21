@@ -643,7 +643,7 @@ test("keeps a reopened virtualized long transcript stable", async () => {
     ]);
     const streamedRow = window.locator(".timeline-item--assistant", { hasText: pinnedStream.fullText });
     await expect(streamedRow).toBeVisible();
-    const streamedCompletionRow = window.locator(".timeline-summary", { hasText: "Worked for" }).last();
+    const streamedCompletionRow = window.locator(".timeline-summary", { hasText: "用时" }).last();
     const streamedBaseline = await waitForStableVirtualizedBottom(window, streamedCompletionRow);
     await expectStableTimelineWindow(window, streamedCompletionRow, streamedBaseline);
   } finally {

@@ -200,7 +200,7 @@ test("labels local package extensions by package root instead of index entrypoin
 
   try {
     const window = await harness.firstWindow();
-    await window.getByRole("button", { name: "Extensions", exact: true }).click();
+    await window.getByRole("button", { name: "扩展", exact: true }).click();
     await expect(window.getByTestId("extensions-surface")).toBeVisible();
 
     const extensionCard = window.getByTestId("extensions-list").getByRole("button", {
@@ -258,15 +258,15 @@ test("shows extensions above files in @ mentions and enables disabled extensions
     await composer.fill("@");
     const mentionMenu = window.getByTestId("mention-menu");
     await expect(mentionMenu).toBeVisible();
-    await expect(mentionMenu.locator(".mention-menu__section-title")).toHaveText(["Extensions", "Files"]);
+    await expect(mentionMenu.locator(".mention-menu__section-title")).toHaveText(["扩展", "文件"]);
     await expect(mentionMenu.locator(".mention-menu__section").first()).toContainText("demo-extension");
-    await expect(mentionMenu.locator(".mention-menu__section").first()).toContainText("Disabled");
-    await expect(mentionMenu.locator(".mention-menu__section").first().getByRole("button", { name: /Enable demo-extension/ })).toBeVisible();
+    await expect(mentionMenu.locator(".mention-menu__section").first()).toContainText("已禁用");
+    await expect(mentionMenu.locator(".mention-menu__section").first().getByRole("button", { name: /启用 demo-extension/ })).toBeVisible();
 
     await composer.fill("@demo");
-    await expect(mentionMenu.locator(".mention-menu__section-title").first()).toHaveText("Extensions");
+    await expect(mentionMenu.locator(".mention-menu__section-title").first()).toHaveText("扩展");
     await expect(mentionMenu.locator(".mention-menu__section").first()).toContainText("demo-extension");
-    await mentionMenu.locator(".mention-menu__section").first().getByRole("button", { name: /Enable demo-extension/ }).click();
+    await mentionMenu.locator(".mention-menu__section").first().getByRole("button", { name: /启用 demo-extension/ }).click();
     await expect
       .poll(async () => {
         const state = await getDesktopState(window);
@@ -281,7 +281,7 @@ test("shows extensions above files in @ mentions and enables disabled extensions
 
     await composer.fill("@READ");
     await expect(mentionMenu).toBeVisible();
-    await expect(mentionMenu.locator(".mention-menu__section-title")).toHaveText(["Files"]);
+    await expect(mentionMenu.locator(".mention-menu__section-title")).toHaveText(["文件"]);
     await expect(mentionMenu.locator(".mention-menu__filename")).toContainText("README.md");
     await composer.press("Tab");
     await expect(composer).toHaveValue("@README.md ");
@@ -324,7 +324,7 @@ test("inserts npm package extension mentions without source prefixes or pinned v
     await composer.fill("@read");
     const mentionMenu = window.getByTestId("mention-menu");
     await expect(mentionMenu).toBeVisible();
-    await expect(mentionMenu.locator(".mention-menu__section-title").first()).toHaveText("Extensions");
+    await expect(mentionMenu.locator(".mention-menu__section-title").first()).toHaveText("扩展");
     await expect(mentionMenu.locator(".mention-menu__section").first()).toContainText(packageName);
 
     await composer.press("Tab");
@@ -368,7 +368,7 @@ test("preserves scoped npm package names in extension mentions", async () => {
     await composer.fill("@acme");
     const mentionMenu = window.getByTestId("mention-menu");
     await expect(mentionMenu).toBeVisible();
-    await expect(mentionMenu.locator(".mention-menu__section-title").first()).toHaveText("Extensions");
+    await expect(mentionMenu.locator(".mention-menu__section-title").first()).toHaveText("扩展");
 
     await composer.press("Tab");
     await expect(composer).toHaveValue("@acme-pi-read-mode ");
@@ -409,7 +409,7 @@ test("inserts git package extension mentions from the resolved package root", as
     await composer.fill("@repo");
     const mentionMenu = window.getByTestId("mention-menu");
     await expect(mentionMenu).toBeVisible();
-    await expect(mentionMenu.locator(".mention-menu__section-title").first()).toHaveText("Extensions");
+    await expect(mentionMenu.locator(".mention-menu__section-title").first()).toHaveText("扩展");
     await expect(mentionMenu.locator(".mention-menu__section").first()).toContainText(repo);
 
     await composer.press("Tab");
@@ -447,7 +447,7 @@ test("manages extensions and prefers runtime commands over colliding host action
     await expect(dockBody).toContainText("demo-widget-below:");
     await expect(dockBody).toContainText("Below widget line");
 
-    await window.getByRole("button", { name: "Extensions", exact: true }).click();
+    await window.getByRole("button", { name: "扩展", exact: true }).click();
     await expect(window.getByTestId("extensions-surface")).toBeVisible();
     const extensionsList = window.getByTestId("extensions-list");
     const extensionCard = extensionsList.getByRole("button", { name: /demo-extension/i });
@@ -456,21 +456,21 @@ test("manages extensions and prefers runtime commands over colliding host action
     await expect(window.locator(".skill-detail")).toContainText("settings");
     await expect(window.locator(".skill-detail")).toContainText("prefill-demo");
 
-    await window.getByRole("button", { name: "Disable", exact: true }).click();
-    await expect(window.locator(".skill-detail__status")).toHaveText("Disabled");
-    await window.getByRole("button", { name: "Back to app", exact: true }).click();
+    await window.getByRole("button", { name: "禁用", exact: true }).click();
+    await expect(window.locator(".skill-detail__status")).toHaveText("已禁用");
+    await window.getByRole("button", { name: "返回应用", exact: true }).click();
     await expect(window.locator(".topbar__session")).toHaveText("Inspect extension surface");
     await expect(window.getByTestId("extension-dock")).toHaveCount(0);
     const composer = window.getByTestId("composer");
-    await window.getByRole("button", { name: "Settings", exact: true }).click();
+    await window.getByRole("button", { name: "设置", exact: true }).click();
     await expect(window.getByTestId("settings-surface")).toBeVisible();
-    await window.getByRole("button", { name: "Back to app", exact: true }).click();
+    await window.getByRole("button", { name: "返回应用", exact: true }).click();
 
-    await window.getByRole("button", { name: "Extensions", exact: true }).click();
+    await window.getByRole("button", { name: "扩展", exact: true }).click();
     await extensionCard.click();
-    await window.getByRole("button", { name: "Enable", exact: true }).click();
-    await expect(window.locator(".skill-detail__status")).toHaveText("Enabled");
-    await window.getByRole("button", { name: "Back to app", exact: true }).click();
+    await window.getByRole("button", { name: "启用", exact: true }).click();
+    await expect(window.locator(".skill-detail__status")).toHaveText("已启用");
+    await window.getByRole("button", { name: "返回应用", exact: true }).click();
     await expect(window.locator(".topbar__session")).toHaveText("Extension Surface");
     await expect(window.getByTestId("extension-dock-summary")).toHaveText("Demo ready");
     await expect(window.getByTestId("extension-dock-body")).toHaveCount(0);
@@ -499,8 +499,8 @@ test("manages extensions and prefers runtime commands over colliding host action
 
     await composer.fill("/se");
     const slashMenu = window.getByTestId("slash-menu");
-    await expect(slashMenu).toContainText("Runtime Commands");
-    await expect(slashMenu).toContainText("Host Actions");
+    await expect(slashMenu).toContainText("运行时命令");
+    await expect(slashMenu).toContainText("应用操作");
 
     await composer.fill("/settings ");
     await composer.press("Enter");
@@ -561,7 +561,7 @@ test("keeps a single subscription path when an extension creates a child session
 
     const beforeState = await getDesktopState(window);
     const beforeSelectedSessionId = beforeState.selectedSessionId;
-    const resumedCountBefore = await window.getByText("Resumed session", { exact: true }).count();
+    const resumedCountBefore = await window.getByText("已恢复会话", { exact: true }).count();
 
     const composer = window.getByTestId("composer");
     await composer.fill("/spawn-child ");
@@ -574,7 +574,7 @@ test("keeps a single subscription path when an extension creates a child session
       })
       .not.toBe(beforeSelectedSessionId);
     await expect(composer).toHaveValue("Child draft");
-    await expect(window.getByText("Resumed session", { exact: true })).toHaveCount(resumedCountBefore);
+    await expect(window.getByText("已恢复会话", { exact: true })).toHaveCount(resumedCountBefore);
   } finally {
     await harness.close();
   }

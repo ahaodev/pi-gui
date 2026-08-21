@@ -115,7 +115,7 @@ test("uses machine-safe status arguments and returns typed failures", async () =
     state: "unavailable",
     error: {
       code: "git-status-failed",
-      message: "Git status is unavailable for this workspace.",
+      message: "此工作区的 Git 状态不可用。",
     },
   });
 

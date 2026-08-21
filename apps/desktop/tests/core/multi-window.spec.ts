@@ -474,7 +474,7 @@ test("opens independent terminals for the same thread in separate windows", asyn
     const secondWindow = await openWindowViaShortcut(harness, firstWindow);
     await expectSelected(secondWindow, workspacePath, "Shared terminal thread");
 
-    await firstWindow.getByLabel("Toggle terminal").click();
+    await firstWindow.getByLabel("切换终端").click();
     const firstTerminal = firstWindow.getByTestId("integrated-terminal");
     await expect(firstTerminal).toBeVisible();
     await firstTerminal.locator(".xterm").click();
@@ -484,7 +484,7 @@ test("opens independent terminals for the same thread in separate windows", asyn
       timeout: 15_000,
     });
 
-    await secondWindow.getByLabel("Toggle terminal").click();
+    await secondWindow.getByLabel("切换终端").click();
     const secondTerminal = secondWindow.getByTestId("integrated-terminal");
     await expect(secondTerminal).toBeVisible();
     await secondTerminal.locator(".xterm").click();

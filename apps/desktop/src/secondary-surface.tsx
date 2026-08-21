@@ -29,11 +29,11 @@ export function SecondarySurface({
       <aside className="secondary-surface__sidebar">
         <button className="secondary-surface__back" type="button" onClick={onBack}>
           <span aria-hidden="true">←</span>
-          <span>Back to app</span>
+          <span>返回应用</span>
         </button>
         <div className="secondary-surface__title">{title}</div>
         {navItems.length > 0 ? (
-          <nav className="secondary-surface__nav" aria-label={`${title} sections`}>
+          <nav className="secondary-surface__nav" aria-label={`${title} 分区`}>
             {navItems.map((item) => (
               <button
                 key={item.id}

@@ -5,12 +5,12 @@ import { emitRunningEvent, readOptionalLog } from "../helpers/notification-event
 import { createThread, selectSessionByTitle, setSessionVisibilityOverride } from "./session-event-test-helpers";
 
 async function openNotificationSettings(window: Page): Promise<void> {
-  await window.getByRole("button", { name: "Settings", exact: true }).click();
-  await window.getByRole("button", { name: "Notifications", exact: true }).click();
+  await window.getByRole("button", { name: "设置", exact: true }).click();
+  await window.getByRole("button", { name: "通知", exact: true }).click();
 }
 
 async function returnToThreads(window: Page): Promise<void> {
-  await window.getByRole("button", { name: "Back to app", exact: true }).click();
+  await window.getByRole("button", { name: "返回应用", exact: true }).click();
 }
 
 test("requests notification permission when the user switches away from a running session", async () => {
@@ -45,7 +45,7 @@ test("requests notification permission when the user switches away from a runnin
     await expect.poll(() => readOptionalLog(requestLogPath), { timeout: 5_000 }).toBe(firstPromptLog);
 
     await openNotificationSettings(window);
-    await expect(window.locator(".settings-view")).toContainText("Enabled");
+    await expect(window.locator(".settings-view")).toContainText("已开启");
   } finally {
     await harness.close();
   }
@@ -70,10 +70,10 @@ test("requests notification permission when the user leaves the threads surface"
     const session = await createThread(window, "Onboarding Settings Session");
     await setSessionVisibilityOverride(harness, "active");
     await selectSessionByTitle(window, "Onboarding Settings Session");
-    await emitRunningEvent(harness, session, "Settings");
+    await emitRunningEvent(harness, session, "设置");
 
     await expect.poll(() => readOptionalLog(requestLogPath), { timeout: 5_000 }).toBe("");
-    await window.getByRole("button", { name: "Settings", exact: true }).click();
+    await window.getByRole("button", { name: "设置", exact: true }).click();
     await expect.poll(() => readOptionalLog(requestLogPath), { timeout: 5_000 }).not.toBe("");
   } finally {
     await harness.close();
@@ -165,9 +165,9 @@ test("does not request notification permission when all notification categories 
     await createThread(window, "Disabled Session B");
     await setSessionVisibilityOverride(harness, "active");
     await openNotificationSettings(window);
-    const backgroundCompletion = window.getByLabel("Background completion", { exact: true });
-    const backgroundFailure = window.getByLabel("Background failures", { exact: true });
-    const attentionNeeded = window.getByLabel("Needs input or approval", { exact: true });
+    const backgroundCompletion = window.getByLabel("后台完成", { exact: true });
+    const backgroundFailure = window.getByLabel("后台失败", { exact: true });
+    const attentionNeeded = window.getByLabel("需要输入或批准", { exact: true });
     await backgroundCompletion.click();
     await backgroundFailure.click();
     await attentionNeeded.click();
@@ -269,7 +269,7 @@ test("does not request notification permission on launch before any work is back
 
   try {
     const window = await harness.firstWindow();
-    await expect(window.getByRole("button", { name: "Settings", exact: true })).toBeVisible();
+    await expect(window.getByRole("button", { name: "设置", exact: true })).toBeVisible();
     await expect.poll(() => readOptionalLog(requestLogPath), { timeout: 5_000 }).toBe("");
     expect((await getDesktopState(window)).activeView).toBe("threads");
   } finally {

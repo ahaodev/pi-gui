@@ -71,7 +71,7 @@ test("supports keyboard shortcuts, slash menus, and topbar controls through the 
 
     await window.keyboard.press(desktopShortcut(","));
     await expect(window.getByTestId("settings-surface")).toBeVisible();
-    await expect(window.locator(".view-header__title")).toContainText("General");
+    await expect(window.locator(".view-header__title")).toContainText("通用");
 
     await window.keyboard.press(desktopShortcut("Shift+O"));
     await expect(window.getByTestId("new-thread-composer")).toBeVisible();
@@ -83,7 +83,7 @@ test("supports keyboard shortcuts, slash menus, and topbar controls through the 
     await composer.fill("/stat");
     const slashMenu = window.getByTestId("slash-menu");
     await expect(slashMenu).toBeVisible();
-    await expect(slashMenu).toContainText("Status");
+    await expect(slashMenu).toContainText("状态");
     await expect(slashMenu).toContainText("Observe State");
     await expect(slashMenu).toContainText("/skill:observe-state");
     await expect(slashMenu.locator(".slash-menu__item").first()).toContainText("/status");
@@ -97,12 +97,12 @@ test("supports keyboard shortcuts, slash menus, and topbar controls through the 
     await expect(slashMenu).toHaveCount(0);
     await expect(composer).toHaveValue("/status");
     await composer.press("Enter");
-    await expect(window.getByTestId("transcript")).toContainText(/Model |No session overrides set/);
+    await expect(window.getByTestId("transcript")).toContainText(/模型 |未设置会话覆盖/);
     await expect(composer).toHaveValue("");
 
     await composer.fill("Need a quick check /stat");
     await expect(slashMenu).toBeVisible();
-    await expect(slashMenu).toContainText("Status");
+    await expect(slashMenu).toContainText("状态");
     await composer.press("Tab");
     await expect(slashMenu).toHaveCount(0);
     await expect(composer).toHaveValue("Need a quick check /status");
@@ -110,16 +110,16 @@ test("supports keyboard shortcuts, slash menus, and topbar controls through the 
     await composer.fill("/thinking");
     const optionsMenu = window.getByTestId("slash-options-menu");
     await expect(optionsMenu).toBeVisible();
-    await expect(optionsMenu).toContainText("Low");
-    await expect(optionsMenu).toContainText("Extra High");
-    await expect(optionsMenu).toContainText("Max");
+    await expect(optionsMenu).toContainText("低");
+    await expect(optionsMenu).toContainText("超高");
+    await expect(optionsMenu).toContainText("最大");
     await composer.press("ArrowDown");
     await composer.press("ArrowDown");
     await composer.press("ArrowDown");
     await composer.press("ArrowDown");
     await composer.press("Enter");
     await expect(optionsMenu).toHaveCount(0);
-    await expect(window.getByTestId("transcript")).toContainText("Thinking set to max");
+    await expect(window.getByTestId("transcript")).toContainText("思考等级已设置为 max");
     await expect(window.locator(".composer__hint")).toContainText("max");
 
     await composer.fill("Keep the draft /thinking");
@@ -141,20 +141,20 @@ test("supports keyboard shortcuts, slash menus, and topbar controls through the 
 
     await composer.fill("/model");
     await expect(optionsMenu).toBeVisible();
-    await expect(optionsMenu).toContainText("No models available");
-    await expect(optionsMenu).toContainText("Open Settings > Models to enable models.");
+    await expect(optionsMenu).toContainText("没有可用模型");
+    await expect(optionsMenu).toContainText("打开 设置 > 模型 以启用模型。");
     await composer.fill("continue");
     await expect(optionsMenu).toHaveCount(0);
 
     const onboardingNotice = window.getByTestId("model-onboarding-notice");
-    await expect(onboardingNotice).toContainText("No models available");
-    await expect(onboardingNotice).toContainText("Settings > Models");
+    await expect(onboardingNotice).toContainText("没有可用模型");
+    await expect(onboardingNotice).toContainText("设置 > 模型");
     await expect(window.getByTestId("send")).toBeDisabled();
 
-    await onboardingNotice.getByRole("button", { name: "Open Settings > Models" }).click();
+    await onboardingNotice.getByRole("button", { name: "打开 设置 > 模型" }).click();
     await expect(window.getByTestId("settings-surface")).toBeVisible();
-    await expect(window.locator(".view-header__title")).toHaveText("Models");
-    await window.getByRole("button", { name: "Back to app", exact: true }).click();
+    await expect(window.locator(".view-header__title")).toHaveText("模型");
+    await window.getByRole("button", { name: "返回应用", exact: true }).click();
     await expect(window.getByTestId("send")).toBeDisabled();
 
     const appRegions = await window.evaluate(() => {
@@ -201,14 +201,14 @@ test("dark mode keeps the send button visible before and after typing", async ()
     await window.keyboard.press(desktopShortcut(","));
     const settingsSurface = window.getByTestId("settings-surface");
     await expect(settingsSurface).toBeVisible();
-    await settingsSurface.getByRole("button", { name: "Appearance", exact: true }).click();
-    await expect(window.locator(".view-header__title")).toHaveText("Appearance");
-    await settingsSurface.locator(".settings-row", { hasText: "Dark" }).locator('input[type="radio"]').click();
+    await settingsSurface.getByRole("button", { name: "外观", exact: true }).click();
+    await expect(window.locator(".view-header__title")).toHaveText("外观");
+    await settingsSurface.locator(".settings-row", { hasText: "深色" }).locator('input[type="radio"]').click();
     await expect
       .poll(() => window.evaluate(() => document.documentElement.classList.contains("dark")))
       .toBe(true);
 
-    await settingsSurface.getByRole("button", { name: "Back to app" }).click();
+    await settingsSurface.getByRole("button", { name: "返回应用" }).click();
     await selectSession(window, "Dark send button session");
 
     const sendButton = window.getByTestId("send");

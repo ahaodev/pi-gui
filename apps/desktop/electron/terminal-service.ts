@@ -104,11 +104,11 @@ export class TerminalService {
   ): TerminalPanelSnapshot {
     const session = this.requireOwnedSession(webContents, terminalId);
     if (session.workspaceId !== workspaceId || session.terminalScopeId !== terminalScopeId) {
-      throw new Error(`Terminal session ${terminalId} does not belong to this thread`);
+      throw new Error(`Terminal session ${terminalId} 不属于此对话`);
     }
     const root = this.requireRoot(session.rootKey);
     if (!root.sessionIds.includes(terminalId)) {
-      throw new Error(`Unknown terminal session: ${terminalId}`);
+      throw new Error(`未知终端会话：${terminalId}`);
     }
     root.activeSessionId = terminalId;
     return this.snapshotRoot(root);
@@ -232,7 +232,7 @@ export class TerminalService {
   private ensureRoot(webContents: WebContents, workspaceId: string, terminalScopeId: string): TerminalRoot {
     const normalizedScopeId = terminalScopeId.trim();
     if (!normalizedScopeId) {
-      throw new Error("Terminal scope is required");
+      throw new Error("需要终端作用域");
     }
     const workspacePath = this.options.getWorkspacePath(workspaceId);
     if (!workspacePath) {
@@ -345,7 +345,7 @@ export class TerminalService {
   private requireOwnedSession(webContents: WebContents, terminalId: string): TerminalSession {
     const session = this.sessionsById.get(terminalId);
     if (!session || session.ownerWebContentsId !== webContents.id) {
-      throw new Error(`Unknown terminal session: ${terminalId}`);
+      throw new Error(`未知终端会话：${terminalId}`);
     }
     return session;
   }
@@ -353,7 +353,7 @@ export class TerminalService {
   private requireRoot(rootKey: string): TerminalRoot {
     const root = this.rootsByKey.get(rootKey);
     if (!root) {
-      throw new Error(`Unknown terminal root: ${rootKey}`);
+      throw new Error(`未知终端根：${rootKey}`);
     }
     return root;
   }
@@ -410,14 +410,14 @@ export class TerminalService {
   }
 
   private defaultTitle(session: TerminalSession): string {
-    return `Terminal ${session.id.split("-").at(-1) ?? ""}`.trim();
+    return `终端 ${session.id.split("-").at(-1) ?? ""}`.trim();
   }
 
   private resolveShell(): string {
     const configuredShell = this.options.getIntegratedTerminalShell()?.trim();
     const shellPath = configuredShell || process.env.SHELL || defaultShellForPlatform();
     if (process.platform !== "win32" && !path.isAbsolute(shellPath)) {
-      throw new Error(`Integrated terminal shell must be an absolute path: ${shellPath}`);
+      throw new Error(`集成终端 shell 必须是绝对路径：${shellPath}`);
     }
     ensureExecutable(shellPath);
     return shellPath;
@@ -449,7 +449,7 @@ function normalizeRootKey(workspacePath: string): string {
 function ensureDirectory(directoryPath: string): void {
   const stats = statSync(directoryPath);
   if (!stats.isDirectory()) {
-    throw new Error(`Workspace is not a directory: ${directoryPath}`);
+    throw new Error(`工作区不是目录：${directoryPath}`);
   }
 }
 

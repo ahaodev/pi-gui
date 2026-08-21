@@ -829,11 +829,11 @@ async function pickWorkspacePathViaDialog(parentWindow?: BrowserWindow | null): 
   const result = window
     ? await dialog.showOpenDialog(window, {
         properties: ["openDirectory"],
-        title: "Open workspace folder",
+        title: "打开工作区文件夹",
       })
     : await dialog.showOpenDialog({
         properties: ["openDirectory"],
-        title: "Open workspace folder",
+        title: "打开工作区文件夹",
       });
   if (result.canceled || result.filePaths.length === 0) {
     return undefined;
@@ -877,9 +877,9 @@ async function runManualUpdateCheck(): Promise<void> {
       const choice = await showDialog({
         type: "info",
         title: "pi-gui",
-        message: `Version ${result.latestVersion} is available.`,
-        detail: `You have ${result.currentVersion}.`,
-        buttons: ["Download", "Later"],
+        message: `版本 ${result.latestVersion} 可用。`,
+        detail: `当前版本 ${result.currentVersion}。`,
+        buttons: ["下载", "稍后"],
         defaultId: 0,
         cancelId: 1,
       });
@@ -893,8 +893,8 @@ async function runManualUpdateCheck(): Promise<void> {
       await showDialog({
         type: "info",
         title: "pi-gui",
-        message: `You're up to date on version ${result.currentVersion}.`,
-        buttons: ["OK"],
+        message: `当前已是最新版本 ${result.currentVersion}。`,
+        buttons: ["确定"],
       });
       return;
     }
@@ -902,56 +902,103 @@ async function runManualUpdateCheck(): Promise<void> {
     await showDialog({
       type: "warning",
       title: "pi-gui",
-      message: "Could not check for updates right now.",
+      message: "现在无法检查更新。",
       detail: result.message,
-      buttons: ["OK"],
+      buttons: ["确定"],
     });
   } catch (error) {
     console.error("pi-gui: manual update check failed:", error);
     await showDialog({
       type: "warning",
       title: "pi-gui",
-      message: "Could not check for updates right now.",
+      message: "现在无法检查更新。",
       detail: error instanceof Error ? error.message : String(error),
-      buttons: ["OK"],
+      buttons: ["确定"],
     }).catch(() => undefined);
   }
 }
 
+// Electron's built-in role labels are hardcoded English (see electron's
+// menu-item-roles), so every role item gets an explicit Chinese `label`
+// override; the role keeps the standard behavior and per-platform
+// accelerator. The template mirrors Electron's default role submenus
+// (editMenu/viewMenu/windowMenu/fileMenu) so behavior is unchanged.
+// Non-macOS platforms previously fell through to Electron's default menu
+// (English "File/Edit/View/Window/Help"); we now install the Chinese menu
+// everywhere. The default Help menu is intentionally omitted — it only
+// contained "Learn More" pointing at electronjs.org.
 function installApplicationMenu(): void {
-  if (process.platform !== "darwin") {
-    return;
-  }
+  const isMac = process.platform === "darwin";
 
-  const template: MenuItemConstructorOptions[] = [
+  const appMenuItems: MenuItemConstructorOptions[] = [
+    { role: "about", label: `关于 ${app.name}` },
+    { type: "separator" },
     {
-      label: app.name,
-      submenu: [
-        { role: "about" },
+      id: CHECK_FOR_UPDATES_MENU_ITEM_ID,
+      label: "检查更新…",
+      click: () => {
+        void runManualUpdateCheck();
+      },
+    },
+    { type: "separator" },
+    { role: "services", label: "服务" },
+    { type: "separator" },
+    { role: "hide", label: `隐藏 ${app.name}` },
+    { role: "hideOthers", label: "隐藏其他" },
+    { role: "unhide", label: "全部显示" },
+    { type: "separator" },
+    { role: "quit", label: `退出 ${app.name}` },
+  ];
+
+  const fileCloseItem: MenuItemConstructorOptions = isMac
+    ? { role: "close", label: "关闭" }
+    : { role: "quit", label: "退出" };
+
+  const editMenuTail: MenuItemConstructorOptions[] = isMac
+    ? [
+        { role: "pasteAndMatchStyle", label: "粘贴并匹配样式" },
+        { role: "delete", label: "删除" },
+        { role: "selectAll", label: "全选" },
         { type: "separator" },
         {
-          id: CHECK_FOR_UPDATES_MENU_ITEM_ID,
-          label: "Check for Updates…",
-          click: () => {
-            void runManualUpdateCheck();
-          },
+          label: "替代项",
+          submenu: [
+            { role: "showSubstitutions", label: "显示替代项" },
+            { type: "separator" },
+            { role: "toggleSmartQuotes", label: "智能引号" },
+            { role: "toggleSmartDashes", label: "智能破折号" },
+            { role: "toggleTextReplacement", label: "文本替换" },
+          ],
         },
+        {
+          label: "语音",
+          submenu: [
+            { role: "startSpeaking", label: "开始朗读" },
+            { role: "stopSpeaking", label: "停止朗读" },
+          ],
+        },
+      ]
+    : [
+        { role: "delete", label: "删除" },
         { type: "separator" },
-        { role: "services" },
+        { role: "selectAll", label: "全选" },
+      ];
+
+  const windowMenuTail: MenuItemConstructorOptions[] = isMac
+    ? [
         { type: "separator" },
-        { role: "hide" },
-        { role: "hideOthers" },
-        { role: "unhide" },
-        { type: "separator" },
-        { role: "quit" },
-      ],
-    },
+        { role: "front", label: "前置全部窗口" },
+      ]
+    : [{ role: "close", label: "关闭" }];
+
+  const template: MenuItemConstructorOptions[] = [
+    ...(isMac ? [{ label: app.name, submenu: appMenuItems }] : []),
     {
-      label: "File",
+      label: "文件",
       submenu: [
         {
           id: NEW_WINDOW_MENU_ITEM_ID,
-          label: "New Window",
+          label: "新建窗口",
           accelerator: "CommandOrControl+N",
           click: () => {
             createAppWindow(getForegroundAppView());
@@ -960,19 +1007,50 @@ function installApplicationMenu(): void {
         { type: "separator" },
         {
           id: OPEN_FOLDER_MENU_ITEM_ID,
-          label: "Open Folder…",
-          accelerator: "Command+O",
+          label: "打开文件夹…",
+          accelerator: "CommandOrControl+O",
           click: () => {
             void pickWorkspaceViaDialog(mainWindow);
           },
         },
         { type: "separator" },
-        { role: "close" },
+        fileCloseItem,
       ],
     },
-    { role: "editMenu" },
-    { role: "viewMenu" },
-    { role: "windowMenu" },
+    {
+      label: "编辑",
+      submenu: [
+        { role: "undo", label: "撤销" },
+        { role: "redo", label: "重做" },
+        { type: "separator" },
+        { role: "cut", label: "剪切" },
+        { role: "copy", label: "复制" },
+        { role: "paste", label: "粘贴" },
+        ...editMenuTail,
+      ],
+    },
+    {
+      label: "视图",
+      submenu: [
+        { role: "reload", label: "重新加载" },
+        { role: "forceReload", label: "强制重新加载" },
+        { role: "toggleDevTools", label: "切换开发者工具" },
+        { type: "separator" },
+        { role: "resetZoom", label: "实际大小" },
+        { role: "zoomIn", label: "放大" },
+        { role: "zoomOut", label: "缩小" },
+        { type: "separator" },
+        { role: "togglefullscreen", label: "切换全屏" },
+      ],
+    },
+    {
+      label: "窗口",
+      submenu: [
+        { role: "minimize", label: "最小化" },
+        { role: "zoom", label: "缩放" },
+        ...windowMenuTail,
+      ],
+    },
   ];
 
   Menu.setApplicationMenu(Menu.buildFromTemplate(template));
@@ -1034,8 +1112,8 @@ app.whenReady().then(async () => {
     extensionFactories: [createOrchestrationRuntimeExtension(orchestrationRuntimeBridge)],
     inlineExtensionMetadata: [
       {
-        displayName: "Thread orchestration",
-        description: "Start child pi-gui threads from transcript tool calls",
+        displayName: "对话编排",
+        description: "通过转录中的工具调用启动子对话",
       },
     ],
   };
@@ -1136,7 +1214,7 @@ app.whenReady().then(async () => {
   ipcMain.handle(desktopIpc.openExternal, (_event, url: string) => {
     const parsed = parseExternalWebUrl(url);
     if (!parsed) {
-      throw new Error(`Refusing to open unsupported URL: ${url}`);
+      throw new Error(`拒绝打开不受支持的 URL：${url}`);
     }
     return shell.openExternal(parsed.toString());
   });
@@ -1168,7 +1246,7 @@ app.whenReady().then(async () => {
   ipcMain.handle(desktopIpc.openWorkspaceInFinder, async (_event, workspaceId: string) => {
     const workspacePath = store.getWorkspacePath(workspaceId);
     if (!workspacePath) {
-      throw new Error(`Unknown workspace: ${workspaceId}`);
+      throw new Error(`未知工作区：${workspaceId}`);
     }
     await shell.openPath(workspacePath);
   });
@@ -1340,14 +1418,14 @@ app.whenReady().then(async () => {
   ipcMain.handle(desktopIpc.openSkillInFinder, async (_event, workspaceId: string, filePath: string) => {
     const resolved = store.getSkillFilePath(workspaceId, filePath);
     if (!resolved) {
-      throw new Error(`Unknown skill: ${filePath}`);
+      throw new Error(`未知技能：${filePath}`);
     }
     await shell.openPath(path.dirname(resolved));
   });
   ipcMain.handle(desktopIpc.openExtensionInFinder, async (_event, workspaceId: string, filePath: string) => {
     const resolved = store.getExtensionFilePath(workspaceId, filePath);
     if (!resolved) {
-      throw new Error(`Unknown extension: ${filePath}`);
+      throw new Error(`未知扩展：${filePath}`);
     }
     await shell.openPath(path.dirname(resolved));
   });
@@ -1360,11 +1438,11 @@ app.whenReady().then(async () => {
       window
         ? await dialog.showOpenDialog(window, {
             properties: ["openFile", "multiSelections"],
-            title: "Attach files",
+            title: "附加文件",
           })
         : await dialog.showOpenDialog({
             properties: ["openFile", "multiSelections"],
-            title: "Attach files",
+            title: "附加文件",
           });
     if (result.canceled || result.filePaths.length === 0) {
       return stateForWindow(window);
@@ -1429,7 +1507,7 @@ app.whenReady().then(async () => {
   ipcMain.handle(desktopIpc.readWorkspaceFile, async (_event, workspaceId: string, filePath: string) => {
     const workspacePath = store.getWorkspacePath(workspaceId);
     if (!workspacePath) {
-      throw new Error(`Unknown workspace: ${workspaceId}`);
+      throw new Error(`未知工作区：${workspaceId}`);
     }
     return readWorkspaceFile(workspacePath, filePath);
   });
@@ -1440,7 +1518,7 @@ app.whenReady().then(async () => {
         state: "unavailable",
         error: {
           code: "workspace-unavailable",
-          message: "Changed files are unavailable because this workspace could not be found.",
+          message: "找不到此工作区，因此变更文件不可用。",
         },
       } satisfies ChangedFilesResult;
     }
@@ -1458,7 +1536,7 @@ app.whenReady().then(async () => {
     async (_event, workspaceId: string, filePath: string, stagingSourcePath?: string) => {
       const workspacePath = store.getWorkspacePath(workspaceId);
       if (!workspacePath) {
-        throw new Error(`Unknown workspace: ${workspaceId}`);
+        throw new Error(`未知工作区：${workspaceId}`);
       }
       await stageFile(workspacePath, filePath, { sourcePath: stagingSourcePath });
     },
@@ -1642,7 +1720,7 @@ function createRuntimeLoginCallbacks(window?: BrowserWindow | null) {
 async function showLoginInstructions(parentWindow: BrowserWindow | null | undefined, message: string): Promise<void> {
   const window = resolveDialogWindow(parentWindow);
   if (!window) {
-    throw new Error("Main window is not available for login instructions.");
+    throw new Error("主窗口不可用，无法显示登录说明。");
   }
   window.show();
   window.focus();
@@ -1659,7 +1737,7 @@ async function promptForText(
 ): Promise<string> {
   const parent = resolveDialogWindow(parentWindow);
   if (!parent) {
-    throw new Error("Main window is not available for login.");
+    throw new Error("主窗口不可用，无法进行登录。");
   }
   parent.show();
   parent.focus();
@@ -1702,11 +1780,11 @@ async function promptForText(
     });
 
     if (result === null) {
-      throw new Error("Login cancelled.");
+      throw new Error("已取消登录。");
     }
     const trimmedResult = result.trim();
     if (!allowEmpty && trimmedResult.length === 0) {
-      throw new Error("Login cancelled.");
+      throw new Error("已取消登录。");
     }
     return trimmedResult;
   } finally {
@@ -1737,8 +1815,8 @@ function promptDataUrl(message: string, placeholder: string): string {
   <div class="msg">${escapeHtml(message)}</div>
   <input id="pi-prompt-input" type="text" placeholder="${escapeHtml(placeholder)}" autofocus />
   <div class="row">
-    <button id="pi-prompt-cancel" type="button">Cancel</button>
-    <button id="pi-prompt-ok" type="button">OK</button>
+    <button id="pi-prompt-cancel" type="button">取消</button>
+    <button id="pi-prompt-ok" type="button">确定</button>
   </div>
   <script>
     (function () {
@@ -1781,7 +1859,7 @@ function escapeHtml(value: string): string {
 async function probeCustomProviderModels(input: CustomProviderProbeInput): Promise<CustomProviderProbeResult> {
   const baseUrl = input.baseUrl?.trim();
   if (!baseUrl || !isValidHttpBaseUrl(baseUrl)) {
-    return { ok: false, error: "Base URL must start with http:// or https://" };
+    return { ok: false, error: "Base URL 必须以 http:// 或 https:// 开头" };
   }
   const target = `${baseUrl.replace(/\/+$/, "")}/models`;
   const apiKey = input.apiKey?.trim();
@@ -1792,12 +1870,12 @@ async function probeCustomProviderModels(input: CustomProviderProbeInput): Promi
       signal: AbortSignal.timeout(5000),
     });
     if (!response.ok) {
-      return { ok: false, error: `${response.status} ${response.statusText} from ${target}` };
+      return { ok: false, error: `${target} 返回 ${response.status} ${response.statusText}` };
     }
     const payload = (await response.json()) as unknown;
     const data = (payload as { data?: unknown }).data;
     if (!Array.isArray(data)) {
-      return { ok: false, error: `Response from ${target} is missing a "data" array` };
+      return { ok: false, error: `来自 ${target} 的响应缺少 "data" 数组` };
     }
     const models = data
       .map((entry) => {
@@ -1815,7 +1893,7 @@ async function probeCustomProviderModels(input: CustomProviderProbeInput): Promi
 
 function describeProbeError(error: unknown, target: string): string {
   if (error instanceof Error && error.name === "TimeoutError") {
-    return `Timed out after 5s contacting ${target}`;
+    return `连接 ${target} 超时（5 秒）`;
   }
   if (error instanceof Error) {
     return error.message;

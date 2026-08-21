@@ -72,7 +72,7 @@ test("new thread reuses drag-drop attachments and carries them into the transcri
     await expect(window.locator(".new-thread .composer-attachment--image")).toHaveCount(1);
     await expect(window.locator(".new-thread .composer-attachment--file")).toHaveCount(1);
 
-    await window.getByRole("button", { name: "Start thread" }).click();
+    await window.getByRole("button", { name: "开始对话" }).click();
 
     await expect(window.getByTestId("composer")).toBeVisible({ timeout: 15_000 });
     await expect
@@ -110,7 +110,7 @@ test("attach controls add mixed attachments in both composer flows", async () =>
     await createNamedThread(window, "Picker attachments");
 
     await stubNextOpenDialog(harness, [imagePath, filePath]);
-    await window.getByRole("button", { name: "Attach files" }).click();
+    await window.getByRole("button", { name: "附加文件" }).click();
     await expect(window.locator(".composer-attachment--image")).toHaveCount(1);
     await expect(window.locator(".composer-attachment--file")).toHaveCount(1);
 

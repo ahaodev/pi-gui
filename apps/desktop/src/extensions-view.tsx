@@ -63,9 +63,9 @@ export function ExtensionsView({
     return (
       <section className="canvas canvas--empty">
         <div className="empty-panel">
-          <div className="session-header__eyebrow">Extensions</div>
-          <h1>Select a workspace</h1>
-          <p>Extensions are discovered from the selected workspace plus your user-level extension directories.</p>
+          <div className="session-header__eyebrow">扩展</div>
+          <h1>选择工作区</h1>
+          <p>扩展来自所选工作区及用户级扩展目录。</p>
         </div>
       </section>
     );
@@ -76,24 +76,24 @@ export function ExtensionsView({
       <div className="conversation skills-view">
         <header className="view-header">
           <div>
-            <h1 className="view-header__title">Extensions</h1>
+            <h1 className="view-header__title">扩展</h1>
             <p className="view-header__body">
-              Inspect and manage first-class runtime extensions for this workspace.
+              查看并管理这个工作区的一等运行时扩展。
             </p>
           </div>
           <div className="view-header__actions">
             <button className="button button--secondary" type="button" onClick={onRefresh}>
               <RefreshIcon />
-              <span>Refresh</span>
+              <span>刷新</span>
             </button>
           </div>
         </header>
 
         <div className="skills-toolbar">
           <input
-            aria-label="Search extensions"
+            aria-label="搜索扩展"
             className="skills-search"
-            placeholder="Search extensions"
+            placeholder="搜索扩展"
             value={query}
             onChange={(event) => {
               setQuery(event.target.value);
@@ -104,7 +104,7 @@ export function ExtensionsView({
         <div className="skills-layout">
           <div className="skills-grid" data-testid="extensions-list">
             {filteredExtensions.length === 0 ? (
-              <ExtensionsEmptyState message="Refresh runtime discovery to load workspace and user-level extensions." />
+              <ExtensionsEmptyState message="刷新运行时发现，以加载工作区与用户级扩展。" />
             ) : (
               filteredExtensions.map((extension) => (
                 <button
@@ -118,7 +118,7 @@ export function ExtensionsView({
                   <span className="skill-card__title-row">
                     <span className="skill-card__title">{extension.displayName}</span>
                     <span className={`skill-card__badge ${extension.enabled ? "skill-card__badge--enabled" : ""}`}>
-                      {extension.enabled ? "Enabled" : "Disabled"}
+                      {extension.enabled ? "已启用" : "已禁用"}
                     </span>
                   </span>
                   <span className="skill-card__description">
@@ -126,9 +126,9 @@ export function ExtensionsView({
                   </span>
                   <span className="skill-card__meta">
                     <span>{extension.sourceInfo.source}</span>
-                    {extension.commands.length > 0 ? <span>{extension.commands.length} commands</span> : null}
-                    {extension.tools.length > 0 ? <span>{extension.tools.length} tools</span> : null}
-                    {extension.diagnostics.length > 0 ? <span>{extension.diagnostics.length} issues</span> : null}
+                    {extension.commands.length > 0 ? <span>{extension.commands.length} 个命令</span> : null}
+                    {extension.tools.length > 0 ? <span>{extension.tools.length} 个工具</span> : null}
+                    {extension.diagnostics.length > 0 ? <span>{extension.diagnostics.length} 个问题</span> : null}
                   </span>
                 </button>
               ))
@@ -144,44 +144,44 @@ export function ExtensionsView({
                     <div className="skill-detail__slash">{selectedExtension.sourceInfo.source}</div>
                   </div>
                   <span className={`skill-detail__status ${selectedExtension.enabled ? "skill-detail__status--enabled" : ""}`}>
-                    {selectedExtension.enabled ? "Enabled" : "Disabled"}
+                    {selectedExtension.enabled ? "已启用" : "已禁用"}
                   </span>
                 </div>
                 <div className="skill-detail__meta-list">
-                  <DetailItem label="Scope" value={extensionScopeLabel(selectedExtension)} />
-                  <DetailItem label="Origin" value={selectedExtension.sourceInfo.origin} />
-                  <DetailItem label="Path" value={selectedExtension.path} mono />
+                  <DetailItem label="作用域" value={extensionScopeLabel(selectedExtension)} />
+                  <DetailItem label="来源" value={selectedExtension.sourceInfo.origin} />
+                  <DetailItem label="路径" value={selectedExtension.path} mono />
                   {selectedExtension.sourceInfo.baseDir ? (
-                    <DetailItem label="Base dir" value={selectedExtension.sourceInfo.baseDir} mono />
+                    <DetailItem label="基础目录" value={selectedExtension.sourceInfo.baseDir} mono />
                   ) : null}
                 </div>
                 {selectedExtensionCanBeManaged ? (
                   <div className="skill-detail__actions">
                     <button className="button button--secondary" type="button" onClick={() => onOpenExtensionFolder(selectedExtension.path)}>
-                      Open folder
+                      打开文件夹
                     </button>
                     <button
                       className="button button--secondary"
                       type="button"
                       onClick={() => onToggleExtension(selectedExtension.path, !selectedExtension.enabled)}
                     >
-                      {selectedExtension.enabled ? "Disable" : "Enable"}
+                      {selectedExtension.enabled ? "禁用" : "启用"}
                     </button>
                   </div>
                 ) : null}
 
-                <ExtensionContributionSection title="Commands" items={selectedExtension.commands} emptyLabel="No commands contributed." />
+                <ExtensionContributionSection title="命令" items={selectedExtension.commands} emptyLabel="未提供命令。" />
                 <ExtensionCompatibilitySection
                   commands={selectedExtension.commands}
                   compatibilityRecords={selectedCompatibilityRecords}
                 />
-                <ExtensionContributionSection title="Tools" items={selectedExtension.tools} emptyLabel="No tools contributed." />
-                <ExtensionContributionSection title="Flags" items={selectedExtension.flags} emptyLabel="No flags contributed." />
-                <ExtensionContributionSection title="Shortcuts" items={selectedExtension.shortcuts} emptyLabel="No shortcuts contributed." />
+                <ExtensionContributionSection title="工具" items={selectedExtension.tools} emptyLabel="未提供工具。" />
+                <ExtensionContributionSection title="标志" items={selectedExtension.flags} emptyLabel="未提供标志。" />
+                <ExtensionContributionSection title="快捷键" items={selectedExtension.shortcuts} emptyLabel="未提供快捷键。" />
                 <ExtensionDiagnostics diagnostics={selectedExtension.diagnostics} />
               </>
             ) : (
-              <ExtensionsEmptyState message="Refresh runtime discovery to inspect extension metadata and diagnostics." />
+              <ExtensionsEmptyState message="刷新运行时发现，以查看扩展元数据与诊断信息。" />
             )}
           </div>
         </div>
@@ -248,7 +248,7 @@ function ExtensionDiagnostics({
   return (
     <div className="skill-detail__meta-list">
       <div>
-        <div className="skill-detail__meta-label">Diagnostics</div>
+        <div className="skill-detail__meta-label">诊断</div>
         {diagnostics.length > 0 ? (
           <div className="extension-detail__diagnostics">
             {diagnostics.map((diagnostic, index) => (
@@ -259,7 +259,7 @@ function ExtensionDiagnostics({
             ))}
           </div>
         ) : (
-          <div className="skill-detail__description">No diagnostics reported.</div>
+          <div className="skill-detail__description">无诊断信息。</div>
         )}
       </div>
     </div>
@@ -284,24 +284,24 @@ function ExtensionCompatibilitySection({
   return (
     <div className="skill-detail__meta-list">
       <div>
-        <div className="skill-detail__meta-label">Command compatibility</div>
+        <div className="skill-detail__meta-label">命令兼容性</div>
         <div className="skill-detail__description">
-          Learned from real GUI execution. Unlisted commands remain unknown until exercised.
+          来自真实 GUI 运行学习。未列出的命令在被执行前保持未知。
         </div>
         <div className="extension-detail__tokens">
           {supported.map((record) => (
             <span className="slash-menu__skill-badge" key={`supported:${record.commandName}`}>
-              {record.commandName} · GUI-compatible
+              {record.commandName} · GUI 兼容
             </span>
           ))}
           {terminalOnly.map((record) => (
             <span className="slash-menu__skill-badge slash-menu__skill-badge--warning" key={`terminal:${record.commandName}`}>
-              {record.commandName} · Terminal-only
+              {record.commandName} · 仅限终端
             </span>
           ))}
           {unknown.map((commandName) => (
             <span className="slash-menu__skill-badge" key={`unknown:${commandName}`}>
-              {commandName} · Unknown
+              {commandName} · 未知
             </span>
           ))}
         </div>
@@ -313,7 +313,7 @@ function ExtensionCompatibilitySection({
 function ExtensionsEmptyState({ message }: { readonly message: string }) {
   return (
     <div className="empty-state">
-      <h2>No extensions found</h2>
+      <h2>未找到扩展</h2>
       <p>{message}</p>
     </div>
   );

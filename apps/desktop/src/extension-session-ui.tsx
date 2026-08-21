@@ -6,7 +6,7 @@ import type { SessionExtensionDialogRecord, SessionExtensionUiStateRecord } from
 
 const ANSI_ESCAPE_PATTERN = /\u001B\[[0-?]*[ -/]*[@-~]/g;
 const DOCK_SEGMENT_SEPARATOR = "--------------------";
-const GENERIC_ACTIVE_LABEL = "Extension UI active";
+const GENERIC_ACTIVE_LABEL = "扩展 UI 已激活";
 
 interface ExtensionDockBlock {
   readonly key: string;
@@ -188,7 +188,7 @@ export function ExtensionDialog({
           <input
             autoFocus
             className="skills-search"
-            placeholder={dialog.placeholder ?? "Enter a value"}
+            placeholder={dialog.placeholder ?? "输入值"}
             value={draft}
             onChange={(event) => setDraft(event.target.value)}
           />
@@ -211,7 +211,7 @@ export function ExtensionDialog({
             type="button"
             onClick={respondWithCancel}
           >
-            Cancel
+            取消
           </button>
           {dialog.kind === "confirm" ? (
             <button
@@ -220,7 +220,7 @@ export function ExtensionDialog({
               type="button"
               onClick={respondWithSubmit}
             >
-              Confirm
+              确认
             </button>
           ) : null}
           {dialog.kind === "input" || dialog.kind === "editor" ? (
@@ -230,7 +230,7 @@ export function ExtensionDialog({
               type="button"
               onClick={respondWithSubmit}
             >
-              Submit
+              提交
             </button>
           ) : null}
         </div>

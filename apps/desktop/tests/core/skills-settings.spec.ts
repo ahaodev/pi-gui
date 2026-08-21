@@ -31,36 +31,36 @@ Use this skill when the user wants a short demo workflow.
     const window = await harness.firstWindow();
     await createNamedThread(window, "Skill test session");
 
-    await window.getByRole("button", { name: "Skills", exact: true }).click();
+    await window.getByRole("button", { name: "技能", exact: true }).click();
     await expect(window.locator(".skills-view")).toBeVisible();
     await expect(window.getByTestId("skills-list")).toContainText("Demo Skill");
     await window.getByRole("button", { name: /Demo Skill/i }).click();
     await expect(window.locator(".skill-detail")).toContainText("/skill:demo-skill");
 
-    await window.getByRole("button", { name: "Try", exact: true }).click();
-    await expect(window.getByRole("button", { name: "Threads", exact: true })).toBeVisible();
+    await window.getByRole("button", { name: "试用", exact: true }).click();
+    await expect(window.getByRole("button", { name: "对话", exact: true })).toBeVisible();
     await expect(window.getByTestId("composer")).toHaveValue("/skill:demo-skill ");
 
-    await window.getByRole("button", { name: "Settings", exact: true }).click();
+    await window.getByRole("button", { name: "设置", exact: true }).click();
     await expect(window.locator(".settings-view")).toBeVisible();
-    await expect(window.getByText("Notifications", { exact: true })).toBeVisible();
-    await expect(window.locator(".settings-view")).toContainText("Enable skill slash commands");
-    const skillCommandsToggle = window.getByRole("checkbox", { name: "Enable skill slash commands" });
+    await expect(window.getByText("通知", { exact: true })).toBeVisible();
+    await expect(window.locator(".settings-view")).toContainText("启用技能斜杠命令");
+    const skillCommandsToggle = window.getByRole("checkbox", { name: "启用技能斜杠命令" });
     await expect(skillCommandsToggle).toBeChecked();
     await skillCommandsToggle.click();
 
-    await window.getByRole("button", { name: "Back to app", exact: true }).click();
+    await window.getByRole("button", { name: "返回应用", exact: true }).click();
     const composer = window.getByTestId("composer");
     await composer.fill("/skill");
     await expect(window.getByTestId("slash-menu")).toHaveCount(0);
 
-    await window.getByRole("button", { name: "Settings", exact: true }).click();
+    await window.getByRole("button", { name: "设置", exact: true }).click();
     await expect(skillCommandsToggle).not.toBeChecked();
     await skillCommandsToggle.click();
-    await window.getByRole("button", { name: "Back to app", exact: true }).click();
+    await window.getByRole("button", { name: "返回应用", exact: true }).click();
     await composer.fill("/skill");
     const slashMenu = window.getByTestId("slash-menu");
-    await expect(slashMenu).toContainText("Runtime Commands");
+    await expect(slashMenu).toContainText("运行时命令");
     await expect(slashMenu).toContainText("Demo Skill");
   } finally {
     await harness.close();

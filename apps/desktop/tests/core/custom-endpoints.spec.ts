@@ -20,8 +20,8 @@ async function readModelsJson(agentDir: string): Promise<Record<string, unknown>
 async function openProvidersSettings(window: Awaited<ReturnType<Awaited<ReturnType<typeof launchDesktop>>["firstWindow"]>>) {
   await window.keyboard.press(desktopShortcut(","));
   await expect(window.getByTestId("settings-surface")).toBeVisible();
-  await window.getByRole("button", { name: "Providers", exact: true }).click();
-  await expect(window.locator(".view-header__title")).toHaveText("Providers");
+  await window.getByRole("button", { name: "供应商", exact: true }).click();
+  await expect(window.locator(".view-header__title")).toHaveText("供应商");
 }
 
 test("settings lets the user add, edit, and delete an OpenAI-compatible custom endpoint", async () => {
@@ -45,20 +45,20 @@ test("settings lets the user add, edit, and delete an OpenAI-compatible custom e
     await openProvidersSettings(window);
 
     const customEndpoints = window.locator(".settings-section", {
-      has: window.locator(".settings-section__title", { hasText: "Custom endpoints" }),
+      has: window.locator(".settings-section__title", { hasText: "自定义端点" }),
     });
-    await expect(customEndpoints).toContainText("No custom endpoints yet.");
-    await customEndpoints.getByRole("button", { name: "Add endpoint", exact: true }).click();
+    await expect(customEndpoints).toContainText("还没有自定义端点。");
+    await customEndpoints.getByRole("button", { name: "添加端点", exact: true }).click();
 
     const dialog = window.getByTestId("custom-endpoint-dialog");
     await expect(dialog).toBeVisible();
 
-    await dialog.getByLabel("Provider ID").fill("ollama-local");
+    await dialog.getByLabel("供应商 ID").fill("ollama-local");
     await dialog.getByLabel("Base URL").fill("http://localhost:11434/v1");
-    await dialog.getByLabel("Add model ID manually").fill("llama3.1");
-    await dialog.getByRole("button", { name: "Add", exact: true }).click();
+    await dialog.getByLabel("手动添加模型 ID").fill("llama3.1");
+    await dialog.getByRole("button", { name: "添加", exact: true }).click();
 
-    await dialog.getByRole("button", { name: "Add endpoint", exact: true }).click();
+    await dialog.getByRole("button", { name: "添加端点", exact: true }).click();
     await expect(dialog).toHaveCount(0);
 
     const entryRow = customEndpoints.locator(".settings-row", {
@@ -85,13 +85,13 @@ test("settings lets the user add, edit, and delete an OpenAI-compatible custom e
     }).toBe(true);
 
     // Edit flow: change base URL.
-    await entryRow.getByRole("button", { name: "Edit", exact: true }).click();
+    await entryRow.getByRole("button", { name: "编辑", exact: true }).click();
     const editDialog = window.getByTestId("custom-endpoint-dialog");
     await expect(editDialog).toBeVisible();
-    await expect(editDialog.getByLabel("Provider ID")).toBeDisabled();
+    await expect(editDialog.getByLabel("供应商 ID")).toBeDisabled();
     const baseUrlInput = editDialog.getByLabel("Base URL");
     await baseUrlInput.fill("http://localhost:8000/v1");
-    await editDialog.getByRole("button", { name: "Save changes", exact: true }).click();
+    await editDialog.getByRole("button", { name: "保存修改", exact: true }).click();
     await expect(editDialog).toHaveCount(0);
     await expect(entryRow).toContainText("http://localhost:8000/v1");
 
@@ -102,8 +102,8 @@ test("settings lets the user add, edit, and delete an OpenAI-compatible custom e
     });
 
     // Delete flow.
-    await entryRow.getByRole("button", { name: "Remove", exact: true }).click();
-    await expect(customEndpoints).toContainText("No custom endpoints yet.");
+    await entryRow.getByRole("button", { name: "移除", exact: true }).click();
+    await expect(customEndpoints).toContainText("还没有自定义端点。");
 
     const afterDelete = await readModelsJson(agentDir);
     const afterDeleteProviders = (afterDelete.providers as Record<string, unknown>) ?? {};
@@ -170,7 +170,7 @@ test("custom endpoints keep legacy managed entries separate from built-in overri
     await openProvidersSettings(window);
 
     const customEndpoints = window.locator(".settings-section", {
-      has: window.locator(".settings-section__title", { hasText: "Custom endpoints" }),
+      has: window.locator(".settings-section__title", { hasText: "自定义端点" }),
     });
     await expect(customEndpoints).toContainText("legacy-local");
     await expect(
@@ -211,8 +211,8 @@ test("custom endpoints keep legacy managed entries separate from built-in overri
     const legacyRow = customEndpoints.locator(".settings-row", {
       has: window.locator(".settings-row__title", { hasText: /^legacy-local$/ }),
     });
-    await legacyRow.getByRole("button", { name: "Remove", exact: true }).click();
-    await expect(customEndpoints).toContainText("No custom endpoints yet.");
+    await legacyRow.getByRole("button", { name: "移除", exact: true }).click();
+    await expect(customEndpoints).toContainText("还没有自定义端点。");
 
     const afterLegacyDelete = await readModelsJson(agentDir);
     const providers = afterLegacyDelete.providers as Record<string, unknown>;
@@ -242,33 +242,33 @@ test("custom endpoint dialog blocks colliding provider IDs and invalid base URLs
     await openProvidersSettings(window);
 
     const customEndpoints = window.locator(".settings-section", {
-      has: window.locator(".settings-section__title", { hasText: "Custom endpoints" }),
+      has: window.locator(".settings-section__title", { hasText: "自定义端点" }),
     });
-    await customEndpoints.getByRole("button", { name: "Add endpoint", exact: true }).click();
+    await customEndpoints.getByRole("button", { name: "添加端点", exact: true }).click();
 
     const dialog = window.getByTestId("custom-endpoint-dialog");
     await expect(dialog).toBeVisible();
 
     // Collides with the seeded openai provider.
-    await dialog.getByLabel("Provider ID").fill("openai");
-    await expect(dialog).toContainText("already in use");
-    const saveButton = dialog.getByRole("button", { name: "Add endpoint", exact: true });
+    await dialog.getByLabel("供应商 ID").fill("openai");
+    await expect(dialog).toContainText("已被占用");
+    const saveButton = dialog.getByRole("button", { name: "添加端点", exact: true });
     await expect(saveButton).toBeDisabled();
 
     // Switch to a unique ID so ID validation no longer blocks save.
-    await dialog.getByLabel("Provider ID").fill("my-endpoint");
+    await dialog.getByLabel("供应商 ID").fill("my-endpoint");
     await dialog.getByLabel("Base URL").fill("ftp://not-allowed");
-    await dialog.getByLabel("Add model ID manually").fill("test-model");
-    await dialog.getByRole("button", { name: "Add", exact: true }).click();
+    await dialog.getByLabel("手动添加模型 ID").fill("test-model");
+    await dialog.getByRole("button", { name: "添加", exact: true }).click();
 
     await saveButton.click();
-    await expect(dialog).toContainText("Base URL must start with http:// or https://");
+    await expect(dialog).toContainText("基础 URL 必须以 http:// 或 https:// 开头");
     await expect(dialog).toBeVisible();
 
     // ESC closes the dialog without saving.
     await dialog.press("Escape");
     await expect(dialog).toHaveCount(0);
-    await expect(customEndpoints).toContainText("No custom endpoints yet.");
+    await expect(customEndpoints).toContainText("还没有自定义端点。");
   } finally {
     await harness.close();
   }

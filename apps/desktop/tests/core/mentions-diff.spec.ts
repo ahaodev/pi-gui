@@ -36,7 +36,7 @@ test("shows workspace file mentions from the composer and inserts the selected f
 
     const mentionMenu = window.getByTestId("mention-menu");
     await expect(mentionMenu).toBeVisible();
-    await expect(mentionMenu.locator(".mention-menu__section-title")).toHaveText(["Extensions", "Files"]);
+    await expect(mentionMenu.locator(".mention-menu__section-title")).toHaveText(["扩展", "文件"]);
     await expect(mentionMenu.locator(".mention-menu__item")).toHaveCount(3);
 
     await composer.pressSequentially("README");
@@ -80,9 +80,9 @@ test("toggles the diff panel from the keyboard shortcut and renders changed file
 
     const topbarActions = window.locator(".topbar__actions");
     await expect(topbarActions.locator(".topbar__icon")).toHaveCount(4);
-    await expect(topbarActions.getByLabel("Toggle terminal")).toBeVisible();
-    await expect(topbarActions.getByLabel("Toggle changes")).toBeVisible();
-    await expect(topbarActions.getByLabel("Toggle files")).toBeVisible();
+    await expect(topbarActions.getByLabel("切换终端")).toBeVisible();
+    await expect(topbarActions.getByLabel("切换变更")).toBeVisible();
+    await expect(topbarActions.getByLabel("切换文件")).toBeVisible();
     await expect(topbarActions.getByLabel(/prompt navigation/i)).toBeVisible();
     await expect(topbarActions.getByLabel(/Evidence|Workbench|Open folder/i)).toHaveCount(0);
 
@@ -91,7 +91,7 @@ test("toggles the diff panel from the keyboard shortcut and renders changed file
 
     await window.keyboard.press(desktopShortcut("D"));
     await expect(diffPanel).toBeVisible();
-    await expect(diffPanel.locator(".diff-panel__title")).toContainText("Changes");
+    await expect(diffPanel.locator(".diff-panel__title")).toContainText("变更");
     await expect(diffPanel.locator(".diff-panel__file-name")).toContainText("README.md");
 
     const mainBox = await window.locator(".main").boundingBox();

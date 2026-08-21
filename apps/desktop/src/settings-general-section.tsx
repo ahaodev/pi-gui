@@ -35,13 +35,13 @@ export function SettingsGeneralSection({
 
   return (
     <>
-      <SettingsGroup title="General">
+      <SettingsGroup title="通用">
         <SettingsInfoRow
-          label="Connected providers"
-          value={connectedCount > 0 ? String(connectedCount) : "None"}
+          label="已连接的供应商"
+          value={connectedCount > 0 ? String(connectedCount) : "无"}
         />
-        <SettingsInfoRow label="Discovered skills" value={String(runtime?.skills.length ?? 0)} />
-        <SettingsRow title="Model settings scope" description="Choose whether model defaults apply everywhere or per repo.">
+        <SettingsInfoRow label="已发现的技能" value={String(runtime?.skills.length ?? 0)} />
+        <SettingsRow title="模型设置范围" description="选择模型默认值应用于全局还是按仓库。">
           <div className="settings-pill-row">
             <button
               className={`settings-pill${modelSettingsScopeMode === "app-global" ? " settings-pill--active" : ""}`}
@@ -49,7 +49,7 @@ export function SettingsGeneralSection({
               aria-pressed={modelSettingsScopeMode === "app-global"}
               onClick={() => onSetModelSettingsScopeMode("app-global")}
             >
-              App global
+              应用全局
             </button>
             <button
               className={`settings-pill${modelSettingsScopeMode === "per-repo" ? " settings-pill--active" : ""}`}
@@ -57,21 +57,21 @@ export function SettingsGeneralSection({
               aria-pressed={modelSettingsScopeMode === "per-repo"}
               onClick={() => onSetModelSettingsScopeMode("per-repo")}
             >
-              Per repo
+              按仓库
             </button>
           </div>
         </SettingsRow>
-        <SettingsRow title="Enable skill slash commands" description="Keep skill slash commands available in the composer.">
+        <SettingsRow title="启用技能斜杠命令" description="在输入框中保持技能斜杠命令可用。">
           <input
-            aria-label="Enable skill slash commands"
+            aria-label="启用技能斜杠命令"
             checked={runtime?.settings.enableSkillCommands ?? true}
             type="checkbox"
             onChange={(event) => onToggleSkillCommands(event.target.checked)}
           />
         </SettingsRow>
-        <SettingsRow title="Shell of integrated terminal" description="Leave blank to use your default login shell.">
+        <SettingsRow title="集成终端的 Shell" description="留空则使用默认登录 Shell。">
           <input
-            aria-label="Shell of integrated terminal"
+            aria-label="集成终端的 Shell"
             className="settings-text-input"
             placeholder="/bin/zsh"
             spellCheck={false}
@@ -88,13 +88,13 @@ export function SettingsGeneralSection({
         </SettingsRow>
       </SettingsGroup>
 
-      <SettingsGroup title="Shortcuts">
-        <SettingsInfoRow label="New thread" value="Cmd+Shift+O" />
-        <SettingsInfoRow label="Open settings" value="Cmd+," />
-        <SettingsInfoRow label="Toggle terminal" value="Cmd+J" />
-        <SettingsInfoRow label="New terminal tab" value="Cmd+T" />
-        <SettingsInfoRow label="Send message" value="Enter" />
-        <SettingsInfoRow label="New line" value="Shift+Enter" />
+      <SettingsGroup title="快捷键">
+        <SettingsInfoRow label="新建对话" value="Cmd+Shift+O" />
+        <SettingsInfoRow label="打开设置" value="Cmd+," />
+        <SettingsInfoRow label="切换终端" value="Cmd+J" />
+        <SettingsInfoRow label="新建终端标签" value="Cmd+T" />
+        <SettingsInfoRow label="发送消息" value="Enter" />
+        <SettingsInfoRow label="换行" value="Shift+Enter" />
       </SettingsGroup>
     </>
   );

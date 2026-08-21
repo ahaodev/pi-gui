@@ -65,7 +65,7 @@ export async function renameWorkspace(
   await store.initialize();
   const nextName = displayName.trim();
   if (!nextName) {
-    return store.withError("Workspace name cannot be empty.");
+    return store.withError("工作区名称不能为空。");
   }
 
   return store.withErrorHandling(async () => {
@@ -129,13 +129,13 @@ export async function renameSession(
   await store.initialize();
   const nextTitle = title.trim();
   if (!nextTitle) {
-    return store.withError("Thread title cannot be empty.");
+    return store.withError("对话标题不能为空。");
   }
 
   return store.withErrorHandling(async () => {
     const sessionRef = toSessionRef(target);
     if (!store.sessionFromState(sessionRef)) {
-      return store.withError(`Unknown session: ${target.workspaceId}:${target.sessionId}`);
+      return store.withError(`未知会话：${target.workspaceId}:${target.sessionId}`);
     }
     store.clearPendingAutoTitle(sessionRef);
     await store.driver.renameSession(sessionRef, nextTitle);
@@ -238,7 +238,7 @@ export async function createSession(store: AppStoreInternals, input: CreateSessi
   await store.initialize();
   const ws = store.workspaceRefFromState(input.workspaceId);
   if (!ws) {
-    return store.withError(`Unknown workspace: ${input.workspaceId}`);
+    return store.withError(`未知工作区：${input.workspaceId}`);
   }
 
   return store.withErrorHandling(async () => {

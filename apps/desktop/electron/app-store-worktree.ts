@@ -22,7 +22,7 @@ export async function createWorktree(store: AppStoreInternals, input: CreateWork
   await store.initialize();
   const rootWorkspace = store.workspaceRefFromState(input.workspaceId);
   if (!rootWorkspace) {
-    return store.withError(`Unknown workspace: ${input.workspaceId}`);
+    return store.withError(`未知工作区：${input.workspaceId}`);
   }
 
   return store.withErrorHandling(async () => {
@@ -60,7 +60,7 @@ export async function removeWorktree(store: AppStoreInternals, input: RemoveWork
   await store.initialize();
   const rootWorkspace = store.workspaceRefFromState(input.workspaceId);
   if (!rootWorkspace) {
-    return store.withError(`Unknown workspace: ${input.workspaceId}`);
+    return store.withError(`未知工作区：${input.workspaceId}`);
   }
 
   return store.withErrorHandling(async () => {
@@ -88,7 +88,7 @@ export async function startThread(store: AppStoreInternals, input: StartThreadIn
   await store.initialize();
   const rootWorkspace = store.workspaceRefFromState(input.rootWorkspaceId);
   if (!rootWorkspace) {
-    return store.withError(`Unknown workspace: ${input.rootWorkspaceId}`);
+    return store.withError(`未知工作区：${input.rootWorkspaceId}`);
   }
 
   return store.withErrorHandling(async () => {
@@ -189,7 +189,7 @@ export async function forkThread(store: AppStoreInternals, input: ForkThreadInpu
   await store.initialize();
   const sourceWorkspace = store.workspaceRefFromState(input.sourceWorkspaceId);
   if (!sourceWorkspace) {
-    return store.withError(`Unknown workspace: ${input.sourceWorkspaceId}`);
+    return store.withError(`未知工作区：${input.sourceWorkspaceId}`);
   }
 
   return store.withErrorHandling(async () => {
@@ -210,7 +210,7 @@ export async function forkThread(store: AppStoreInternals, input: ForkThreadInpu
     if (input.environment === "worktree") {
       const rootWorkspace = store.workspaceRefFromState(input.rootWorkspaceId);
       if (!rootWorkspace) {
-        return store.withError(`Unknown workspace: ${input.rootWorkspaceId}`);
+        return store.withError(`未知工作区：${input.rootWorkspaceId}`);
       }
       const worktreeOptions = buildWorktreeOptions(
         store,
@@ -376,7 +376,7 @@ export function buildWorktreeOptions(
     : "wt";
   const folderName = `${baseLabel}-${suffix}`;
   const repoName = clampSlug(slugify(basename(workspace.path) || "repo"), 20);
-  const displayName = preferredTitle || `Worktree ${suffix}`;
+  const displayName = preferredTitle || `工作树 ${suffix}`;
   return {
     path: join(store.worktreeRoot, repoName, folderName),
     displayName,

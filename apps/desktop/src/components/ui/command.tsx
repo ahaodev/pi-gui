@@ -28,7 +28,7 @@ function Command({
 }
 
 function CommandDialog({
-  title = "Command Palette",
+  title = "命令面板",
   description = "搜索要运行的命令…",
   children,
   className,

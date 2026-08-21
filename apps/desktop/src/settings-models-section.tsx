@@ -63,7 +63,7 @@ export function SettingsModelsSection({
   return (
     <>
       <SettingsGroup>
-        <SettingsRow title="Default model" description="Choose the default model for new sessions.">
+        <SettingsRow title="默认模型" description="选择新会话的默认模型。">
           <select
             className="settings-select"
             value={
@@ -79,7 +79,7 @@ export function SettingsModelsSection({
               }
             }}
           >
-            <option value="">Choose a model</option>
+            <option value="">选择模型</option>
             {enabledAvailableModels.map((model) => (
               <option key={`${model.providerId}:${model.modelId}`} value={`${model.providerId}:${model.modelId}`}>
                 {model.providerName} · {model.label}
@@ -87,7 +87,7 @@ export function SettingsModelsSection({
             ))}
           </select>
         </SettingsRow>
-        <SettingsRow title="Reasoning" description="Set the default reasoning level for new sessions.">
+        <SettingsRow title="推理" description="设置新会话的默认推理等级。">
           <div className="settings-pill-row">
             {THINKING_LEVELS.map((level) => (
               <button
@@ -103,7 +103,7 @@ export function SettingsModelsSection({
         </SettingsRow>
       </SettingsGroup>
 
-      <SettingsGroup title="Enabled models" description="Choose which models appear in pickers throughout the app.">
+      <SettingsGroup title="已启用模型" description="选择在应用各处选取器中显示哪些模型。">
         <div className="settings-row">
           {enabledAvailablePatterns.length > 0 ? (
             <div className="settings-pill-row">
@@ -116,33 +116,33 @@ export function SettingsModelsSection({
           ) : (
             <span className="settings-hint">
               {availableModels.length === 0
-                ? "No connected models available yet."
-                : "No available models are currently enabled."}
+                ? "暂无已连接的可用模型。"
+                : "当前没有已启用的可用模型。"}
             </span>
           )}
         </div>
         {allImplicitlyEnabled && availableModels.length > 0 ? (
           <div className="settings-row">
-            <span className="settings-hint">All available models enabled by default.</span>
+            <span className="settings-hint">默认启用所有可用模型。</span>
           </div>
         ) : null}
         {!defaultIsEnabled && defaultProvider && defaultModelId ? (
           <div className="settings-row">
             <span className="settings-warning">
-              Your default model ({defaultProvider}:{defaultModelId}) is not enabled. Choose a new default above.
+              你的默认模型（{defaultProvider}:{defaultModelId}）未启用。请在上方选择新的默认模型。
             </span>
           </div>
         ) : null}
         <details className="settings-disclosure">
           <summary className="settings-disclosure__summary">
-            <span>Edit enabled models</span>
+            <span>编辑已启用模型</span>
             <span>{filteredScopedModels.length}</span>
           </summary>
           <div className="settings-disclosure__body">
             <input
-              aria-label="Search enabled models"
+              aria-label="搜索已启用模型"
               className="settings-search"
-              placeholder="Search enabled models"
+              placeholder="搜索已启用模型"
               value={scopedQuery}
               onChange={(event) => setScopedQuery(event.target.value)}
             />
@@ -156,7 +156,7 @@ export function SettingsModelsSection({
                     <input
                       checked={enabled}
                       disabled={isLast}
-                      title={isLast ? "At least one model must be enabled" : undefined}
+                      title={isLast ? "至少需要启用一个模型" : undefined}
                       type="checkbox"
                       onChange={(event) => togglePattern(pattern, event.target.checked)}
                     />
@@ -172,17 +172,17 @@ export function SettingsModelsSection({
         </details>
       </SettingsGroup>
 
-      <SettingsGroup title="All models" description="Browse the full model catalog. Enable models above to use them.">
+      <SettingsGroup title="全部模型" description="浏览完整模型目录。在上方启用模型后即可使用。">
         <details className="settings-disclosure">
           <summary className="settings-disclosure__summary">
-            <span>Browse full model inventory</span>
+            <span>浏览完整模型列表</span>
             <span>{filteredModels.length}</span>
           </summary>
           <div className="settings-disclosure__body">
             <input
-              aria-label="Search models"
+              aria-label="搜索模型"
               className="settings-search"
-              placeholder="Search models"
+              placeholder="搜索模型"
               value={modelQuery}
               onChange={(event) => setModelQuery(event.target.value)}
             />
@@ -199,20 +199,20 @@ export function SettingsModelsSection({
                     <span className="settings-option__title">{model.providerName} · {model.label}</span>
                     <span className="settings-option__meta">
                       {model.providerId}:{model.modelId}
-                      {model.reasoning ? " · reasoning" : ""}
-                      {model.supportsImages ? " · images" : ""}
-                      {!model.available ? " · not logged in" : ""}
+                      {model.reasoning ? " · 支持推理" : ""}
+                      {model.supportsImages ? " · 支持图像" : ""}
+                      {!model.available ? " · 未登录" : ""}
                     </span>
                     {model.available ? (
                       <label className="settings-toggle settings-toggle--inline">
                         <input
                           checked={enabled}
                           disabled={isLast}
-                          title={isLast ? "At least one model must be enabled" : undefined}
+                          title={isLast ? "至少需要启用一个模型" : undefined}
                           type="checkbox"
                           onChange={(event) => togglePattern(pattern, event.target.checked)}
                         />
-                        <span className="sr-only">Enable</span>
+                        <span className="sr-only">启用</span>
                       </label>
                     ) : null}
                   </div>

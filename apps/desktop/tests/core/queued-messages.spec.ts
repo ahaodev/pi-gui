@@ -134,12 +134,12 @@ test("shows queued messages while running and preserves attachments through inli
     const queuedCard = window.getByTestId("queued-composer-message").first();
     await expect(queuedCard.locator(".queued-composer-message__mode")).toHaveCount(0);
     await expect(queuedCard.locator(".queued-composer-message__header .queued-composer-message__text")).toContainText("Inspect the queued screenshot");
-    await queuedCard.getByRole("button", { name: "Edit" }).click();
-    await expect(window.getByTestId("queued-composer-editing")).toContainText("Editing queued message");
+    await queuedCard.getByRole("button", { name: "编辑" }).click();
+    await expect(window.getByTestId("queued-composer-editing")).toContainText("正在编辑排队消息");
     await expect(composer).toHaveValue("Inspect the queued screenshot");
     await expect(window.locator(".composer-attachment__name")).toContainText("queued-image.png");
 
-    await window.getByRole("button", { name: "Cancel" }).click();
+    await window.getByRole("button", { name: "取消" }).click();
     await expect(composer).toHaveValue("local scratch draft");
     await expect(window.locator(".composer-attachment__name")).toContainText("local-draft.png");
   } finally {
@@ -185,7 +185,7 @@ test("delineates queued follow-ups and submitted steers in the timeline", async 
     await window
       .getByTestId("queued-composer-message")
       .filter({ hasText: queuedSteer.text })
-      .getByRole("button", { name: "Steer", exact: true })
+      .getByRole("button", { name: "引导", exact: true })
       .click();
     await expect(window.getByTestId("queued-composer-message").filter({ hasText: queuedSteer.text })).toHaveCount(0);
     await expect(window.getByTestId("transcript")).toContainText(queuedSteer.text);

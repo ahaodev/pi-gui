@@ -288,7 +288,7 @@ export function ConversationTimeline({
       )}
       {showJumpToLatest ? (
         <button className="timeline-jump" data-testid="timeline-jump" type="button" onClick={onJumpToLatest}>
-          New activity below
+          下方有新动态
         </button>
       ) : null}
     </div>
@@ -313,8 +313,8 @@ function TimelineContextRail({
   readonly onSelect: (messageId: string) => void;
 }) {
   return (
-    <nav className="timeline-context-rail" data-testid="timeline-context-rail" aria-label="Prompts in this thread">
-      <div className="timeline-context-rail__title">Prompts</div>
+    <nav className="timeline-context-rail" data-testid="timeline-context-rail" aria-label="本对话中的提示词">
+      <div className="timeline-context-rail__title">提示词</div>
       <ol className="timeline-context-rail__list">
         {prompts.map((prompt) => (
           <li key={prompt.id}>
@@ -337,7 +337,7 @@ function TimelineContextRail({
 
 function buildPromptPreview(text: string): string {
   const firstLine = text.split("\n").map((line) => line.trim()).find((line) => line.length > 0) ?? "";
-  return firstLine.length > 80 ? `${firstLine.slice(0, 80)}…` : firstLine || "Prompt";
+  return firstLine.length > 80 ? `${firstLine.slice(0, 80)}…` : firstLine || "提示词";
 }
 
 function cssEscape(value: string): string {
@@ -365,7 +365,7 @@ function TranscriptSkeleton() {
         <span className="skeleton-line" style={{ width: "80%" }} />
         <span className="skeleton-line" style={{ width: "72%" }} />
       </div>
-      <span className="sr-only">Loading transcript…</span>
+      <span className="sr-only">正在加载对话记录……</span>
     </div>
   );
 }
@@ -376,8 +376,8 @@ function TranscriptEmptyState() {
       <span className="transcript-empty__glyph" aria-hidden="true">
         <SparkIcon />
       </span>
-      <p className="transcript-empty__title">Start the conversation</p>
-      <p className="transcript-empty__hint">Send a prompt below to begin this session.</p>
+      <p className="transcript-empty__title">开始对话</p>
+      <p className="transcript-empty__hint">在下方发送消息以开始本会话。</p>
     </div>
   );
 }

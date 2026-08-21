@@ -6,7 +6,14 @@ export function extensionSourceSummary(extension: RuntimeExtensionRecord): strin
 
 export function extensionScopeLabel(extension: RuntimeExtensionRecord): string {
   if (extension.sourceInfo.source === "builtin" && extension.sourceInfo.origin === "top-level") {
-    return "Built-in";
+    return "内置";
   }
-  return extension.sourceInfo.scope;
+  switch (extension.sourceInfo.scope) {
+    case "project":
+      return "项目";
+    case "user":
+      return "用户";
+    default:
+      return extension.sourceInfo.scope;
+  }
 }

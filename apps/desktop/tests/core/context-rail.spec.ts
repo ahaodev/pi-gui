@@ -89,7 +89,7 @@ test("context rail lists prompts and scrolls to a turn; timing markers render", 
     await expect(window.getByTestId("transcript")).toBeVisible({ timeout: 15_000 });
 
     // Timing markers derived from the 8s prompt->answer spans.
-    await expect(window.getByTestId("timeline-turn-marker").first()).toContainText("Worked for 8s", {
+    await expect(window.getByTestId("timeline-turn-marker").first()).toContainText("用时 8s", {
       timeout: 10_000,
     });
 
@@ -144,7 +144,7 @@ test("context rail lists prompts and scrolls to a turn; timing markers render", 
 
     // The topbar toggle hides the rail even on this wide viewport, while the
     // transcript keeps its 768px measure.
-    await window.getByRole("button", { name: "Hide prompt navigation" }).click();
+    await window.getByRole("button", { name: "隐藏提示导航" }).click();
     await expect(rail).toBeHidden();
     const measureAfterHide = await window
       .getByTestId("transcript")
@@ -167,7 +167,7 @@ test("context rail lists prompts and scrolls to a turn; timing markers render", 
     await expect(window.getByTestId("timeline-context-rail")).toBeHidden();
 
     // Toggling back on restores it.
-    await window.getByRole("button", { name: "Show prompt navigation" }).click();
+    await window.getByRole("button", { name: "显示提示导航" }).click();
     await expect(window.getByTestId("timeline-context-rail")).toBeVisible();
   } finally {
     await rerun.close();

@@ -17,9 +17,9 @@ test("submits a real prompt and shows the response in the transcript", async () 
   try {
     const window = await harness.firstWindow();
 
-    await window.getByRole("complementary").getByRole("button", { name: "New thread" }).click();
-    await window.getByLabel("New thread prompt").fill("Reply with only the uppercase word READY.");
-    await window.getByRole("button", { name: "Start thread" }).click();
+    await window.getByRole("complementary").getByRole("button", { name: "新建对话" }).click();
+    await window.getByLabel("新建对话输入框").fill("Reply with only the uppercase word READY.");
+    await window.getByRole("button", { name: "开始对话" }).click();
 
     await expect(window.getByTestId("transcript")).toContainText(/READY/, { timeout: 150_000 });
 

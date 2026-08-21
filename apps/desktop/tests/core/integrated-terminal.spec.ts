@@ -27,12 +27,12 @@ test("opens a workspace terminal with persistent output, tabs, and takeover cont
     await waitForWorkspaceByPath(window, workspacePath);
     await createNamedThread(window, "Terminal host thread");
 
-    await window.getByLabel("Toggle terminal").hover();
-    const terminalTooltip = window.locator(".topbar__tooltip", { hasText: "Toggle terminal" });
-    await expect(terminalTooltip).toContainText("Toggle terminal");
+    await window.getByLabel("切换终端").hover();
+    const terminalTooltip = window.locator(".topbar__tooltip", { hasText: "切换终端" });
+    await expect(terminalTooltip).toContainText("切换终端");
     await expect(terminalTooltip.locator("kbd")).toHaveText(/⌘J|Ctrl\+J/);
 
-    await window.getByLabel("Toggle terminal").click();
+    await window.getByLabel("切换终端").click();
     const terminal = window.getByTestId("integrated-terminal");
     await expect(terminal).toBeVisible();
     await expect(window.getByTestId("terminal-tab")).toHaveCount(1);
@@ -74,20 +74,20 @@ test("opens a workspace terminal with persistent output, tabs, and takeover cont
     await window.keyboard.press(desktopShortcut("V"));
     await expect.poll(async () => (await getDesktopState(window)).composerAttachments.length).toBe(0);
 
-    await window.getByLabel("New terminal").click();
+    await window.getByLabel("新建终端").click();
     await expect(window.getByTestId("terminal-tab")).toHaveCount(2);
     await window.getByTestId("integrated-terminal").locator(".xterm").click();
     await window.keyboard.press(desktopShortcut("T"));
     await expect(window.getByTestId("terminal-tab")).toHaveCount(3);
 
     const beforeTakeover = await window.getByTestId("integrated-terminal").boundingBox();
-    await window.getByLabel("Maximize terminal").click();
+    await window.getByLabel("最大化终端").click();
     await expect(window.getByTestId("integrated-terminal")).toHaveClass(/terminal-panel--takeover/);
     await expect(window.getByTestId("composer")).toHaveCount(0);
     const takeover = await window.getByTestId("integrated-terminal").boundingBox();
     expect(takeover?.height ?? 0).toBeGreaterThan(beforeTakeover?.height ?? 0);
 
-    await window.getByLabel("Restore terminal").click();
+    await window.getByLabel("还原终端").click();
     await expect(window.getByTestId("integrated-terminal")).not.toHaveClass(/terminal-panel--takeover/);
     await expect(window.getByTestId("composer")).toBeVisible();
 
@@ -112,8 +112,8 @@ test("persists the integrated terminal shell setting", async () => {
 
     await window.keyboard.press(desktopShortcut(","));
     await expect(window.getByTestId("settings-surface")).toBeVisible();
-    await window.getByRole("button", { name: "General", exact: true }).click();
-    const shellInput = window.getByLabel("Shell of integrated terminal");
+    await window.getByRole("button", { name: "通用", exact: true }).click();
+    const shellInput = window.getByLabel("集成终端的 Shell");
     await shellInput.fill("/bin/zsh");
     await shellInput.press("Enter");
     await expect.poll(async () => (await getDesktopState(window)).integratedTerminalShell).toBe("/bin/zsh");
@@ -135,7 +135,7 @@ test("pastes clipboard text into the integrated terminal once", async () => {
     await waitForWorkspaceByPath(window, workspacePath);
     await createNamedThread(window, "Terminal paste thread");
 
-    await window.getByLabel("Toggle terminal").click();
+    await window.getByLabel("切换终端").click();
     const terminal = window.getByTestId("integrated-terminal");
     await expect(terminal).toBeVisible();
     await terminal.locator(".xterm").click();
@@ -171,7 +171,7 @@ test("writes an oversized terminal paste in chunks instead of dropping it", asyn
     await waitForWorkspaceByPath(window, workspacePath);
     await createNamedThread(window, "Terminal large paste thread");
 
-    await window.getByLabel("Toggle terminal").click();
+    await window.getByLabel("切换终端").click();
     const terminal = window.getByTestId("integrated-terminal");
     await expect(terminal).toBeVisible();
     await terminal.locator(".xterm").click();

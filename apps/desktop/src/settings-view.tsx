@@ -82,9 +82,9 @@ export function SettingsView({
     return (
       <section className="canvas canvas--empty">
         <div className="empty-panel">
-          <div className="session-header__eyebrow">Settings</div>
-          <h1>Select a workspace</h1>
-          <p>Provider and skill settings need a selected workspace.</p>
+          <div className="session-header__eyebrow">设置</div>
+          <h1>选择工作区</h1>
+          <p>供应商与技能设置需要选择工作区。</p>
         </div>
       </section>
     );
@@ -97,7 +97,7 @@ export function SettingsView({
           <div>
             <h1 className="view-header__title">{sectionTitle(section)}</h1>
             <p className="view-header__body">
-              {sectionDescription(section, workspace?.name ?? "this workspace")}
+              {sectionDescription(section, workspace?.name ?? "此工作区")}
             </p>
           </div>
         </header>

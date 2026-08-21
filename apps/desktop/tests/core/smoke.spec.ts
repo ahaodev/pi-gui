@@ -23,15 +23,15 @@ test("boots an existing workspace and starts a new thread through the real UI", 
 
     await waitForWorkspaceByPath(window, workspacePath);
     await expect(window.getByTestId("workspace-list")).toContainText(basename(workspacePath));
-    await window.getByRole("complementary").getByRole("button", { name: "New thread" }).click();
+    await window.getByRole("complementary").getByRole("button", { name: "新建对话" }).click();
 
-    const prompt = window.getByLabel("New thread prompt");
+    const prompt = window.getByLabel("新建对话输入框");
     await expect(prompt).toBeVisible();
     await expect(prompt).toBeFocused();
-    await expect(window.getByRole("heading", { name: "Let's build" })).toBeVisible();
+    await expect(window.getByRole("heading", { name: "开始构建" })).toBeVisible();
     await prompt.fill(promptText);
 
-    await window.getByRole("button", { name: "Start thread" }).click();
+    await window.getByRole("button", { name: "开始对话" }).click();
 
     await expect(window.locator(".topbar__session")).toHaveText(/\S+/);
     await expect(window.getByTestId("composer")).toBeFocused();

@@ -81,7 +81,7 @@ export function SettingsProvidersSection({
 
   return (
     <>
-      <SettingsGroup title="Connected" description="Connected providers are used first for picking models.">
+      <SettingsGroup title="已连接" description="选择模型时优先使用已连接的供应商。">
         {connectedProviders.length > 0 ? (
           connectedProviders.map((provider) => (
             <ProviderRow
@@ -94,12 +94,12 @@ export function SettingsProvidersSection({
           ))
         ) : (
           <div className="settings-row">
-            <span className="settings-row__description">No providers connected yet.</span>
+            <span className="settings-row__description">尚未连接任何供应商。</span>
           </div>
         )}
       </SettingsGroup>
 
-      <SettingsGroup title="Sign in" description="OAuth-capable providers can sign in directly from the desktop app.">
+      <SettingsGroup title="登录" description="支持 OAuth 的供应商可直接在桌面应用中登录。">
         {oauthProviders.map((provider) => (
           <ProviderRow
             key={provider.id}
@@ -117,17 +117,17 @@ export function SettingsProvidersSection({
         onDeleteCustomProvider={onDeleteCustomProvider}
       />
 
-      <SettingsGroup title="All providers" description="Browse the full provider inventory.">
+      <SettingsGroup title="全部供应商" description="浏览完整供应商列表。">
         <details className="settings-disclosure">
           <summary className="settings-disclosure__summary">
-            <span>Browse all providers</span>
+            <span>浏览全部供应商</span>
             <span>{filteredProviders.length}</span>
           </summary>
           <div className="settings-disclosure__body">
             <input
-              aria-label="Search providers"
+              aria-label="搜索供应商"
               className="settings-search"
-              placeholder="Search providers"
+              placeholder="搜索供应商"
               value={providerQuery}
               onChange={(event) => setProviderQuery(event.target.value)}
             />
@@ -181,11 +181,11 @@ function ProviderApiKeyDialog({
   readonly onRemove?: () => Promise<void>;
   readonly onSave: () => Promise<void>;
 }) {
-  const title = provider.authSource === "auth_file" ? "Manage API key" : "Set API key";
+  const title = provider.authSource === "auth_file" ? "管理 API 密钥" : "设置 API 密钥";
   const body =
     provider.authSource === "auth_file"
-      ? `Replace or remove the saved API key for ${provider.name}.`
-      : `Save an API key locally for ${provider.name}.`;
+      ? `替换或删除 ${provider.name} 已保存的 API 密钥。`
+      : `为 ${provider.name} 在本地保存一个 API 密钥。`;
 
   return (
     <div className="extension-dialog-backdrop">
@@ -193,11 +193,11 @@ function ProviderApiKeyDialog({
         <div className="extension-dialog__title">{title}</div>
         <p className="extension-dialog__body">{body}</p>
         <input
-          aria-label={`${provider.name} API key`}
+          aria-label={`${provider.name} 的 API 密钥`}
           autoFocus
           className="settings-search"
           disabled={pending}
-          placeholder="Enter API key"
+          placeholder="输入 API 密钥"
           type="password"
           value={draft}
           onChange={(event) => onChangeDraft(event.target.value)}
@@ -216,11 +216,11 @@ function ProviderApiKeyDialog({
         {error ? <p className="extension-dialog__body settings-warning">{error}</p> : null}
         <div className="extension-dialog__actions">
           <button className="button button--secondary" disabled={pending} type="button" onClick={onClose}>
-            Cancel
+            取消
           </button>
           {onRemove ? (
             <button className="button button--secondary" disabled={pending} type="button" onClick={() => void onRemove()}>
-              Remove saved key
+              移除已保存的密钥
             </button>
           ) : null}
           <button
@@ -229,7 +229,7 @@ function ProviderApiKeyDialog({
             type="button"
             onClick={() => void onSave()}
           >
-            {provider.authSource === "auth_file" ? "Save key" : "Set API key"}
+            {provider.authSource === "auth_file" ? "保存密钥" : "设置 API 密钥"}
           </button>
         </div>
       </div>

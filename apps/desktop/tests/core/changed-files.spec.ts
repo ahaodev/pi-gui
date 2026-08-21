@@ -55,8 +55,8 @@ test("preserves an exact changed-file path through diff and stage actions", asyn
     await changedRow.locator(".diff-panel__file-name").click();
     await expect(diffPanel.locator(".diff-inline")).toContainText("exact path contents");
 
-    await changedRow.getByRole("button", { name: "Stage", exact: true }).click();
-    await expect(changedRow.getByRole("button", { name: "Staged", exact: true })).toBeDisabled();
+    await changedRow.getByRole("button", { name: "暂存", exact: true }).click();
+    await expect(changedRow.getByRole("button", { name: "已暂存", exact: true })).toBeDisabled();
 
     const { stdout } = await execFileAsync(
       "git",
@@ -108,12 +108,12 @@ test("shows Git status as unavailable without losing reviewed files", async () =
 
     await rename(gitPath, unavailableGitPath);
     gitMoved = true;
-    await diffPanel.locator('button[aria-label="Refresh"]').click();
+    await diffPanel.locator('button[aria-label="刷新"]').click();
     await expect(diffPanel.getByTestId("changed-files-unavailable")).toHaveText(
-      "Git status is unavailable for this workspace.",
+      "此工作区的 Git 状态不可用。",
     );
     await expect(diffPanel.locator(".file-workbench__section-header")).toContainText(/unavailable/i);
-    await expect(diffPanel.getByText("No changes", { exact: true })).toHaveCount(0);
+    await expect(diffPanel.getByText("没有变更", { exact: true })).toHaveCount(0);
     await expect
       .poll(() => window.evaluate((key) => globalThis.localStorage.getItem(key), storageKey))
       .toBe(reviewedBeforeFailure);

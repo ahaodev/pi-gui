@@ -36,8 +36,8 @@ export function showUpdateNotification(
     return;
   }
   const notification = new Notification({
-    title: "pi-gui Release Available",
-    body: `Version ${latestVersion} is available (you have ${currentVersion}). Click to view the release.`,
+    title: "pi-gui 有新版本",
+    body: `版本 ${latestVersion} 可用（当前 ${currentVersion}）。点击查看发布。`,
   });
   notification.on("click", () => {
     void openReleasesPage(releaseUrl);
@@ -62,10 +62,10 @@ export async function checkForUpdate(): Promise<UpdateCheckResult> {
   } catch (error) {
     const message =
       error instanceof Error && error.name === "AbortError"
-        ? "The update check timed out."
+        ? "更新检查超时。"
         : error instanceof Error
           ? error.message
-          : "The update check could not reach GitHub.";
+          : "更新检查无法连接到 GitHub。";
     return { status: "error", message };
   } finally {
     clearTimeout(timeout);
@@ -74,7 +74,7 @@ export async function checkForUpdate(): Promise<UpdateCheckResult> {
   if (!res.ok) {
     return {
       status: "error",
-      message: `GitHub Releases returned ${res.status}.`,
+      message: `GitHub Releases 返回了状态 ${res.status}。`,
     };
   }
 
@@ -82,14 +82,14 @@ export async function checkForUpdate(): Promise<UpdateCheckResult> {
   try {
     releases = (await res.json()) as GitHubRelease[];
   } catch {
-    return { status: "error", message: "GitHub Releases returned an unreadable response." };
+    return { status: "error", message: "GitHub Releases 返回了无法读取的响应。" };
   }
 
   const release = releases[0];
   if (!release?.tag_name) {
     return {
       status: "error",
-      message: "GitHub Releases did not return any published versions.",
+      message: "GitHub Releases 未返回任何已发布的版本。",
     };
   }
 

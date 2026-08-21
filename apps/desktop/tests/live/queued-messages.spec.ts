@@ -33,11 +33,11 @@ test("queues follow-ups with Enter and steers the current run with Cmd+Enter", a
   try {
     const window = await harness.firstWindow();
 
-    await window.getByRole("complementary").getByRole("button", { name: "New thread" }).click();
-    await window.getByLabel("New thread prompt").fill(
+    await window.getByRole("complementary").getByRole("button", { name: "新建对话" }).click();
+    await window.getByLabel("新建对话输入框").fill(
       "Use your bash or shell tool to run `python - <<'PY'\nimport time\nprint(\"queue-start\")\ntime.sleep(8)\nprint(\"queue-end\")\nPY` and, after the tool call, reply with exactly BASELINE_DONE.",
     );
-    await window.getByRole("button", { name: "Start thread" }).click();
+    await window.getByRole("button", { name: "开始对话" }).click();
 
     await expect
       .poll(async () => {
@@ -48,17 +48,17 @@ test("queues follow-ups with Enter and steers the current run with Cmd+Enter", a
 
     const composer = window.getByTestId("composer");
     const sendButton = window.getByTestId("send");
-    await expect(sendButton).toHaveAttribute("aria-label", "Stop run");
+    await expect(sendButton).toHaveAttribute("aria-label", "停止运行");
 
     await composer.fill("After the current run fully finishes, reply with exactly FOLLOW_UP_DONE.");
-    await expect(sendButton).toHaveAttribute("aria-label", "Send message");
+    await expect(sendButton).toHaveAttribute("aria-label", "发送消息");
     await composer.press("Enter");
-    await expect(sendButton).toHaveAttribute("aria-label", "Stop run");
+    await expect(sendButton).toHaveAttribute("aria-label", "停止运行");
     await expect(window.getByTestId("queued-composer-message").filter({ hasText: "FOLLOW_UP_DONE" })).toHaveCount(1);
     await expect(window.locator(".queued-composer-message__mode")).toHaveCount(0);
 
     await composer.fill("Change your pending final answer for the current run to exactly STEER_DONE.");
-    await expect(sendButton).toHaveAttribute("aria-label", "Send message");
+    await expect(sendButton).toHaveAttribute("aria-label", "发送消息");
     await composer.press(desktopShortcut("Enter"));
     await expect(window.getByTestId("queued-composer-message").filter({ hasText: "STEER_DONE" })).toHaveCount(0);
     await expect(window.getByTestId("transcript")).toContainText("STEER_DONE");

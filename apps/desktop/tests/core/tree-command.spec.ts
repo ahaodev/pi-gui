@@ -72,10 +72,10 @@ test("opens /tree from the composer, navigates branches, and blocks it on the ne
     );
 
     await treeModal.locator(".tree-row__content", { hasText: "Branch alpha" }).click();
-    await treeModal.getByRole("button", { name: "Continue" }).click();
+    await treeModal.getByRole("button", { name: "继续" }).click();
     await expect(window.getByTestId("tree-summary-step")).toBeVisible();
     await treeModal.getByRole("button", { name: "No summary" }).click();
-    await treeModal.getByRole("button", { name: "Switch branch" }).click();
+    await treeModal.getByRole("button", { name: "切换分支" }).click();
 
     await expect(treeModal).toHaveCount(0);
     await expect(composer).toHaveValue("Branch alpha");
@@ -86,9 +86,9 @@ test("opens /tree from the composer, navigates branches, and blocks it on the ne
     await composer.press("Enter");
     await expect(treeModal).toBeVisible();
     await treeModal.locator(".tree-row__content", { hasText: "Beta answer" }).click();
-    await treeModal.getByRole("button", { name: "Continue" }).click();
+    await treeModal.getByRole("button", { name: "继续" }).click();
     await treeModal.getByRole("button", { name: "No summary" }).click();
-    await treeModal.getByRole("button", { name: "Switch branch" }).click();
+    await treeModal.getByRole("button", { name: "切换分支" }).click();
 
     await expect(treeModal).toHaveCount(0);
     await expect(composer).toHaveValue("");
@@ -158,7 +158,7 @@ test("restores focus to a remaining extension dialog after the tree modal closes
     await expect(extensionDialog).toBeVisible();
     await expect(window.getByTestId("tree-modal-search")).toBeFocused();
 
-    await treeModal.getByRole("button", { name: "Close tree modal" }).click();
+    await treeModal.getByRole("button", { name: "关闭会话树" }).click();
     await expect(treeModal).toHaveCount(0);
     await expect(extensionDialog).toBeVisible();
     await expect(extensionCancel).toBeFocused();

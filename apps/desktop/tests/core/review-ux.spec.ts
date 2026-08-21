@@ -116,10 +116,10 @@ test("reviewed checkboxes update counter, prune on changes, and survive relaunch
   await expect(diffPanel.locator(".diff-panel__file")).toHaveCount(3);
 
   const counter = diffPanel.getByTestId("diff-panel-counter");
-  await expect(counter).toHaveText("Reviewed 0 of 3");
+  await expect(counter).toHaveText("已审阅 0 / 3");
 
   await diffPanel.getByTestId("diff-panel-reviewed-src/foo.ts").check();
-  await expect(counter).toHaveText("Reviewed 1 of 3");
+  await expect(counter).toHaveText("已审阅 1 / 3");
   await expect(diffPanel.locator('.diff-panel__file[data-file-path="src/foo.ts"]')).toHaveClass(
     /diff-panel__file--reviewed/,
   );
@@ -129,7 +129,7 @@ test("reviewed checkboxes update counter, prune on changes, and survive relaunch
   ).toBe(JSON.stringify([JSON.stringify([sessionRef.workspaceId, "src/foo.ts"])]));
 
   await diffPanel.getByTestId("diff-panel-reviewed-src/foo.ts").uncheck();
-  await expect(counter).toHaveText("Reviewed 0 of 3");
+  await expect(counter).toHaveText("已审阅 0 / 3");
   await expect(
     diffPanel.locator('.diff-panel__file[data-file-path="src/foo.ts"]'),
   ).not.toHaveClass(/diff-panel__file--reviewed/);
@@ -139,7 +139,7 @@ test("reviewed checkboxes update counter, prune on changes, and survive relaunch
 
   await diffPanel.getByTestId("diff-panel-reviewed-src/foo.ts").check();
   await diffPanel.getByTestId("diff-panel-reviewed-script.py").check();
-  await expect(counter).toHaveText("Reviewed 2 of 3");
+  await expect(counter).toHaveText("已审阅 2 / 3");
 
   await harness.close();
 
@@ -149,15 +149,15 @@ test("reviewed checkboxes update counter, prune on changes, and survive relaunch
     await window.keyboard.press(desktopShortcut("D"));
     const reopenedPanel = window.locator(".diff-panel");
     await expect(reopenedPanel).toBeVisible();
-    await expect(reopenedPanel.getByTestId("diff-panel-counter")).toHaveText("Reviewed 2 of 3");
+    await expect(reopenedPanel.getByTestId("diff-panel-counter")).toHaveText("已审阅 2 / 3");
     await expect(reopenedPanel.getByTestId("diff-panel-reviewed-src/foo.ts")).toBeChecked();
     await expect(reopenedPanel.getByTestId("diff-panel-reviewed-script.py")).toBeChecked();
     await expect(reopenedPanel.getByTestId("diff-panel-reviewed-notes.md")).not.toBeChecked();
 
     await commitFiles(workspacePath, ["src/foo.ts"], "land foo");
-    await reopenedPanel.locator('button[aria-label="Refresh"]').click();
+    await reopenedPanel.locator('button[aria-label="刷新"]').click();
     await expect(reopenedPanel.locator(".diff-panel__file")).toHaveCount(2);
-    await expect(reopenedPanel.getByTestId("diff-panel-counter")).toHaveText("Reviewed 1 of 2");
+    await expect(reopenedPanel.getByTestId("diff-panel-counter")).toHaveText("已审阅 1 / 2");
 
     expect(
       await window.evaluate((key) => globalThis.localStorage.getItem(key), storageKey),
@@ -174,14 +174,14 @@ test("Files mode shows a file browser and reader instead of the changes reviewer
     await window.keyboard.press(desktopShortcut("D"));
     const diffPanel = window.locator(".diff-panel");
     await expect(diffPanel).toBeVisible();
-    await expect(diffPanel.locator(".diff-panel__title")).toHaveText("Changes");
-    await expect(diffPanel.getByTestId("diff-panel-counter")).toHaveText("Reviewed 0 of 3");
+    await expect(diffPanel.locator(".diff-panel__title")).toHaveText("变更");
+    await expect(diffPanel.getByTestId("diff-panel-counter")).toHaveText("已审阅 0 / 3");
 
     await diffPanel.locator('.diff-panel__file[data-file-path="src/foo.ts"] .diff-panel__file-name').click();
     await expect(diffPanel.locator(".diff-inline")).toBeVisible();
 
-    await window.locator(".topbar__actions").getByLabel("Toggle files").click();
-    await expect(diffPanel.locator(".diff-panel__title")).toHaveText("Files");
+    await window.locator(".topbar__actions").getByLabel("切换文件").click();
+    await expect(diffPanel.locator(".diff-panel__title")).toHaveText("文件");
     await expect(diffPanel.getByTestId("diff-panel-counter")).toHaveCount(0);
     await expect(diffPanel.locator(".file-workbench__section--changes")).toHaveCount(0);
     await expect(diffPanel.getByTestId("file-workbench-tree")).toBeVisible();
@@ -190,7 +190,7 @@ test("Files mode shows a file browser and reader instead of the changes reviewer
     await diffPanel.locator('.file-workbench__tree-row--file[data-file-path="notes.md"]').click();
     await expect(diffPanel.getByTestId("file-workbench-preview")).toContainText("# notes");
     await expect(diffPanel.locator(".diff-inline")).toHaveCount(0);
-    await expect(diffPanel.getByRole("group", { name: "Viewer mode" })).toHaveCount(0);
+    await expect(diffPanel.getByRole("group", { name: "查看模式" })).toHaveCount(0);
   } finally {
     await harness.close();
   }

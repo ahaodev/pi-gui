@@ -477,7 +477,7 @@ export class DesktopAppStore implements AppStoreInternals {
     await this.initialize();
     const sessionRef = toSessionRef(target);
     if (!this.sessionFromState(sessionRef)) {
-      return this.withError(`Unknown session: ${target.workspaceId}:${target.sessionId}`);
+      return this.withError(`未知会话：${target.workspaceId}:${target.sessionId}`);
     }
     if (!this.markSessionViewed(sessionRef)) {
       return structuredClone(this.state);
@@ -496,10 +496,10 @@ export class DesktopAppStore implements AppStoreInternals {
     const sessionRef = toSessionRef(target);
     const session = this.sessionFromState(sessionRef);
     if (!session) {
-      return this.withError(`Unknown session: ${target.workspaceId}:${target.sessionId}`);
+      return this.withError(`未知会话：${target.workspaceId}:${target.sessionId}`);
     }
     if (pinned && session.archivedAt) {
-      return this.withError(`Cannot pin archived session: ${target.workspaceId}:${target.sessionId}`);
+      return this.withError(`无法固定已归档会话：${target.workspaceId}:${target.sessionId}`);
     }
 
     const key = sessionKey(sessionRef);
@@ -843,7 +843,7 @@ export class DesktopAppStore implements AppStoreInternals {
     await this.initialize();
     const ws = this.workspaceRefFromState(targetWorkspaceId);
     if (!ws) {
-      return this.withError(`Unknown workspace: ${targetWorkspaceId}`);
+      return this.withError(`未知工作区：${targetWorkspaceId}`);
     }
     return this.withErrorHandling(async () => {
       const snapshot = await this.driver.runtimeSupervisor.setProjectDefaultModel(ws, { provider, modelId });
@@ -866,7 +866,7 @@ export class DesktopAppStore implements AppStoreInternals {
     await this.initialize();
     const ws = this.workspaceRefFromState(targetWorkspaceId);
     if (!ws) {
-      return this.withError(`Unknown workspace: ${targetWorkspaceId}`);
+      return this.withError(`未知工作区：${targetWorkspaceId}`);
     }
     return this.withErrorHandling(async () => {
       const snapshot = await this.driver.runtimeSupervisor.setProjectDefaultThinkingLevel(ws, thinkingLevel);
@@ -888,7 +888,7 @@ export class DesktopAppStore implements AppStoreInternals {
     const targetWorkspaceId = this.resolveModelSettingsWorkspaceId(workspaceId);
     const ws = this.workspaceRefFromState(workspaceId);
     if (!ws) {
-      return this.withError(`Unknown workspace: ${workspaceId}`);
+      return this.withError(`未知工作区：${workspaceId}`);
     }
 
     return this.withErrorHandling(async () => {
@@ -965,7 +965,7 @@ export class DesktopAppStore implements AppStoreInternals {
     await this.initialize();
     const ws = this.workspaceRefFromState(targetWorkspaceId);
     if (!ws) {
-      return this.withError(`Unknown workspace: ${targetWorkspaceId}`);
+      return this.withError(`未知工作区：${targetWorkspaceId}`);
     }
     return this.withErrorHandling(async () => {
       const snapshot = await this.driver.runtimeSupervisor.setProjectScopedModelPatterns(ws, patterns);
@@ -1042,7 +1042,7 @@ export class DesktopAppStore implements AppStoreInternals {
     await this.initialize();
     const ws = this.workspaceRefFromState(workspaceId);
     if (!ws) {
-      return this.withError(`Unknown workspace: ${workspaceId}`);
+      return this.withError(`未知工作区：${workspaceId}`);
     }
 
     return this.withErrorHandling(async () => {
@@ -1127,7 +1127,7 @@ export class DesktopAppStore implements AppStoreInternals {
       console.warn("[app-store] ignoring malformed persisted UI state", error);
       startupDiagnostics.push({
         scope: "application",
-        message: `Persisted UI state could not be fully restored: ${message}`,
+        message: `持久化 UI 状态无法完全恢复：${message}`,
       });
     }
     try {
@@ -1137,7 +1137,7 @@ export class DesktopAppStore implements AppStoreInternals {
       console.warn("[app-store] ignoring malformed legacy UI state", error);
       startupDiagnostics.push({
         scope: "application",
-        message: `Legacy UI state could not be fully migrated: ${message}`,
+        message: `旧版 UI 状态无法完全迁移：${message}`,
       });
     }
 
@@ -1261,7 +1261,7 @@ export class DesktopAppStore implements AppStoreInternals {
     try {
       const workspaceStat = await stat(workspacePath);
       if (!workspaceStat.isDirectory()) {
-        throw new Error("Path is not a directory.");
+        throw new Error("路径不是目录。");
       }
       await this.driver.syncWorkspace(workspacePath, displayName);
       return undefined;
@@ -1975,7 +1975,7 @@ export class DesktopAppStore implements AppStoreInternals {
         commandName: pending.command.name,
         extensionPath: pending.command.sourceInfo.path,
         status: "supported",
-        message: "Observed working in pi-gui.",
+        message: "在 pi-gui 中确认可用。",
         capability: "gui-safe",
         updatedAt: timestamp,
       });
@@ -2019,7 +2019,7 @@ export class DesktopAppStore implements AppStoreInternals {
     const key = sessionKey(sessionRef);
     const pending = this.pendingRuntimeCommandsBySession.get(key);
     if (pending) {
-      const message = `/${pending.command.name} requires terminal-only ${formatCapabilityLabel(issue.capability)} and is not supported in pi-gui yet. Use pi in the terminal for this command.`;
+      const message = `/${pending.command.name} 需要仅限终端的能力（${formatCapabilityLabel(issue.capability)}），pi-gui 暂不支持。请在终端中使用 pi 执行该命令。`;
       pending.blockedMessage = message;
       recordLearnedCommandCompatibility(this.extensionCommandCompatibilityByWorkspace, sessionRef.workspaceId, {
         commandName: pending.command.name,
@@ -3278,7 +3278,7 @@ function describeStoreError(error: unknown): string {
   if (isSessionLeasedError(error)) {
     const { holder } = error;
     const where = holder.surface === "pi-cli" ? "the pi CLI" : "another pi instance";
-    return `This session is currently open in ${where} (pid ${holder.pid} on host ${holder.hostname}). Close it there or wait a few minutes before continuing here.`;
+    return `此会话当前正在 ${where}（主机 ${holder.hostname} 上的进程 ${holder.pid}）中打开。请先在那里关闭，或稍等几分钟后再继续。`;
   }
   return error instanceof Error ? error.message : String(error);
 }
@@ -3409,15 +3409,15 @@ function reconcilePinnedSessionOrder(
 function formatCapabilityLabel(capability: string): string {
   switch (capability) {
     case "custom":
-      return "custom UI";
+      return "自定义 UI";
     case "onTerminalInput":
-      return "terminal input";
+      return "终端输入";
     case "setEditorComponent":
-      return "custom editor UI";
+      return "自定义编辑器 UI";
     case "setFooter":
-      return "footer UI";
+      return "页脚 UI";
     case "setHeader":
-      return "header UI";
+      return "页眉 UI";
     default:
       return capability.replace(/([a-z])([A-Z])/g, "$1 $2").toLowerCase();
   }

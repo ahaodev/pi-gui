@@ -50,9 +50,9 @@ test("toggles and restores window transparency", async () => {
 
     await window.keyboard.press(desktopShortcut(","));
     await expect(window.getByTestId("settings-surface")).toBeVisible();
-    await window.getByRole("button", { name: "Appearance", exact: true }).click();
+    await window.getByRole("button", { name: "外观", exact: true }).click();
 
-    const transparencyToggle = window.getByLabel("Window transparency");
+    const transparencyToggle = window.getByLabel("窗口透明");
     await expect(transparencyToggle).not.toBeChecked();
     await transparencyToggle.click();
     await expect.poll(async () => (await getDesktopState(window)).enableTransparency).toBe(true);
@@ -120,44 +120,44 @@ test("selects and restores theme presets", async () => {
 
     await window.keyboard.press(desktopShortcut(","));
     await expect(window.getByTestId("settings-surface")).toBeVisible();
-    await window.getByRole("button", { name: "Appearance", exact: true }).click();
-    await window.locator(".settings-row", { hasText: "Light" }).locator('input[type="radio"]').click();
-    await selectThemePreset(window, "Default");
-    await expect(window.locator(".view-header__title")).toHaveText("Appearance");
-    await window.getByRole("button", { name: "Back to app" }).click();
+    await window.getByRole("button", { name: "外观", exact: true }).click();
+    await window.locator(".settings-row", { hasText: "浅色" }).locator('input[type="radio"]').click();
+    await selectThemePreset(window, "默认");
+    await expect(window.locator(".view-header__title")).toHaveText("外观");
+    await window.getByRole("button", { name: "返回应用" }).click();
     await expect(window.locator(".main")).toBeVisible();
     await saveProofScreenshot(window, proofDir, "16-app-surface-default-light-workbench.png");
 
     await window.keyboard.press(desktopShortcut(","));
     await expect(window.getByTestId("settings-surface")).toBeVisible();
-    await window.getByRole("button", { name: "Appearance", exact: true }).click();
+    await window.getByRole("button", { name: "外观", exact: true }).click();
     await selectThemePreset(window, "Catppuccin");
     await expect.poll(async () => (await getDesktopState(window)).themePresetId).toBe("catppuccin");
     await expect.poll(() => rootInlineCssVariable(window, "--main")).toBe("#f1ecf8");
     await expect.poll(() => rootInlineCssVariable(window, "--sidebar")).toBe("#ded5ed");
     await expect.poll(() => rootInlineCssVariable(window, "--theme-selection-bg")).toBe("#e8dcff");
-    await window.getByRole("button", { name: "Back to app" }).click();
+    await window.getByRole("button", { name: "返回应用" }).click();
     await expect(window.locator(".main")).toBeVisible();
     await expectThemedAppSurface(window);
     await saveProofScreenshot(window, proofDir, "17-app-surface-catppuccin-workbench-light.png");
 
     await window.keyboard.press(desktopShortcut(","));
     await expect(window.getByTestId("settings-surface")).toBeVisible();
-    await window.getByRole("button", { name: "Appearance", exact: true }).click();
+    await window.getByRole("button", { name: "外观", exact: true }).click();
     await selectThemePreset(window, "Gruvbox");
     await expect.poll(async () => (await getDesktopState(window)).themePresetId).toBe("gruvbox");
     await expect.poll(() => rootInlineCssVariable(window, "--main")).toBe("#f3e8cf");
     await expect.poll(() => rootInlineCssVariable(window, "--sidebar")).toBe("#dfc99f");
     await expect.poll(() => rootInlineCssVariable(window, "--theme-selection-bg")).toBe("#ebd29a");
     await expect.poll(() => rootInlineCssVariable(window, "--theme-control-border")).toBe("#b58a43");
-    await window.getByRole("button", { name: "Back to app" }).click();
+    await window.getByRole("button", { name: "返回应用" }).click();
     await expect(window.locator(".main")).toBeVisible();
     await expectThemedAppSurface(window);
     await saveProofScreenshot(window, proofDir, "18-app-surface-gruvbox-workbench-light.png");
 
     await window.keyboard.press(desktopShortcut(","));
     await expect(window.getByTestId("settings-surface")).toBeVisible();
-    await window.getByRole("button", { name: "Appearance", exact: true }).click();
+    await window.getByRole("button", { name: "外观", exact: true }).click();
     await selectThemePreset(window, "Tokyo Night");
     await expect.poll(async () => (await getDesktopState(window)).themePresetId).toBe("tokyo-night");
     await expect.poll(() => rootThemePreset(window)).toBe("tokyo-night");
@@ -166,26 +166,26 @@ test("selects and restores theme presets", async () => {
     await expect.poll(() => rootInlineCssVariable(window, "--sidebar")).toBe("#d6deef");
     await expect.poll(() => rootInlineCssVariable(window, "--theme-selection-bg")).toBe("#dbe8ff");
     await expect.poll(() => rootInlineCssVariable(window, "--theme-control-border")).toBe("#98b7e5");
-    await window.getByRole("button", { name: "Back to app" }).click();
+    await window.getByRole("button", { name: "返回应用" }).click();
     await expect(window.locator(".main")).toBeVisible();
     await expectThemedAppSurface(window);
     await saveProofScreenshot(window, proofDir, "19-app-surface-tokyo-workbench-light.png");
 
     await window.keyboard.press(desktopShortcut(","));
     await expect(window.getByTestId("settings-surface")).toBeVisible();
-    await window.getByRole("button", { name: "Appearance", exact: true }).click();
-    await window.locator(".settings-row", { hasText: "Dark" }).locator('input[type="radio"]').click();
+    await window.getByRole("button", { name: "外观", exact: true }).click();
+    await window.locator(".settings-row", { hasText: "深色" }).locator('input[type="radio"]').click();
     await expect.poll(() => window.evaluate(() => document.documentElement.classList.contains("dark"))).toBe(true);
     await expect.poll(() => rootCssVariable(window, "--accent")).toBe("#7aa2f7");
 
-    await window.getByRole("button", { name: "Back to app" }).click();
+    await window.getByRole("button", { name: "返回应用" }).click();
     await expect(window.locator(".main")).toBeVisible();
     await expectThemedAppSurface(window);
     await saveProofScreenshot(window, proofDir, "20-app-surface-tokyo-workbench-dark.png");
 
     await window.keyboard.press(desktopShortcut(","));
     await expect(window.getByTestId("settings-surface")).toBeVisible();
-    await window.getByRole("button", { name: "Appearance", exact: true }).click();
+    await window.getByRole("button", { name: "外观", exact: true }).click();
     await saveProofScreenshot(window, proofDir, "21-appearance-theme-presets-workbench.png");
   } finally {
     await harness.close();
@@ -238,8 +238,8 @@ test("light theme presets apply coordinated workbench palettes", async () => {
 
     await window.keyboard.press(desktopShortcut(","));
     await expect(window.getByTestId("settings-surface")).toBeVisible();
-    await window.getByRole("button", { name: "Appearance", exact: true }).click();
-    await window.locator(".settings-row", { hasText: "Light" }).locator('input[type="radio"]').click();
+    await window.getByRole("button", { name: "外观", exact: true }).click();
+    await window.locator(".settings-row", { hasText: "浅色" }).locator('input[type="radio"]').click();
     await expect.poll(() => window.evaluate(() => document.documentElement.classList.contains("dark"))).toBe(false);
 
     const baseline = await rootComputedCssVariables(window, pageLightTokenNames);
@@ -265,7 +265,7 @@ test("light theme presets apply coordinated workbench palettes", async () => {
     expect(paletteSignatures.size).toBe(themePresets.length - 1);
 
     await selectThemePreset(window, "Gruvbox");
-    await window.getByRole("button", { name: "Back to app" }).click();
+    await window.getByRole("button", { name: "返回应用" }).click();
     await expect(window.locator(".main")).toBeVisible();
     await expectThemedAppSurface(window);
   } finally {

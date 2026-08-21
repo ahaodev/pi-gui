@@ -29,10 +29,10 @@ test("attaches an image through the native picker and shows the attachment chip"
     await createNamedThread(window, "Image attach session");
 
     await stubNextOpenDialog(harness, [imagePath]);
-    await window.getByRole("button", { name: "Attach files" }).click();
+    await window.getByRole("button", { name: "附加文件" }).click();
 
     await expect(window.locator(".composer-attachment")).toContainText("screenshot.png");
-    await window.getByRole("button", { name: "Remove screenshot.png" }).click();
+    await window.getByRole("button", { name: "移除 screenshot.png" }).click();
     await expect(window.locator(".composer-attachment")).toHaveCount(0);
   } finally {
     await harness.close();

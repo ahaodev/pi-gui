@@ -704,8 +704,8 @@ const vscodeDark = withOverrides(githubDark, {
 export const themePresets: readonly ThemePreset[] = [
   {
     id: "default",
-    name: "Default",
-    description: "The current pi-gui palette.",
+    name: "默认",
+    description: "pi-gui 当前默认配色。",
     swatches: ["#f8f8fb", "#ffffff", "#6a55f2", "#1f2638"],
     variants: {
       light: { label: "Default light", tokens: {} },
@@ -715,7 +715,7 @@ export const themePresets: readonly ThemePreset[] = [
   preset(
     "catppuccin",
     "Catppuccin",
-    "Soft pastel Latte and Mocha variants.",
+    "柔和的 Latte 与 Mocha 粉彩变体。",
     ["#eff1f5", "#1e1e2e", "#cba6f7", "#89b4fa"],
     catppuccinLight,
     catppuccinDark,
@@ -723,7 +723,7 @@ export const themePresets: readonly ThemePreset[] = [
   preset(
     "tokyo-night",
     "Tokyo Night",
-    "A cool editor palette with a bright Day variant.",
+    "冷色调编辑器配色，附带明亮的 Day 变体。",
     ["#d5d6db", "#1a1b26", "#7aa2f7", "#bb9af7"],
     tokyoLight,
     tokyoDark,
@@ -731,7 +731,7 @@ export const themePresets: readonly ThemePreset[] = [
   preset(
     "nord",
     "Nord",
-    "Low-contrast arctic neutrals and blue accents.",
+    "低对比度的极地中性色与蓝色点缀。",
     ["#eceff4", "#2e3440", "#88c0d0", "#5e81ac"],
     nordLight,
     nordDark,
@@ -739,7 +739,7 @@ export const themePresets: readonly ThemePreset[] = [
   preset(
     "dracula",
     "Dracula",
-    "Purple-forward dark theme with a restrained light adaptation.",
+    "以紫色为主的深色主题，附带克制的浅色适配。",
     ["#f4f1fa", "#282a36", "#bd93f9", "#ff79c6"],
     draculaLight,
     draculaDark,
@@ -747,7 +747,7 @@ export const themePresets: readonly ThemePreset[] = [
   preset(
     "gruvbox",
     "Gruvbox",
-    "Warm retro contrast adapted for the desktop shell.",
+    "为桌面外壳适配的温暖复古对比配色。",
     ["#fbf1c7", "#282828", "#83a598", "#b8bb26"],
     gruvboxLight,
     gruvboxDark,
@@ -755,7 +755,7 @@ export const themePresets: readonly ThemePreset[] = [
   preset(
     "github",
     "GitHub",
-    "GitHub-style light and dark surfaces.",
+    "GitHub 风格浅色与深色界面。",
     ["#ffffff", "#0d1117", "#0969da", "#238636"],
     githubLight,
     githubDark,
@@ -763,7 +763,7 @@ export const themePresets: readonly ThemePreset[] = [
   preset(
     "vscode",
     "VS Code",
-    "Familiar editor chrome with blue accents.",
+    "熟悉的编辑器界面，蓝色点缀。",
     ["#ffffff", "#1e1e1e", "#007acc", "#3794ff"],
     vscodeLight,
     vscodeDark,
