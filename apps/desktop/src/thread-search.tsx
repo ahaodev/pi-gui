@@ -22,10 +22,10 @@ export function ThreadSearchBar({
   onClose,
 }: ThreadSearchBarProps) {
   return (
-    <div className="thread-search-bar" data-testid="thread-search-bar">
+    <div className="thread-search-bar sticky top-0 z-10 flex items-center gap-1.5 border-b border-border bg-surface px-3 py-1.5" data-testid="thread-search-bar">
       <input
         ref={inputRef}
-        className="thread-search-bar__input"
+        className="thread-search-bar__input flex-1 rounded-sm border border-border bg-background px-2 py-1 text-[13px] text-foreground outline-none focus:border-[var(--accent)]"
         type="text"
         placeholder="搜索对话……"
         value={query}
@@ -44,10 +44,10 @@ export function ThreadSearchBar({
           }
         }}
       />
-      <span className="thread-search-bar__count">
+      <span className="thread-search-bar__count min-w-[72px] text-center text-xs text-muted">
         {query ? (matchCount > 0 ? `${activeIndex + 1} / ${matchCount}` : "0 个结果") : ""}
       </span>
-      <div className="thread-search-bar__actions">
+      <div className="thread-search-bar__actions flex gap-0.5">
         <button
           aria-label="上一处匹配"
           className="icon-button"

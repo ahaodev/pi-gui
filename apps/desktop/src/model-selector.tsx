@@ -91,12 +91,14 @@ export function ModelSelector({
     return null;
   }
 
+  const dropdownClass = `model-selector__dropdown absolute left-0 z-20 flex min-w-[280px] max-h-[320px] flex-col overflow-y-auto rounded-lg border border-border bg-surface p-1 shadow-[var(--elevation-menu)] ${dropdownPlacement === "below" ? "model-selector__dropdown--below top-full mt-1.5" : "bottom-full mb-1.5"}`;
+
   return (
-    <span className="model-selector" ref={containerRef}>
+    <span className="model-selector relative inline-flex items-center gap-1.5" ref={containerRef}>
       {shouldRenderModelControl ? (
-        <span className="model-selector__anchor">
+        <span className="model-selector__anchor relative inline-flex">
           <button
-            className="model-selector__badge"
+            className="model-selector__badge inline-flex min-h-6 cursor-pointer items-center gap-[5px] rounded-full border border-border bg-surface-muted px-[9px] py-0.5 text-xs font-[560] tracking-[-0.01em] text-muted-strong transition-colors hover:enabled:border-[var(--border-heavy)] hover:enabled:bg-overlay-hover hover:enabled:text-foreground-strong disabled:cursor-default disabled:opacity-60"
             type="button"
             disabled={disabled}
             onClick={() => setOpen(open === "model" ? "none" : "model")}
@@ -104,13 +106,10 @@ export function ModelSelector({
             {modelBadgeLabel}
           </button>
           {open === "model" ? (
-            <div
-              className={`model-selector__dropdown ${dropdownPlacement === "below" ? "model-selector__dropdown--below" : ""}`}
-              onWheel={(event) => event.stopPropagation()}
-            >
-              <div className="model-selector__filter">
+            <div className={dropdownClass} onWheel={(event) => event.stopPropagation()}>
+              <div className="model-selector__filter sticky top-0 z-[1] bg-surface px-2 pt-1 pb-2">
                 <input
-                  className="model-selector__filter-input"
+                  className="model-selector__filter-input w-full rounded-sm border border-border bg-surface-muted px-2.5 py-1.5 text-[13px] text-foreground outline-none focus:border-[var(--accent)]"
                   placeholder="筛选模型……"
                   value={modelFilter}
                   onChange={(e) => setModelFilter(e.target.value)}
@@ -119,12 +118,12 @@ export function ModelSelector({
               </div>
               {groupedModels.map((group) => (
                 <div key={group.provider}>
-                  <div className="model-selector__group-title">{group.provider}</div>
+                  <div className="model-selector__group-title px-2.5 pt-1.5 pb-1 text-[11px] font-semibold tracking-[0.04em] text-muted uppercase">{group.provider}</div>
                   {group.items.map((option) => {
                     const isActive = option.providerId === provider && option.modelId === modelId;
                     return (
                       <button
-                        className={`model-selector__item${isActive ? " model-selector__item--active" : ""}`}
+                        className={`model-selector__item flex w-full cursor-pointer items-center gap-2 rounded-sm border-0 bg-transparent px-2.5 py-1.5 text-left text-[13px] text-foreground hover:enabled:bg-surface-muted ${isActive ? "model-selector__item--active font-medium text-[var(--accent)]" : ""}`}
                         key={`${option.providerId}:${option.modelId}`}
                         type="button"
                         onClick={() => {
@@ -134,8 +133,8 @@ export function ModelSelector({
                           setOpen("none");
                         }}
                       >
-                        <span className="model-selector__item-label">{option.label}</span>
-                        {isActive ? <span className="model-selector__item-meta">当前</span> : null}
+                        <span className="model-selector__item-label flex-1">{option.label}</span>
+                        {isActive ? <span className="model-selector__item-meta text-[11px] text-muted">当前</span> : null}
                       </button>
                     );
                   })}
@@ -143,10 +142,10 @@ export function ModelSelector({
               ))}
               {groupedModels.length === 0 ? (
                 <>
-                  <div className="model-selector__group-title">
+                  <div className="model-selector__group-title px-2.5 pt-1.5 pb-1 text-[11px] font-semibold tracking-[0.04em] text-muted uppercase">
                     {noMatchingModels ? "没有匹配的模型" : emptyModelTitle}
                   </div>
-                  {noMatchingModels ? <div className="model-selector__empty">试试其他筛选条件。</div> : null}
+                  {noMatchingModels ? <div className="model-selector__empty px-2.5 pb-2 text-xs text-muted leading-[1.4]">试试其他筛选条件。</div> : null}
                 </>
               ) : null}
             </div>
@@ -154,9 +153,9 @@ export function ModelSelector({
         </span>
       ) : null}
       {thinkingLevel ? (
-        <span className="model-selector__anchor">
+        <span className="model-selector__anchor relative inline-flex">
           <button
-            className="model-selector__badge"
+            className="model-selector__badge inline-flex min-h-6 cursor-pointer items-center gap-[5px] rounded-full border border-border bg-surface-muted px-[9px] py-0.5 text-xs font-[560] tracking-[-0.01em] text-muted-strong transition-colors hover:enabled:border-[var(--border-heavy)] hover:enabled:bg-overlay-hover hover:enabled:text-foreground-strong disabled:cursor-default disabled:opacity-60"
             type="button"
             disabled={disabled}
             onClick={() => setOpen(open === "thinking" ? "none" : "thinking")}
@@ -164,16 +163,13 @@ export function ModelSelector({
             {thinkingLevel}
           </button>
           {open === "thinking" ? (
-            <div
-              className={`model-selector__dropdown ${dropdownPlacement === "below" ? "model-selector__dropdown--below" : ""}`}
-              onWheel={(event) => event.stopPropagation()}
-            >
-              <div className="model-selector__group-title">思考等级</div>
+            <div className={dropdownClass} onWheel={(event) => event.stopPropagation()}>
+              <div className="model-selector__group-title px-2.5 pt-1.5 pb-1 text-[11px] font-semibold tracking-[0.04em] text-muted uppercase">思考等级</div>
               {THINKING_OPTIONS.map((option) => {
                 const isActive = option.value === thinkingLevel;
                 return (
                   <button
-                    className={`model-selector__item${isActive ? " model-selector__item--active" : ""}`}
+                    className={`model-selector__item flex w-full cursor-pointer items-center gap-2 rounded-sm border-0 bg-transparent px-2.5 py-1.5 text-left text-[13px] text-foreground hover:enabled:bg-surface-muted ${isActive ? "model-selector__item--active font-medium text-[var(--accent)]" : ""}`}
                     key={option.value}
                     type="button"
                     onClick={() => {
@@ -183,8 +179,8 @@ export function ModelSelector({
                       setOpen("none");
                     }}
                   >
-                    <span className="model-selector__item-label">{option.label}</span>
-                    <span className="model-selector__item-meta">{option.description}</span>
+                    <span className="model-selector__item-label flex-1">{option.label}</span>
+                    <span className="model-selector__item-meta text-[11px] text-muted">{option.description}</span>
                   </button>
                 );
               })}
