@@ -288,33 +288,33 @@ export function TerminalPanel({
   return (
     <section
       ref={panelRef}
-      className={`terminal-panel${isTakeover ? " terminal-panel--takeover" : ""}`}
+      className={`terminal-panel relative z-[8] grid min-h-[220px] max-h-[calc(100vh-140px)] grid-rows-[auto_1fr] overflow-hidden border-t border-[#2a2e3a] bg-[#0f1117] text-[#d7dae0]${isTakeover ? " terminal-panel--takeover max-h-none grid-row-[2/-1] z-20" : ""}`}
       data-pi-terminal="true"
       data-testid="integrated-terminal"
       style={isTakeover ? undefined : { height: `${height || DEFAULT_TERMINAL_HEIGHT}px` }}
     >
-      <div className="terminal-panel__resize-handle" onMouseDown={startResize} />
-      <div className="terminal-panel__toolbar">
-        <div className="terminal-panel__tabs" role="tablist" aria-label="终端会话">
+      <div className="terminal-panel__resize-handle absolute inset-x-0 top-0 z-[2] h-1.5 cursor-ns-resize" onMouseDown={startResize} />
+      <div className="terminal-panel__toolbar flex min-h-[38px] items-center justify-between gap-2.5 border-b border-[#242936] bg-[#171a22] py-[5px] pr-2 pl-2.5">
+        <div className="terminal-panel__tabs flex min-w-0 items-center gap-1 overflow-x-auto" role="tablist" aria-label="终端会话">
           {(panel?.sessions ?? []).map((session) => (
             <div
               key={session.id}
-              className={`terminal-panel__tab-item${session.id === panel?.activeSessionId ? " terminal-panel__tab-item--active" : ""}`}
+              className={`terminal-panel__tab-item flex h-7 min-w-[112px] max-w-[220px] items-center gap-[3px] rounded-sm border px-1 pl-2 ${session.id === panel?.activeSessionId ? "terminal-panel__tab-item--active border-[#343b4c] bg-[#202532] text-[#f2f4f8]" : "border-transparent bg-transparent text-[#aeb6c6]"}`}
             >
               <button
-                className="terminal-panel__tab"
+                className="terminal-panel__tab flex h-full min-w-0 flex-1 cursor-pointer items-center gap-[7px] border-0 bg-transparent p-0 text-xs font-[560] text-inherit"
                 type="button"
                 role="tab"
                 aria-selected={session.id === panel?.activeSessionId}
                 data-testid="terminal-tab"
                 onClick={() => void setActiveTerminal(session.id)}
               >
-                <span className={`terminal-panel__status terminal-panel__status--${session.status}`} />
-                <span className="terminal-panel__tab-title">{session.title}</span>
+                <span className={`terminal-panel__status size-[7px] flex-none rounded-full ${terminalStatusClass(session.status)}`} />
+                <span className="terminal-panel__tab-title min-w-0 overflow-hidden text-ellipsis whitespace-nowrap">{session.title}</span>
               </button>
               <button
                 type="button"
-                className="terminal-panel__tab-close"
+                className="terminal-panel__tab-close grid size-5 flex-none cursor-pointer place-items-center rounded-[var(--radius-xs)] border-0 bg-transparent text-[#8791a4] [&_svg]:size-[13px] hover:bg-[#303747] hover:text-white"
                 aria-label={`关闭 ${session.title}`}
                 onClick={(event) => {
                   event.stopPropagation();
@@ -326,34 +326,45 @@ export function TerminalPanel({
             </div>
           ))}
         </div>
-        <div className="terminal-panel__actions">
-          <button type="button" className="icon-button terminal-panel__action" title="新建终端" aria-label="新建终端" onClick={() => void createTerminal()}>
+        <div className="terminal-panel__actions flex flex-none items-center gap-[3px]">
+          <button type="button" className="terminal-panel__action grid size-7 cursor-pointer place-items-center rounded-sm border border-transparent bg-transparent text-[#aeb6c6] [&_svg]:size-3.5 hover:enabled:border-[#343b4c] hover:enabled:bg-[#202532] hover:enabled:text-white" title="新建终端" aria-label="新建终端" onClick={() => void createTerminal()}>
             <PlusIcon />
           </button>
-          <button type="button" className="icon-button terminal-panel__action" title="重启终端" aria-label="重启终端" onClick={() => void restartTerminal()}>
+          <button type="button" className="terminal-panel__action grid size-7 cursor-pointer place-items-center rounded-sm border border-transparent bg-transparent text-[#aeb6c6] [&_svg]:size-3.5 hover:enabled:border-[#343b4c] hover:enabled:bg-[#202532] hover:enabled:text-white" title="重启终端" aria-label="重启终端" onClick={() => void restartTerminal()}>
             <RefreshIcon />
           </button>
           <button
             type="button"
-            className="icon-button terminal-panel__action"
+            className="terminal-panel__action grid size-7 cursor-pointer place-items-center rounded-sm border border-transparent bg-transparent text-[#aeb6c6] [&_svg]:size-3.5 hover:enabled:border-[#343b4c] hover:enabled:bg-[#202532] hover:enabled:text-white"
             title={isTakeover ? "还原终端" : "最大化终端"}
             aria-label={isTakeover ? "还原终端" : "最大化终端"}
             onClick={onToggleTakeover}
           >
             {isTakeover ? <MinimizeIcon /> : <MaximizeIcon />}
           </button>
-          <button type="button" className="icon-button terminal-panel__action" title="隐藏终端" aria-label="隐藏终端" onClick={onHide}>
+          <button type="button" className="terminal-panel__action grid size-7 cursor-pointer place-items-center rounded-sm border border-transparent bg-transparent text-[#aeb6c6] [&_svg]:size-3.5 hover:enabled:border-[#343b4c] hover:enabled:bg-[#202532] hover:enabled:text-white" title="隐藏终端" aria-label="隐藏终端" onClick={onHide}>
             <CloseIcon />
           </button>
         </div>
       </div>
       {error ? (
-        <div className="terminal-panel__error">{error}</div>
+        <div className="terminal-panel__error whitespace-pre-wrap p-[18px] font-mono text-xs text-error-ink">{error}</div>
       ) : (
-        <div className="terminal-panel__viewport" ref={containerRef} />
+        <div className="terminal-panel__viewport min-h-0 overflow-hidden px-2.5 py-2 [&_.xterm]:h-full" ref={containerRef} />
       )}
     </section>
   );
+}
+
+function terminalStatusClass(status: string): string {
+  switch (status) {
+    case "exited":
+      return "terminal-panel__status--exited bg-[var(--status-neutral)]";
+    case "error":
+      return "terminal-panel__status--error bg-[var(--status-error)]";
+    default:
+      return "terminal-panel__status--running bg-[var(--status-running)]";
+  }
 }
 
 function updateSession(

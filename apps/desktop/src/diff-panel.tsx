@@ -340,14 +340,14 @@ export function DiffPanel({
   }, [panelMode]);
 
   return (
-    <section className={`diff-panel file-workbench file-workbench--${panelMode}`}>
-      <div className="diff-panel__header file-workbench__header">
-        <div className="file-workbench__heading">
-          <h2 className="diff-panel__title">{panelMode === "changes" ? "变更" : "文件"}</h2>
-          <span className="file-workbench__subtitle">{buildSubtitle(activeContext)}</span>
+    <section className={`diff-panel file-workbench file-workbench--${panelMode} flex h-full min-h-0 flex-col overflow-hidden bg-surface`}>
+      <div className="diff-panel__header file-workbench__header flex items-center justify-between gap-2 border-b border-border px-4 pt-3 pb-2.5">
+        <div className="file-workbench__heading min-w-0">
+          <h2 className="diff-panel__title m-0 text-sm font-semibold text-foreground-strong">{panelMode === "changes" ? "变更" : "文件"}</h2>
+          <span className="file-workbench__subtitle block max-w-[180px] overflow-hidden text-ellipsis whitespace-nowrap text-[11px] text-muted-soft">{buildSubtitle(activeContext)}</span>
         </div>
         {showReviewCounter ? (
-          <span className="diff-panel__counter" data-testid="diff-panel-counter">
+          <span className="diff-panel__counter ml-auto mr-2 text-xs text-muted-strong tabular-nums" data-testid="diff-panel-counter">
             {`已审阅 ${reviewedCount} / ${changedRows.length}`}
           </span>
         ) : null}
@@ -363,14 +363,18 @@ export function DiffPanel({
       </div>
 
       {showContextStrip ? (
-        <div className="file-workbench__context-strip" aria-label="文件作用域">
+        <div className="file-workbench__context-strip flex gap-1.5 overflow-x-auto border-b border-border px-2.5 py-2" aria-label="文件作用域">
           {contexts.map((context) => {
             const isActive = activeContext?.workspace.id === context.workspace.id;
             const changedResult = changedByWorkspace[context.workspace.id];
             const changeCount = changedResult?.state === "available" ? changedResult.files.length : 0;
             return (
               <button
-                className={`file-workbench__context ${isActive ? "file-workbench__context--active" : ""}`}
+                className={[
+                  "file-workbench__context flex min-w-[92px] max-w-[160px] items-center justify-between gap-2 rounded-md border border-border bg-surface-muted px-2 py-[7px] text-xs text-muted-strong",
+                  "[&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis [&>span]:whitespace-nowrap",
+                  isActive ? "file-workbench__context--active border-[var(--accent)] bg-accent-tint text-[var(--accent)]" : "",
+                ].filter(Boolean).join(" ")}
                 key={context.workspace.id}
                 type="button"
                 onClick={() => setActiveWorkspaceId(context.workspace.id)}
@@ -389,17 +393,22 @@ export function DiffPanel({
         </div>
       ) : null}
 
-      <div className="file-workbench__body">
+      <div
+        className={[
+          "file-workbench__body grid min-h-0 grid-rows-[minmax(0,1fr)] overflow-hidden border-b border-border",
+          panelMode === "files" ? "flex-[0_1_42%] min-h-[180px]" : "flex-[0_0_min(42%,280px)]",
+        ].join(" ")}
+      >
         {panelMode === "files" ? (
-          <section className="file-workbench__section file-workbench__section--tree" aria-label="工作区文件树">
-            <div className="file-workbench__section-header">
+          <section className="file-workbench__section file-workbench__section--tree grid min-h-0 grid-rows-[auto_minmax(0,1fr)] overflow-hidden" aria-label="工作区文件树">
+            <div className="file-workbench__section-header flex min-h-[30px] items-center justify-between gap-2 px-3 text-[11px] font-bold text-muted-soft uppercase">
               <span>工作区文件树</span>
               <span>{activeFiles.length}</span>
             </div>
             {activeTree.length === 0 ? (
-              <div className="diff-panel__empty">没有已索引的文件</div>
+              <div className="diff-panel__empty px-4 py-10 text-center text-[13px] text-muted-soft">没有已索引的文件</div>
             ) : (
-              <div className="file-workbench__tree" data-testid="file-workbench-tree">
+              <div className="file-workbench__tree min-h-0 overflow-auto py-1 pb-2" data-testid="file-workbench-tree">
                 {activeTree.map((node) => (
                   <FileTreeRow
                     key={node.path || node.name}
@@ -418,29 +427,29 @@ export function DiffPanel({
             )}
           </section>
         ) : (
-          <section className="file-workbench__section file-workbench__section--changes" aria-label="已变更文件">
-            <div className="file-workbench__section-header">
+          <section className="file-workbench__section file-workbench__section--changes grid min-h-0 grid-rows-[auto_minmax(0,1fr)] overflow-hidden" aria-label="已变更文件">
+            <div className="file-workbench__section-header flex min-h-[30px] items-center justify-between gap-2 px-3 text-[11px] font-bold text-muted-soft uppercase">
               <span>已变更文件</span>
               <span>{changedFilesSummary}</span>
             </div>
             {changedRows.length === 0 && unavailableChangedGroupCount === 0 ? (
-              <div className="diff-panel__empty">
+              <div className="diff-panel__empty px-4 py-10 text-center text-[13px] text-muted-soft">
                 {pendingChangedGroupCount > 0 ? "正在加载变更……" : "没有变更"}
               </div>
             ) : (
-              <div className="diff-panel__file-list" ref={fileListRef}>
+              <div className="diff-panel__file-list min-h-0 overflow-y-auto" ref={fileListRef}>
                 {changedGroups.map((group) =>
                   group.files.length === 0 && !group.error ? null : (
-                    <div className="file-workbench__change-group" key={group.context.workspace.id}>
+                    <div className="file-workbench__change-group grid" key={group.context.workspace.id}>
                       {showContextStrip ? (
-                        <div className="file-workbench__change-heading">
+                        <div className="file-workbench__section-header file-workbench__change-heading flex min-h-[26px] items-center justify-between gap-2 bg-surface-muted px-3 text-[11px] font-bold text-muted-soft uppercase">
                           <span>{contextLabel(group.context)}</span>
                           <span>{group.error ? "不可用" : group.files.length}</span>
                         </div>
                       ) : null}
                       {group.error ? (
                         <div
-                          className="diff-panel__empty diff-panel__unavailable"
+                          className="diff-panel__empty diff-panel__unavailable px-4 py-10 text-center text-[13px] text-error-ink"
                           data-testid="changed-files-unavailable"
                           role="status"
                         >
@@ -453,8 +462,8 @@ export function DiffPanel({
                           selectedFile?.workspaceId === file.workspaceId &&
                           selectedFile.path === file.path;
                         const className = [
-                          "diff-panel__file",
-                          isSelected ? "diff-panel__file--selected" : "",
+                          "diff-panel__file flex items-center gap-1.5 p-0",
+                          isSelected ? "diff-panel__file--selected bg-surface-muted" : "",
                           isReviewed ? "diff-panel__file--reviewed" : "",
                         ]
                           .filter(Boolean)
@@ -463,14 +472,17 @@ export function DiffPanel({
                           <div className={className} key={`${file.workspaceId}:${file.path}`} data-file-path={file.path}>
                             <input
                               aria-label={`标记 ${file.path} 为已审阅`}
-                              className="diff-panel__reviewed-checkbox"
+                              className="diff-panel__reviewed-checkbox m-0 ml-3 flex-none cursor-pointer"
                               data-testid={`diff-panel-reviewed-${file.path}`}
                               type="checkbox"
                               checked={isReviewed}
                               onChange={() => toggleReviewed(file)}
                             />
                             <button
-                              className="diff-panel__file-name"
+                              className={[
+                                "diff-panel__file-name flex min-w-0 flex-1 cursor-pointer items-center gap-1.5 border-0 bg-transparent px-3 py-1.5 text-left text-[13px] font-mono text-foreground hover:bg-surface-muted",
+                                isReviewed ? "text-muted-soft line-through" : "",
+                              ].filter(Boolean).join(" ")}
                               type="button"
                               onClick={() => {
                                 setViewerMode("diff");
@@ -479,12 +491,14 @@ export function DiffPanel({
                                 );
                               }}
                             >
-                              <span className={`diff-panel__status-dot diff-panel__status-dot--${file.status}`} />
-                              <span className="diff-panel__file-path">{formatPathForDisplay(file.path)}</span>
-                              <span className="file-workbench__status-label">{statusLabel(file)}</span>
+                              <span
+                                className={`diff-panel__status-dot inline-block size-2 flex-none rounded-full ${statusDotClass(file.status)}`}
+                              />
+                              <span className="diff-panel__file-path min-w-0 whitespace-pre-wrap wrap-anywhere">{formatPathForDisplay(file.path)}</span>
+                              <span className="file-workbench__status-label ml-auto font-sans text-[11px] text-muted-soft">{statusLabel(file)}</span>
                             </button>
                             <button
-                              className="diff-panel__stage-btn"
+                              className="diff-panel__stage-btn mr-2 cursor-pointer rounded-[var(--radius-xs)] border border-border bg-transparent px-2 py-0.5 text-[11px] text-muted-strong hover:enabled:bg-surface-muted disabled:cursor-default disabled:opacity-[0.55] disabled:text-muted-soft"
                               type="button"
                               onClick={() => handleStage(file)}
                               disabled={file.staged}
@@ -503,22 +517,31 @@ export function DiffPanel({
         )}
       </div>
 
-      <div className="diff-panel__viewer file-workbench__viewer">
-        <div className="diff-panel__viewer-header file-workbench__viewer-header">
-          <span className="file-workbench__viewer-path">
+      <div
+        className={[
+          "diff-panel__viewer file-workbench__viewer flex-1 overflow-y-auto border-t-0",
+          panelMode === "changes" ? "min-h-[260px]" : "min-h-[220px]",
+        ].join(" ")}
+      >
+        <div className="diff-panel__viewer-header file-workbench__viewer-header flex items-center justify-between gap-2.5 border-b border-border bg-surface-muted px-3 py-2 font-mono text-xs font-semibold text-foreground">
+          <span className="file-workbench__viewer-path diff-panel__file-path min-w-0 whitespace-pre-wrap wrap-anywhere">
             {selectedFile ? formatPathForDisplay(selectedFile.path) : "选择文件"}
           </span>
           {selectedFile && panelMode === "changes" ? (
-            <span className="file-workbench__viewer-modes" role="group" aria-label="查看模式">
+            <span className="file-workbench__viewer-modes flex flex-wrap justify-end gap-1" role="group" aria-label="查看模式">
               <button
-                className={viewerMode === "preview" ? "file-workbench__mode file-workbench__mode--active" : "file-workbench__mode"}
+                className={viewerMode === "preview"
+                  ? "file-workbench__mode file-workbench__mode--active h-6 cursor-pointer rounded-sm border border-[var(--accent)] bg-accent-tint px-2 text-xs font-[650] text-[var(--accent)]"
+                  : "file-workbench__mode h-6 cursor-pointer rounded-sm border border-border bg-surface-muted px-2 text-xs font-[650] text-muted-strong"}
                 type="button"
                 onClick={() => setViewerMode("preview")}
               >
                 文件
               </button>
               <button
-                className={viewerMode === "diff" ? "file-workbench__mode file-workbench__mode--active" : "file-workbench__mode"}
+                className={viewerMode === "diff"
+                  ? "file-workbench__mode file-workbench__mode--active h-6 cursor-pointer rounded-sm border border-[var(--accent)] bg-accent-tint px-2 text-xs font-[650] text-[var(--accent)]"
+                  : "file-workbench__mode h-6 cursor-pointer rounded-sm border border-border bg-surface-muted px-2 text-xs font-[650] text-muted-strong"}
                 type="button"
                 onClick={() => setViewerMode("diff")}
               >
@@ -556,8 +579,11 @@ function FileTreeRow({
   if (node.kind === "directory") {
     return (
       <div>
-        <div className="file-workbench__tree-row file-workbench__tree-row--dir" style={{ "--depth": depth } as CSSProperties}>
-          <span className="file-workbench__tree-icon"><FolderIcon /></span>
+        <div
+          className="file-workbench__tree-row file-workbench__tree-row--dir flex min-h-7 w-full items-center gap-1.5 py-1 pr-2.5 pl-[calc(10px+var(--depth)*14px)] text-left text-xs font-[650] text-muted-strong"
+          style={{ "--depth": depth } as CSSProperties}
+        >
+          <span className="file-workbench__tree-icon size-[15px] flex-none [&_svg]:size-[15px]"><FolderIcon /></span>
           <span>{node.name}</span>
         </div>
         {node.children.map((child) => (
@@ -577,13 +603,13 @@ function FileTreeRow({
   const isSelected = selectedFile?.workspaceId === activeWorkspaceId && selectedFile.path === node.path;
   return (
     <button
-      className={`file-workbench__tree-row file-workbench__tree-row--file ${isSelected ? "file-workbench__tree-row--selected" : ""}`}
+      className={`file-workbench__tree-row file-workbench__tree-row--file flex min-h-7 w-full cursor-pointer items-center gap-1.5 border-0 bg-transparent py-1 pr-2.5 pl-[calc(10px+var(--depth)*14px)] text-left text-xs text-foreground hover:bg-surface-muted ${isSelected ? "file-workbench__tree-row--selected bg-surface-muted" : ""}`}
       data-file-path={node.path}
       style={{ "--depth": depth } as CSSProperties}
       type="button"
       onClick={() => onSelect(node.path)}
     >
-      <span className="file-workbench__tree-icon"><FileIcon /></span>
+      <span className="file-workbench__tree-icon size-[15px] flex-none [&_svg]:size-[15px]"><FileIcon /></span>
       <span>{node.name}</span>
     </button>
   );
@@ -605,33 +631,50 @@ function renderViewer({
   readonly diffText: string;
 }) {
   if (!selectedFile) {
-    return <div className="diff-panel__empty">从文件树或已变更文件中选择文件。</div>;
+    return <div className="diff-panel__empty px-4 py-10 text-center text-[13px] text-muted-soft">从文件树或已变更文件中选择文件。</div>;
   }
   if (viewerLoading) {
-    return <div className="diff-panel__empty">{viewerMode === "diff" ? "正在加载差异……" : "正在加载预览……"}</div>;
+    return <div className="diff-panel__empty px-4 py-10 text-center text-[13px] text-muted-soft">{viewerMode === "diff" ? "正在加载差异……" : "正在加载预览……"}</div>;
   }
   if (viewerError) {
-    return <div className="diff-panel__empty">{viewerError}</div>;
+    return <div className="diff-panel__empty px-4 py-10 text-center text-[13px] text-muted-soft">{viewerError}</div>;
   }
   if (viewerMode === "diff") {
     return diffText ? (
       <InlineDiff diff={diffText} language={extensionToLanguage(selectedFile.path)} />
     ) : (
-      <div className="diff-panel__empty">该文件没有可用的差异。</div>
+      <div className="diff-panel__empty px-4 py-10 text-center text-[13px] text-muted-soft">该文件没有可用的差异。</div>
     );
   }
   if (!preview) {
-    return <div className="diff-panel__empty">没有可用的预览。</div>;
+    return <div className="diff-panel__empty px-4 py-10 text-center text-[13px] text-muted-soft">没有可用的预览。</div>;
   }
   if (preview.binary) {
-    return <div className="diff-panel__empty">无法预览二进制文件或目录。</div>;
+    return <div className="diff-panel__empty px-4 py-10 text-center text-[13px] text-muted-soft">无法预览二进制文件或目录。</div>;
   }
   return (
-    <pre className="file-workbench__preview" data-testid="file-workbench-preview">
+    <pre className="file-workbench__preview m-0 p-3 whitespace-pre-wrap font-mono text-xs text-foreground" data-testid="file-workbench-preview">
       {preview.content}
       {preview.truncated ? "\n\n[预览已截断]" : ""}
     </pre>
   );
+}
+
+function statusDotClass(status: string): string {
+  switch (status) {
+    case "modified":
+    case "renamed":
+      return "bg-[var(--diff-modified-ink)]";
+    case "added":
+    case "copied":
+      return "bg-[var(--diff-added-ink)]";
+    case "deleted":
+      return "bg-[var(--diff-removed-ink)]";
+    case "untracked":
+      return "bg-[var(--diff-untracked-ink)]";
+    default:
+      return "bg-muted-soft";
+  }
 }
 
 function buildFileTree(files: readonly string[]): readonly FileTreeNode[] {
