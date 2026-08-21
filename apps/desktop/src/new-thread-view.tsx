@@ -14,6 +14,10 @@ import { ComposerSurface } from "./composer-surface";
 import { ModelOnboardingNoticeBanner } from "./model-onboarding-notice";
 import type { ModelOnboardingState, ModelOnboardingSettingsSection } from "./model-onboarding";
 import { ModelSelector } from "./model-selector";
+import { Toggle } from "@/components/ui/toggle";
+
+const environmentToggleClass =
+  "new-thread__environment h-auto min-w-0 rounded-full border border-border bg-surface-muted px-[11px] py-[7px] text-[13px] font-[560] text-muted-strong shadow-none hover:bg-surface-muted hover:text-muted-strong data-[state=on]:border-line-strong data-[state=on]:bg-accent-tint data-[state=on]:text-foreground-strong";
 
 interface NewThreadViewProps {
   readonly workspaces: readonly WorkspaceRecord[];
@@ -133,17 +137,21 @@ export function NewThreadView({
 
   return (
     <section className="canvas canvas--new-thread">
-      <div className="new-thread">
-        <div className="new-thread__hero">
-          <div className="new-thread__logo" data-testid="new-thread-logo">
+      <div className="new-thread grid min-h-[calc(100vh-164px)] content-center gap-5">
+        <div className="new-thread__hero grid justify-items-center gap-2 text-center">
+          <div className="new-thread__logo grid size-11 place-items-center [&_svg]:block [&_svg]:size-11" data-testid="new-thread-logo">
             <PiLogoMark />
           </div>
-          <div className="new-thread__eyebrow">新建对话</div>
-          <h1 className="new-thread__title">开始构建</h1>
-          <label className="new-thread__workspace-picker">
+          <div className="new-thread__eyebrow text-[11px] font-bold tracking-[0.12em] text-muted-soft uppercase">
+            新建对话
+          </div>
+          <h1 className="new-thread__title m-0 text-[30px] font-[640] tracking-[-0.03em] text-foreground-strong">
+            开始构建
+          </h1>
+          <label className="new-thread__workspace-picker grid justify-items-center">
             <span className="sr-only">工作区</span>
             <select
-              className="new-thread__workspace"
+              className="new-thread__workspace rounded-full border border-border bg-surface px-3 py-2 text-foreground-strong"
               value={workspace.id}
               onChange={(event) => onSelectWorkspace(event.target.value)}
             >
@@ -156,7 +164,7 @@ export function NewThreadView({
           </label>
         </div>
 
-        <div className="new-thread__composer composer">
+        <div className="new-thread__composer composer mx-auto w-full max-w-[820px]">
           <div className="conversation conversation--composer">
             <ComposerSurface
               lastError={lastError}
@@ -257,24 +265,24 @@ function NewThreadComposerFooter({
     <>
       <div className="composer__footer">
         <div className="composer__footer-row">
-          <div className="composer__hint new-thread__hint">
-            <div className="new-thread__environment-group">
-              <button
-                className={`new-thread__environment ${environment === "local" ? "new-thread__environment--active" : ""}`}
-                type="button"
-                onClick={() => onSelectEnvironment("local")}
+          <div className="composer__hint new-thread__hint flex flex-wrap items-center gap-2.5 text-[12px] text-muted-soft">
+            <div className="new-thread__environment-group inline-flex gap-2">
+              <Toggle
+                className={environmentToggleClass}
+                pressed={environment === "local"}
+                onPressedChange={() => onSelectEnvironment("local")}
               >
                 <span>本地</span>
-              </button>
-              <button
-                className={`new-thread__environment ${environment === "worktree" ? "new-thread__environment--active" : ""}`}
-                type="button"
-                onClick={() => onSelectEnvironment("worktree")}
+              </Toggle>
+              <Toggle
+                className={environmentToggleClass}
+                pressed={environment === "worktree"}
+                onPressedChange={() => onSelectEnvironment("worktree")}
               >
                 <span>工作树</span>
-              </button>
+              </Toggle>
             </div>
-            <span className="new-thread__hint-separator">·</span>
+            <span className="new-thread__hint-separator text-muted-soft">·</span>
             <ModelSelector
               runtime={runtime}
               provider={provider}
