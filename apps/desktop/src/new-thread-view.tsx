@@ -19,6 +19,8 @@ import { Toggle } from "@/components/ui/toggle";
 const environmentToggleClass =
   "new-thread__environment h-auto min-w-0 rounded-full border border-border bg-surface-muted px-[11px] py-[7px] text-[13px] font-[560] text-muted-strong shadow-none hover:bg-surface-muted hover:text-muted-strong data-[state=on]:border-line-strong data-[state=on]:bg-accent-tint data-[state=on]:text-foreground-strong";
 
+export { environmentToggleClass };
+
 interface NewThreadViewProps {
   readonly workspaces: readonly WorkspaceRecord[];
   readonly selectedWorkspaceId: string;
