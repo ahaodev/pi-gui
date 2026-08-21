@@ -1,5 +1,6 @@
 import { useMemo, type ReactNode } from "react";
 import { MAX_HIGHLIGHTED_LINES, highlightLine, type HighlightLine } from "./syntax-highlight";
+import { cn } from "@/lib/utils";
 
 interface DiffLine {
   readonly type: "added" | "removed" | "context" | "header";
@@ -23,17 +24,26 @@ export function InlineDiff({
 
   return (
     <pre
-      className="diff-inline"
+      className="diff-inline m-0 p-0 font-mono text-xs leading-[1.6]"
       data-language={highlightActive ? language : undefined}
     >
       {lines.map((line, index) => (
-        <div className={`diff-line diff-line--${line.type}`} key={index}>
-          {line.lineNumber !== undefined ? (
-            <span className="diff-line__number">{line.lineNumber}</span>
-          ) : (
-            <span className="diff-line__number" />
+        <div
+          className={cn(
+            "diff-line flex pr-3",
+            `diff-line--${line.type}`,
+            line.type === "added" && "bg-[var(--diff-added-bg)] text-[var(--diff-added-ink)]",
+            line.type === "removed" && "bg-[var(--diff-removed-bg)] text-[var(--diff-removed-ink)]",
+            line.type === "header" && "bg-[var(--diff-header-bg)] text-muted-soft italic",
           )}
-          <span className="diff-line__content">
+          key={index}
+        >
+          {line.lineNumber !== undefined ? (
+            <span className="diff-line__number inline-block min-w-10 flex-none px-2 text-right text-muted-soft select-none">{line.lineNumber}</span>
+          ) : (
+            <span className="diff-line__number inline-block min-w-10 flex-none px-2 text-right select-none" />
+          )}
+          <span className="diff-line__content whitespace-pre-wrap break-words">
             {highlightActive && line.type !== "header" ? (
               <HighlightedContent content={line.content} language={language!} />
             ) : (

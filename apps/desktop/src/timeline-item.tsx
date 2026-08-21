@@ -61,28 +61,28 @@ function TimelineMessage({
 }) {
   if (item.role === "user") {
     return (
-      <article className="timeline-item timeline-item--user">
-        <div className="timeline-item__bubble">
+      <article className="timeline-item timeline-item--user flex min-w-0 items-center justify-end gap-2">
+        <div className="timeline-item__bubble w-[min(620px,100%)] min-w-0 rounded-3xl border border-[var(--theme-bubble-border,var(--line))] bg-[var(--theme-bubble-bg,var(--main))] px-[17px] py-[13px]">
           {item.attachments?.length ? (
-            <div className="timeline-item__attachments">
+            <div className="timeline-item__attachments mb-2.5 flex flex-wrap gap-2.5">
               {item.attachments.map((attachment, index) =>
                 attachment.kind === "image" ? (
                   <img
                     alt={attachment.name ?? `附件 ${index + 1}`}
-                    className="timeline-item__attachment timeline-item__attachment--image"
+                    className="timeline-item__attachment timeline-item__attachment--image size-22 rounded-xl border border-border bg-surface-muted object-cover"
                     key={`${item.id}:${index}`}
                     src={`data:${attachment.mimeType};base64,${attachment.data}`}
                   />
                 ) : (
                   <div
-                    className="timeline-item__attachment timeline-item__attachment--file"
+                    className="timeline-item__attachment timeline-item__attachment--file inline-flex min-w-0 max-w-[min(320px,100%)] items-center gap-2.5 rounded-xl border border-border bg-background px-3 py-2.5"
                     key={`${item.id}:${index}`}
                     title={attachment.fsPath}
                   >
-                    <span className="timeline-item__attachment-icon" aria-hidden="true">
+                    <span className="timeline-item__attachment-icon grid size-[18px] flex-none place-items-center text-muted-soft [&_svg]:size-[18px]" aria-hidden="true">
                       <FileIcon />
                     </span>
-                    <span className="timeline-item__attachment-name">{attachment.name}</span>
+                    <span className="timeline-item__attachment-name min-w-0 truncate text-[13px] font-[520] text-foreground-strong">{attachment.name}</span>
                   </div>
                 ),
               )}
@@ -96,8 +96,8 @@ function TimelineMessage({
 
   if (item.role === "branchSummary" || item.role === "compactionSummary") {
     return (
-      <article className="timeline-item timeline-item--summary-card">
-        <div className="timeline-item__summary-eyebrow">
+      <article className="timeline-item timeline-item--summary-card max-w-full min-w-0 rounded-4xl border border-[var(--summary-card-border)] bg-[var(--summary-card-bg)] px-4 py-3.5">
+        <div className="timeline-item__summary-eyebrow mb-2 text-[11px] font-bold tracking-[0.08em] text-[var(--summary-eyebrow)] uppercase">
           {item.role === "branchSummary" ? "分支摘要" : "压缩摘要"}
         </div>
         <MessageMarkdown text={item.text} />
@@ -107,20 +107,20 @@ function TimelineMessage({
 
   const canFork = onForkFromMessage != null && sourceMessageIndex !== undefined;
   return (
-    <article className="timeline-item timeline-item--assistant">
+    <article className="timeline-item timeline-item--assistant group relative max-w-full min-w-0">
       <MessageMarkdown text={item.text} />
       {canFork ? (
-        <div className="timeline-item__actions">
+        <div className="timeline-item__actions absolute top-full left-0 z-[2] mt-0.5 flex -translate-y-0.5 items-center gap-1 opacity-0 transition-[opacity,transform] duration-[var(--motion-fast)] ease-[var(--ease-out)] group-hover:translate-y-0 group-hover:opacity-100 hover:translate-y-0 hover:opacity-100 focus-within:translate-y-0 focus-within:opacity-100">
           <button
             type="button"
-            className="timeline-item__action"
+            className="timeline-item__action inline-flex h-6 cursor-pointer items-center gap-[5px] rounded-md border border-transparent bg-transparent px-2 text-xs leading-none text-muted-strong [&_svg]:size-[13px] hover:border-border hover:bg-surface-muted hover:text-foreground"
             title="从此处分叉对话"
             aria-label="从此处分叉对话"
             data-testid="fork-from-message"
             onClick={() => onForkFromMessage(sourceMessageIndex, item.text)}
           >
             <ForkIcon />
-            <span className="timeline-item__action-label">分叉</span>
+            <span className="timeline-item__action-label font-medium">分叉</span>
           </button>
         </div>
       ) : null}
@@ -168,42 +168,51 @@ function TimelineToolCallItem({
     void navigator.clipboard.writeText(text);
   };
 
+  const pipClass = cn(
+    "timeline-tool__status-pip size-1.5 flex-none rounded-full bg-muted-soft",
+    item.status === "success" && "bg-success",
+    item.status === "error" && "bg-destructive",
+    item.status === "running" && "bg-[var(--accent)] animate-[timeline-pip-pulse_1.4s_var(--ease-in-out)_infinite]",
+  );
+
   return (
-    <article className={`timeline-tool timeline-tool--${item.status}`}>
-      <div className="timeline-tool__header-row">
-        <span className="timeline-tool__glyph" aria-hidden="true">
+    <article className={cn("timeline-tool grid max-w-full min-w-0 gap-0.5 p-0", `timeline-tool--${item.status}`)}>
+      <div className="timeline-tool__header-row flex items-center gap-1.5">
+        <span className={cn("timeline-tool__glyph inline-flex size-4 flex-none items-center justify-center text-muted-soft [&_svg]:size-3.5", item.status === "error" && "text-destructive")} aria-hidden="true">
           {toolGlyph(item.toolName)}
         </span>
         <button
-          className="timeline-tool__header"
+          className="timeline-tool__header flex min-w-0 flex-1 cursor-pointer flex-wrap items-center gap-1 border-0 bg-none p-0 text-left disabled:cursor-default"
           type="button"
           aria-expanded={expanded}
           disabled={!hasContent}
           onClick={() => onToggle?.(item.callId)}
         >
           {hasContent ? (
-            <span className={`timeline-tool__chevron ${expanded ? "timeline-tool__chevron--expanded" : ""}`}>
+            <span className={cn("timeline-tool__chevron inline-flex size-4 flex-none text-muted-soft transition-transform duration-[var(--motion-base)] ease-[var(--ease-out)]", expanded && "timeline-tool__chevron--expanded rotate-90")}>
               <ChevronRightIcon />
             </span>
           ) : null}
-          <span className="timeline-tool__label">{compactLabel}</span>
-          {inlineDetail ? <span className="timeline-tool__detail">{inlineDetail}</span> : null}
+          <span className={cn("timeline-tool__label text-[13px] leading-[1.45] text-muted-strong", item.status === "error" && "text-error-ink")}>
+            {compactLabel}
+          </span>
+          {inlineDetail ? <span className="timeline-tool__detail min-w-0 text-xs leading-[1.45] text-error-ink wrap-anywhere">{inlineDetail}</span> : null}
           {diffStats ? (
-            <span className="timeline-tool__diff-stats">
-              <span className="timeline-tool__stat-add">+{diffStats.added}</span>
+            <span className="timeline-tool__diff-stats ml-1.5 font-mono text-xs">
+              <span className="timeline-tool__stat-add text-success">+{diffStats.added}</span>
               {" "}
-              <span className="timeline-tool__stat-del">-{diffStats.removed}</span>
+              <span className="timeline-tool__stat-del text-destructive">-{diffStats.removed}</span>
             </span>
           ) : null}
-          <span className="timeline-tool__meta-inline">
-            <span className="timeline-tool__status-pip" aria-hidden="true" />
+          <span className="timeline-tool__meta-inline ml-1.5 inline-flex items-center gap-[5px] whitespace-nowrap text-xs text-muted-soft">
+            <span className={pipClass} aria-hidden="true" />
             {`${item.toolName} \u00b7 ${statusLabel(item.status)}`}
           </span>
         </button>
         {filePath && onViewFileInDiff ? (
           <button
             aria-label={`在变更中查看 ${filePath}`}
-            className="icon-button timeline-tool__view-in-diff"
+            className="timeline-tool__view-in-diff inline-flex size-[22px] flex-none cursor-pointer items-center justify-center rounded-md border border-transparent bg-none text-muted-soft hover:border-[var(--theme-control-border,var(--border-heavy))] hover:bg-[var(--theme-control-hover-bg,var(--overlay-hover))] hover:text-foreground"
             data-testid="timeline-tool-view-in-diff"
             type="button"
             onClick={(event) => {
@@ -216,20 +225,20 @@ function TimelineToolCallItem({
         ) : null}
       </div>
       {expanded && hasContent ? (
-        <div className="timeline-tool__body">
+        <div className="timeline-tool__body mt-1.5 max-h-[400px] overflow-x-hidden overflow-y-auto rounded-sm border border-border">
           {diffText ? (
             <>
-              <div className="timeline-tool__diff-header">
-                <span className="timeline-tool__diff-filename">
+              <div className="timeline-tool__diff-header flex items-center justify-between border-b border-border bg-surface-muted px-3 py-1.5">
+                <span className="timeline-tool__diff-filename font-mono text-xs font-semibold text-foreground">
                   {extractFilename(item.input)}
                   {diffStats ? (
-                    <span className="timeline-tool__diff-stats">
-                      {" "}<span className="timeline-tool__stat-add">+{diffStats.added}</span>
-                      {" "}<span className="timeline-tool__stat-del">-{diffStats.removed}</span>
+                    <span className="timeline-tool__diff-stats ml-1.5 font-mono text-xs">
+                      {" "}<span className="timeline-tool__stat-add text-success">+{diffStats.added}</span>
+                      {" "}<span className="timeline-tool__stat-del text-destructive">-{diffStats.removed}</span>
                     </span>
                   ) : null}
                 </span>
-                <button className="icon-button timeline-tool__copy" type="button" onClick={handleCopy} aria-label="复制">
+                <button className="timeline-tool__copy inline-flex size-6 cursor-pointer items-center justify-center rounded-md border border-transparent bg-none text-muted-soft hover:border-[var(--theme-control-border,var(--border-heavy))] hover:bg-[var(--theme-control-hover-bg,var(--overlay-hover))] hover:text-[var(--ink-strong)]" type="button" onClick={handleCopy} aria-label="复制">
                   <CopyIcon />
                 </button>
               </div>
@@ -237,12 +246,12 @@ function TimelineToolCallItem({
             </>
           ) : (
             <>
-              <div className="timeline-tool__body-actions">
-                <button className="icon-button timeline-tool__copy" type="button" onClick={handleCopy} aria-label="复制">
+              <div className="timeline-tool__body-actions flex justify-end border-b border-border bg-surface-muted px-1.5 py-1">
+                <button className="timeline-tool__copy inline-flex size-6 cursor-pointer items-center justify-center rounded-md border border-transparent bg-none text-muted-soft hover:border-[var(--theme-control-border,var(--border-heavy))] hover:bg-[var(--theme-control-hover-bg,var(--overlay-hover))] hover:text-[var(--ink-strong)]" type="button" onClick={handleCopy} aria-label="复制">
                   <CopyIcon />
                 </button>
               </div>
-              <pre className="timeline-tool__pre">{formatToolContent(item.input, item.output)}</pre>
+              <pre className="timeline-tool__pre m-0 whitespace-pre-wrap break-words px-3 py-2 font-mono text-xs leading-[1.5] text-foreground">{formatToolContent(item.input, item.output)}</pre>
             </>
           )}
         </div>
