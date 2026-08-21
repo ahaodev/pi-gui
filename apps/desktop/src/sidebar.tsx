@@ -332,7 +332,7 @@ export function Sidebar(props: SidebarProps) {
             </p>
             <Button
               type="button"
-              className="rounded-lg px-3 py-2 text-sm font-semibold"
+              className="rounded-lg px-3 py-2 text-[13px] font-semibold"
               onClick={() => {
                 void updateSnapshot(api, setSnapshot, () => api.pickWorkspace());
               }}

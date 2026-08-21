@@ -42,13 +42,13 @@
   --radius-round: 50%;
 
   /* ---- Type scale (compact, px-based like Codex) ------------------------- */
-  --text-xs: 11px;
-  --text-sm: 12px;
-  --text-base: 14px;
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-base: 16px;
   --text-md: 15px;
-  --text-lg: 16px;
+  --text-lg: 18px;
   --text-xl: 20px;
-  --text-2xl: 28px;
+  --text-2xl: 24px;
 
   --leading-tight: 1.25;
   --leading-snug: 1.375;

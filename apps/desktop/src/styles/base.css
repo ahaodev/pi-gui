@@ -186,7 +186,9 @@ body {
 .loading-card__eyebrow,
 .session-header__eyebrow {
   color: var(--muted);
-  font-size: var(--text-sm);
+  /* 12px — pinned explicitly: --text-sm now aligns with the Tailwind
+     utility scale (14px) used by the migrated surfaces. */
+  font-size: 12px;
   font-weight: var(--font-semibold);
   letter-spacing: var(--tracking-wide);
   text-transform: uppercase;
@@ -243,7 +245,9 @@ body {
   background: var(--surface);
   border: 1px solid transparent;
   color: var(--text-strong);
-  font-size: var(--text-base);
+  /* 14px — pinned explicitly: --text-base now aligns with the Tailwind
+     utility scale (16px) used by the migrated surfaces. */
+  font-size: 14px;
   font-weight: var(--font-semibold);
   transition:
     background var(--motion-base) var(--ease-out),
