@@ -11,6 +11,7 @@ import { hasFilesInDataTransfer } from "./composer-attachments";
 import { ExtensionDock, type ExtensionDockModel } from "./extension-session-ui";
 import { ExtensionIcon, FileIcon, ModelIcon, ReasoningIcon, SettingsIcon, SkillIcon, SparkIcon, StatusIcon } from "./icons";
 import { QueuedComposerMessages } from "./queued-composer-messages";
+import { cn } from "@/lib/utils";
 
 type ExtensionMentionOption = Extract<MentionOption, { kind: "extension" }>;
 type FileMentionOption = Extract<MentionOption, { kind: "file" }>;
@@ -147,7 +148,12 @@ export function ComposerSurface({
 
   return (
     <div
-      className={`composer__surface ${isDragActive ? "composer__surface--drag-active" : ""}`}
+      className={cn(
+        "composer__surface relative w-full overflow-visible rounded-[var(--radius-4xl)] border px-3.5 pt-3 pb-[11px] transition-[border-color,box-shadow,background-color] duration-[var(--motion-base)] ease-[var(--ease-out)]",
+        isDragActive
+          ? "border-[var(--focus-ring-border)] bg-accent-tint shadow-[var(--focus-ring),var(--shadow-md)]"
+          : "border-[var(--theme-control-border,var(--line))] bg-[var(--theme-control-bg,var(--surface))] shadow-[0_0_0_1px_var(--theme-focus-ring,transparent),var(--shadow-md)]",
+      )}
       data-testid={`${textareaTestId}-surface`}
       onPaste={onComposerPaste}
       onDragEnter={handleDragEnter}
@@ -156,24 +162,27 @@ export function ComposerSurface({
       onDragOver={handleDragOver}
     >
       {isDragActive ? (
-        <div className="composer__drop-indicator" data-testid="composer-drop-indicator">
+        <div
+          className="composer__drop-indicator pointer-events-none absolute top-3 right-3.5 z-[2] rounded-full bg-accent-tint px-2.5 py-1.5 text-xs font-semibold text-[var(--accent)]"
+          data-testid="composer-drop-indicator"
+        >
           拖放图片或文件以附加
         </div>
       ) : null}
       {activeSlashCommand ? (
-        <div className="composer__slash-intent">
-          <span className="composer__slash-intent-icon" aria-hidden="true">
+        <div className="mb-2.5 flex items-center gap-2.5 border-b border-border pt-1.5 pb-2.5">
+          <span className="composer__slash-intent-icon grid size-5 shrink-0 place-items-center text-muted-strong [&_svg]:size-[18px]" aria-hidden="true">
             <SlashCommandIcon command={activeSlashCommand} />
           </span>
-          <span className="composer__slash-intent-body">
-            <span className="composer__slash-intent-title">{activeSlashCommand.title}</span>
+          <span className="grid min-w-0 gap-px">
+            <span className="text-[13px] font-semibold text-foreground-strong">{activeSlashCommand.title}</span>
             {activeSlashCommandMeta ? (
-              <span className="composer__slash-intent-meta">{activeSlashCommandMeta}</span>
+              <span className="text-xs text-muted-soft">{activeSlashCommandMeta}</span>
             ) : null}
           </span>
           <button
             aria-label={`清除 ${activeSlashCommand.title}`}
-            className="composer__slash-intent-clear"
+            className="ml-auto size-6 rounded-full text-muted-soft"
             type="button"
             onClick={onClearSlashCommand}
           >
@@ -190,24 +199,29 @@ export function ComposerSurface({
         onSteerMessage={onSteerQueuedMessage}
       />
       {attachments.length > 0 ? (
-        <div className="composer__attachments">
+        <div className="mb-2.5 flex flex-wrap gap-2.5">
           {attachments.map((attachment) => (
-            <div className={`composer-attachment composer-attachment--${attachment.kind}`} key={attachment.id}>
+            <div
+              className={`composer-attachment composer-attachment--${attachment.kind} inline-flex min-w-0 max-w-[min(280px,100%)] items-center gap-2 rounded-full border border-border bg-surface-muted p-1.5 pr-2.5`}
+              key={attachment.id}
+            >
               {attachment.kind === "image" ? (
                 <img
                   alt={attachment.name}
-                  className="composer-attachment__preview"
+                  className="composer-attachment__preview size-7 rounded-[var(--radius-md)] bg-surface-muted object-cover"
                   src={`data:${attachment.mimeType};base64,${attachment.data}`}
                 />
               ) : (
-                <span className="composer-attachment__icon" aria-hidden="true">
+                <span className="composer-attachment__icon grid size-7 shrink-0 place-items-center rounded-[var(--radius-md)] bg-surface-muted text-muted-soft" aria-hidden="true">
                   <FileIcon />
                 </span>
               )}
-              <span className="composer-attachment__name">{attachment.name}</span>
+              <span className="composer-attachment__name min-w-0 truncate text-[13px] font-[520] text-muted-strong">
+                {attachment.name}
+              </span>
               <button
                 aria-label={`移除 ${attachment.name}`}
-                className="composer-attachment__remove"
+                className="text-lg leading-none text-muted-soft"
                 type="button"
                 onClick={() => onRemoveAttachment(attachment.id)}
               >
@@ -221,14 +235,17 @@ export function ComposerSurface({
         <ExtensionDock dock={extensionDock} expanded={extensionDockExpanded} onToggle={onToggleExtensionDock} />
       ) : null}
       {lastError ? (
-        <div className="composer__error error-banner" data-testid="composer-error-banner">
+        <div
+          className="error-banner composer__error mb-3 w-full rounded-[var(--radius-xl)] border border-danger-tint-border bg-danger-tint-bg px-3.5 py-3 font-semibold text-error-ink"
+          data-testid="composer-error-banner"
+        >
           {lastError}
         </div>
       ) : null}
-      <div className="composer__editor">
+      <div className="composer__editor relative grid gap-2.5">
         {topNotice}
         {showMentionMenu ? (
-          <div className="composer__menus">
+          <div className="composer__menus pointer-events-none absolute inset-x-0 bottom-[calc(100%+12px)] z-[4] grid gap-2">
             <div className="mention-menu" data-testid="mention-menu" onWheel={(event) => event.stopPropagation()}>
               <MentionMenuSections
                 options={mentionOptions}
@@ -240,7 +257,7 @@ export function ComposerSurface({
           </div>
         ) : null}
         {showSlashMenu || (showSlashOptionMenu && selectedSlashCommand) ? (
-          <div className="composer__menus">
+          <div className="composer__menus pointer-events-none absolute inset-x-0 bottom-[calc(100%+12px)] z-[4] grid gap-2">
             {showSlashMenu ? (
               <div className="slash-menu" data-testid="slash-menu" onWheel={(event) => event.stopPropagation()}>
                 {slashSections.map((section) => (
@@ -319,7 +336,10 @@ export function ComposerSurface({
         ) : null}
         <textarea
           aria-label={textareaLabel}
-          className={textareaClassName}
+          className={cn(
+            "w-full min-h-6 max-h-[220px] resize-none border-0 bg-transparent p-0 text-[15px] leading-[1.5] text-foreground-strong outline-none",
+            textareaClassName,
+          )}
           data-testid={textareaTestId}
           ref={composerRef}
           value={composerDraft}
@@ -329,7 +349,7 @@ export function ComposerSurface({
           onKeyDown={onComposerKeyDown}
           placeholder={textareaPlaceholder}
         />
-        <div className="composer__bar">{footer}</div>
+        <div className="composer__bar mt-2 w-full">{footer}</div>
       </div>
     </div>
   );

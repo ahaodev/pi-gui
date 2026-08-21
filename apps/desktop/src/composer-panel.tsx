@@ -118,7 +118,7 @@ export function ComposerPanel({
   const primaryActionIsStop = selectedSession.status === "running" && !hasComposerInput;
 
   return (
-    <footer className="composer">
+    <footer className="composer bg-[linear-gradient(180deg,transparent_0%,var(--main)_54%)] px-7 pt-[18px] pb-6">
       <div className="conversation conversation--composer">
         <ComposerSurface
           lastError={lastError}
@@ -163,9 +163,9 @@ export function ComposerPanel({
           extensionDockExpanded={extensionDockExpanded}
           onToggleExtensionDock={onToggleExtensionDock}
           footer={(
-            <div className="composer__footer">
-              <div className="composer__footer-row">
-                <div className="composer__hint">
+            <div className="composer__footer grid w-full gap-2.5">
+              <div className="composer__footer-row flex w-full items-center justify-between gap-4">
+                <div className="composer__hint text-xs text-muted-soft">
                   {selectedSession.status === "running"
                     ? `${runningLabel} · Enter 排队 · Cmd+Enter 引导`
                     : "Enter 发送 · Shift+Enter 换行"}
@@ -182,10 +182,10 @@ export function ComposerPanel({
                     onSetThinking={onSetThinking}
                   />
                 </div>
-                <div className="composer__actions">
+                <div className="composer__actions flex items-center gap-2">
                   <button
                     aria-label="附加文件"
-                    className="icon-button composer__attach"
+                    className="composer__attach inline-grid size-8 shrink-0 place-items-center rounded-[var(--radius-lg)] border border-border bg-surface-muted text-muted-soft transition-colors duration-[var(--motion-base)] ease-[var(--ease-out)] hover:border-line-strong hover:bg-overlay-hover"
                     type="button"
                     onClick={onPickAttachments}
                   >

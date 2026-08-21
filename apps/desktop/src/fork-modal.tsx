@@ -76,7 +76,10 @@ export function ForkModal({
         </div>
 
         {error ? (
-          <div className="tree-modal__error error-banner" data-testid="fork-modal-error">
+          <div
+            className="tree-modal__error error-banner w-full rounded-[var(--radius-xl)] border border-danger-tint-border bg-danger-tint-bg px-3.5 py-3 font-semibold text-error-ink"
+            data-testid="fork-modal-error"
+          >
             {error}
           </div>
         ) : null}

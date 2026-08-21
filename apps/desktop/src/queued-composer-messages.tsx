@@ -44,7 +44,7 @@ export function QueuedComposerMessages({
           className={cn(
             "queued-composer-message grid gap-2.5 rounded-3xl border border-border bg-[linear-gradient(180deg,var(--main),var(--surface-muted))] p-3 pl-3.5 pr-3.5",
             message.id === editingQueuedMessageId &&
-              "queued-composer-message--editing border-[var(--focus-ring-border)] shadow-[0_0_0_4px_var(--focus-ring)]",
+              "queued-composer-message--editing border-[var(--focus-ring-border)] shadow-[var(--focus-ring)]",
           )}
           data-testid="queued-composer-message"
           key={message.id}

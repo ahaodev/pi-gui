@@ -814,7 +814,11 @@ export default function App() {
         />
 
         {snapshot.startupDiagnostics.length > 0 ? (
-          <div className="startup-diagnostics" role="status" data-testid="startup-diagnostics">
+          <div
+            className="startup-diagnostics flex flex-wrap gap-x-3 gap-y-1.5 border-b border-danger-tint-border bg-danger-tint-bg px-3.5 py-2 text-xs leading-[1.4] text-error-ink"
+            role="status"
+            data-testid="startup-diagnostics"
+          >
             <strong>部分已保存的工作区无法刷新。</strong>
             <span>
               {snapshot.startupDiagnostics
@@ -908,13 +912,17 @@ export default function App() {
                 </div>
 
                 {showSchemaSkewNotice ? (
-                  <div className="schema-skew-notice" role="status" data-testid="schema-skew-notice">
-                    <span className="schema-skew-notice__text">
+                  <div
+                    className="schema-skew-notice mb-2 flex items-center justify-between gap-3 rounded-[var(--radius-md)] border border-[color-mix(in_srgb,#d9a441_45%,var(--line))] border-l-3 border-l-[#d9a441] bg-[color-mix(in_srgb,#d9a441_10%,var(--surface))] px-3 py-2"
+                    role="status"
+                    data-testid="schema-skew-notice"
+                  >
+                    <span className="schema-skew-notice__text min-w-0 text-xs leading-[1.4] text-muted-strong">
                       该会话由更新版本的 pi 写入——部分内容可能无法显示。请更新 pi-gui（或使用 pi CLI 打开）以查看全部内容。
                     </span>
                     <button
                       type="button"
-                      className="schema-skew-notice__dismiss"
+                      className="schema-skew-notice__dismiss cursor-pointer border-0 bg-transparent p-0 text-xs font-semibold text-[var(--accent)] hover:underline"
                       aria-label="忽略提示"
                       onClick={() => dismissSchemaSkewNotice(selectedSessionKey)}
                     >

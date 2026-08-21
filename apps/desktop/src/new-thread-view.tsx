@@ -314,7 +314,7 @@ function NewThreadComposerFooter({
             />
             <button
               aria-label="附加文件"
-              className="icon-button composer__attach"
+              className="composer__attach inline-grid size-8 shrink-0 place-items-center rounded-[var(--radius-lg)] border border-border bg-surface-muted text-muted-soft transition-colors duration-[var(--motion-base)] ease-[var(--ease-out)] hover:border-line-strong hover:bg-overlay-hover"
               type="button"
               onClick={() => fileInputRef.current?.click()}
             >
