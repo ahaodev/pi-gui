@@ -896,7 +896,7 @@ export default function App() {
         ) : selectedWorkspace && selectedSession ? (
           <>
             <section className="canvas canvas--thread flex min-h-0 min-w-0 flex-col overflow-hidden px-7 pt-5 pb-0 max-[980px]:px-[18px]">
-              <div className="conversation conversation--thread mx-auto flex w-[min(927px,100%)] min-h-0 min-w-0 flex-1 flex-col">
+              <div className="conversation conversation--thread mx-auto flex w-[min(927px,100%)] min-h-0 min-w-0 flex-[1_1_auto] flex-col">
                 <div className="chat-header mb-[18px] grid gap-1">
                   <div className="chat-header__eyebrow text-xs font-[560] tracking-[0.06em] text-muted-subtle uppercase">
                     {selectedWorkspace.kind === "worktree"
