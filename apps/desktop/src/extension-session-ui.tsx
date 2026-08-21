@@ -57,25 +57,25 @@ export function ExtensionDock({
   readonly onToggle: () => void;
 }) {
   return (
-    <div className={`extension-dock ${expanded ? "extension-dock--expanded" : ""}`} data-testid="extension-dock">
+    <div className={`extension-dock mb-2.5 ${expanded ? "extension-dock--expanded border-b border-border pb-2.5" : ""}`} data-testid="extension-dock">
       <button
         aria-controls="extension-dock-body"
         aria-expanded={expanded}
-        className="extension-dock__toggle"
+        className="extension-dock__toggle flex w-full min-h-[34px] cursor-pointer items-center gap-2.5 rounded-xl border border-border bg-surface-muted px-2.5 py-[7px] text-left text-muted-strong hover:bg-overlay-hover"
         data-testid="extension-dock-toggle"
         title={dock.summaryText}
         type="button"
         onClick={onToggle}
       >
-        <span className="extension-dock__summary" data-testid="extension-dock-summary">
+        <span className="extension-dock__summary min-w-0 flex-1 overflow-hidden text-ellipsis whitespace-nowrap text-[13px] font-[560] tracking-[-0.01em]" data-testid="extension-dock-summary">
           {dock.summaryText}
         </span>
-        <span className="extension-dock__chevron" aria-hidden="true">
+        <span className="extension-dock__chevron size-4 flex-none text-muted-soft [&_svg]:size-4" aria-hidden="true">
           {expanded ? <ChevronDownIcon /> : <ChevronRightIcon />}
         </span>
       </button>
       {expanded ? (
-        <pre className="extension-dock__body" data-testid="extension-dock-body" id="extension-dock-body">
+        <pre className="extension-dock__body m-0 mt-2 max-h-[min(220px,28vh)] overflow-auto px-3 pt-2.5 font-mono text-xs leading-[1.5] whitespace-pre-wrap break-words text-muted-strong" data-testid="extension-dock-body" id="extension-dock-body">
           {dock.bodyText}
         </pre>
       ) : null}
@@ -148,31 +148,31 @@ export function ExtensionDialog({
   };
 
   return (
-    <div className="extension-dialog-backdrop">
+    <div className="extension-dialog-backdrop fixed inset-0 z-30 grid place-items-center bg-[rgba(24,31,44,0.26)] p-6 backdrop-blur-[6px]">
       <div
         aria-describedby={dialog.kind === "confirm" ? bodyId : undefined}
         aria-labelledby={titleId}
         aria-modal="true"
-        className="extension-dialog"
+        className="extension-dialog grid w-[min(560px,100%)] gap-3.5 rounded-[var(--radius-composer)] border border-border bg-surface p-[22px] shadow-[var(--shadow-xl)]"
         data-testid="extension-dialog"
         ref={dialogRef}
         role="dialog"
         onKeyDown={handleKeyDown}
       >
-        <div className="extension-dialog__title" id={titleId}>
+        <div className="extension-dialog__title text-[20px] font-[630] text-foreground-strong" id={titleId}>
           {dialog.title}
         </div>
         {dialog.kind === "confirm" ? (
-          <p className="extension-dialog__body" id={bodyId}>
+          <p className="extension-dialog__body m-0 text-sm leading-[1.65] text-muted-strong" id={bodyId}>
             {dialog.message}
           </p>
         ) : null}
 
         {dialog.kind === "select" ? (
-          <div className="extension-dialog__options">
+          <div className="extension-dialog__options grid gap-2">
             {dialog.options.map((option, index) => (
               <button
-                className="extension-dialog__option"
+                className="extension-dialog__option cursor-pointer rounded-xl border border-border bg-surface-muted px-3 py-[11px] text-left text-foreground-strong hover:border-line-strong hover:bg-overlay-hover"
                 key={option}
                 ref={index === 0 ? firstOptionButtonRef : undefined}
                 type="button"
@@ -187,7 +187,7 @@ export function ExtensionDialog({
         {dialog.kind === "input" ? (
           <input
             autoFocus
-            className="skills-search"
+            className="skills-search w-[min(360px,100%)] rounded-lg border border-[var(--border-default)] bg-surface px-3 py-2 text-sm text-foreground-strong placeholder:text-muted-soft focus-visible:border-[var(--focus-ring-border)]"
             placeholder={dialog.placeholder ?? "输入值"}
             value={draft}
             onChange={(event) => setDraft(event.target.value)}
@@ -197,13 +197,13 @@ export function ExtensionDialog({
         {dialog.kind === "editor" ? (
           <textarea
             autoFocus
-            className="extension-dialog__editor"
+            className="extension-dialog__editor min-h-[180px] w-full resize-y rounded-2xl border border-border bg-surface px-3.5 py-3 text-foreground-strong"
             value={draft}
             onChange={(event) => setDraft(event.target.value)}
           />
         ) : null}
 
-        <div className="extension-dialog__actions">
+        <div className="extension-dialog__actions flex justify-end gap-2">
           <button
             ref={cancelButtonRef}
             className="button button--secondary"
