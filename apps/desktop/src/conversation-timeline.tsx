@@ -5,6 +5,7 @@ import { buildDisplayTimelineItems } from "./timeline-turns";
 import { ThreadSearchBar } from "./thread-search";
 import { TimelineItem } from "./timeline-item";
 import { SparkIcon } from "./icons";
+import { cn } from "@/lib/utils";
 
 const OVERSCAN_PX = 720;
 const ROW_GAP_PX = 14;
@@ -228,9 +229,9 @@ export function ConversationTimeline({
   }, [onTimelineScroll, timelinePaneRef]);
 
   return (
-    <div className="timeline-surface">
+    <div className="timeline-surface flex flex-1 gap-3 self-stretch min-h-0 min-w-0 [container-type:inline-size]">
     <div
-      className="timeline-pane timeline-pane--thread"
+      className="timeline-pane timeline-pane--thread relative w-full min-h-0 min-w-0 flex-1 overflow-auto [overflow-anchor:none]"
       data-testid="timeline-pane"
       ref={assignTimelinePaneRef}
       onPointerDown={onTimelineScrollIntent}
@@ -249,11 +250,11 @@ export function ConversationTimeline({
         />
       ) : null}
       {isTranscriptLoading ? (
-        <div className="timeline" data-testid="transcript">
+        <div className="timeline mx-auto grid w-full min-w-0 max-w-[var(--transcript-measure,768px)] gap-4" data-testid="transcript">
           <TranscriptSkeleton />
         </div>
       ) : transcript.length === 0 ? (
-        <div className="timeline" data-testid="transcript">
+        <div className="timeline mx-auto grid w-full min-w-0 max-w-[var(--transcript-measure,768px)] gap-4" data-testid="transcript">
           <TranscriptEmptyState />
         </div>
       ) : shouldVirtualize ? (
@@ -271,7 +272,7 @@ export function ConversationTimeline({
           onForkFromMessage={onForkFromMessage}
         />
       ) : (
-        <div className="timeline" data-testid="transcript">
+        <div className="timeline mx-auto grid w-full min-w-0 max-w-[var(--transcript-measure,768px)] gap-4" data-testid="transcript">
           {displayItems.map((item) => (
             <MeasuredTimelineItem
               item={item}
@@ -287,7 +288,12 @@ export function ConversationTimeline({
         </div>
       )}
       {showJumpToLatest ? (
-        <button className="timeline-jump" data-testid="timeline-jump" type="button" onClick={onJumpToLatest}>
+        <button
+          className="timeline-jump sticky bottom-3 mx-auto mt-[18px] block rounded-full border border-border bg-surface px-3.5 py-2.5 text-[13px] font-semibold text-foreground-strong shadow-lg"
+          data-testid="timeline-jump"
+          type="button"
+          onClick={onJumpToLatest}
+        >
           下方有新动态
         </button>
       ) : null}
@@ -313,20 +319,26 @@ function TimelineContextRail({
   readonly onSelect: (messageId: string) => void;
 }) {
   return (
-    <nav className="timeline-context-rail" data-testid="timeline-context-rail" aria-label="本对话中的提示词">
-      <div className="timeline-context-rail__title">提示词</div>
-      <ol className="timeline-context-rail__list">
+    <nav
+      className="timeline-context-rail flex w-[132px] flex-none flex-col gap-1.5 self-stretch min-h-0 overflow-y-auto border-l border-border pt-1 pb-3 pl-4 @max-[926px]:hidden"
+      data-testid="timeline-context-rail"
+      aria-label="本对话中的提示词"
+    >
+      <div className="timeline-context-rail__title py-1 text-[11px] font-bold tracking-[0.08em] text-muted-soft uppercase">
+        提示词
+      </div>
+      <ol className="timeline-context-rail__list m-0 flex list-none flex-col gap-0.5 p-0">
         {prompts.map((prompt) => (
           <li key={prompt.id}>
             <button
               type="button"
-              className="timeline-context-rail__item"
+              className="timeline-context-rail__item flex w-full cursor-pointer items-baseline gap-2 rounded-md border-0 bg-transparent px-2 py-[5px] text-left text-xs leading-[1.4] text-muted-strong hover:bg-surface-muted hover:text-foreground"
               data-testid="timeline-context-rail-item"
               title={prompt.preview}
               onClick={() => onSelect(prompt.id)}
             >
-              <span className="timeline-context-rail__index">{prompt.turnNumber}</span>
-              <span className="timeline-context-rail__text">{prompt.preview}</span>
+              <span className="timeline-context-rail__index flex-none text-[11px] tabular-nums text-muted-soft">{prompt.turnNumber}</span>
+              <span className="timeline-context-rail__text min-w-0 truncate">{prompt.preview}</span>
             </button>
           </li>
         ))}
@@ -348,22 +360,24 @@ function cssEscape(value: string): string {
 }
 
 function TranscriptSkeleton() {
+  const lineClass =
+    "skeleton-line h-3 animate-[skeleton-shimmer_1.4s_ease-in-out_infinite] rounded-sm bg-[linear-gradient(90deg,var(--overlay-subtle)_0%,var(--overlay-hover)_50%,var(--overlay-subtle)_100%)] bg-[length:200%_100%]";
   return (
-    <div className="transcript-skeleton" data-testid="transcript-skeleton" aria-hidden="true">
-      <div className="transcript-skeleton__row transcript-skeleton__row--user">
-        <span className="skeleton-line" style={{ width: "42%" }} />
+    <div className="transcript-skeleton grid gap-4 py-1" data-testid="transcript-skeleton" aria-hidden="true">
+      <div className="transcript-skeleton__row transcript-skeleton__row--user grid justify-items-end gap-2">
+        <span className={lineClass} style={{ width: "42%" }} />
       </div>
-      <div className="transcript-skeleton__row">
-        <span className="skeleton-line" style={{ width: "88%" }} />
-        <span className="skeleton-line" style={{ width: "94%" }} />
-        <span className="skeleton-line" style={{ width: "66%" }} />
+      <div className="transcript-skeleton__row grid gap-2">
+        <span className={lineClass} style={{ width: "88%" }} />
+        <span className={lineClass} style={{ width: "94%" }} />
+        <span className={lineClass} style={{ width: "66%" }} />
       </div>
-      <div className="transcript-skeleton__row transcript-skeleton__row--tool">
-        <span className="skeleton-line skeleton-line--tool" style={{ width: "38%" }} />
+      <div className="transcript-skeleton__row transcript-skeleton__row--tool grid gap-2 pt-0.5">
+        <span className="skeleton-line skeleton-line--tool h-5 animate-[skeleton-shimmer_1.4s_ease-in-out_infinite] rounded-md bg-[linear-gradient(90deg,var(--overlay-subtle)_0%,var(--overlay-hover)_50%,var(--overlay-subtle)_100%)] bg-[length:200%_100%]" style={{ width: "38%" }} />
       </div>
-      <div className="transcript-skeleton__row">
-        <span className="skeleton-line" style={{ width: "80%" }} />
-        <span className="skeleton-line" style={{ width: "72%" }} />
+      <div className="transcript-skeleton__row grid gap-2">
+        <span className={lineClass} style={{ width: "80%" }} />
+        <span className={lineClass} style={{ width: "72%" }} />
       </div>
       <span className="sr-only">正在加载对话记录……</span>
     </div>
@@ -372,12 +386,12 @@ function TranscriptSkeleton() {
 
 function TranscriptEmptyState() {
   return (
-    <div className="transcript-empty" data-testid="transcript-empty">
-      <span className="transcript-empty__glyph" aria-hidden="true">
+    <div className="transcript-empty flex flex-col items-center gap-1 px-6 py-16 text-center" data-testid="transcript-empty">
+      <span className="transcript-empty__glyph mb-2 grid size-10 place-items-center rounded-full bg-accent-tint text-[var(--accent)] [&_svg]:size-5" aria-hidden="true">
         <SparkIcon />
       </span>
-      <p className="transcript-empty__title">开始对话</p>
-      <p className="transcript-empty__hint">在下方发送消息以开始本会话。</p>
+      <p className="transcript-empty__title m-0 text-[15px] font-semibold text-foreground-strong">开始对话</p>
+      <p className="transcript-empty__hint m-0 text-[13px] text-muted-soft">在下方发送消息以开始本会话。</p>
     </div>
   );
 }
@@ -470,14 +484,14 @@ function VirtualizedTranscriptList({
   const endIndex = findEndIndex(rowOffsets, endOffset);
 
   return (
-    <div className="timeline timeline--virtualized" data-testid="transcript" style={{ height: `${totalHeight}px` }}>
+    <div className="timeline timeline--virtualized relative mx-auto block w-full min-w-0 max-w-[var(--transcript-measure,768px)]" data-testid="transcript" style={{ height: `${totalHeight}px` }}>
       {displayItems.slice(startIndex, endIndex).map((item, offsetIndex) => {
         const index = startIndex + offsetIndex;
         return (
           <MeasuredTimelineItem
             item={item}
             key={item.id}
-            className="timeline__virtual-row"
+            className="timeline__virtual-row absolute left-0 top-0 w-full"
             top={rowOffsets[index] ?? 0}
             onHeightChange={onHeightChange}
             expandedToolCallIds={expandedToolCallIds}
@@ -538,7 +552,7 @@ function MeasuredTimelineItem({
 
   return (
     <div
-      className={className}
+      className={cn(className, !className && "animate-[timeline-enter_var(--motion-slow)_var(--ease-out)_both]")}
       ref={rowRef}
       data-message-id={item.id}
       style={top == null ? undefined : { transform: `translateY(${top}px)` }}

@@ -4,6 +4,7 @@ import { MessageMarkdown } from "./message-markdown";
 import { InlineDiff, extractDiffFromOutput } from "./diff-inline";
 import { ChevronRightIcon, CopyIcon, DiffIcon, FileIcon, ForkIcon, SparkIcon, TerminalIcon } from "./icons";
 import { extensionToLanguage } from "./syntax-highlight";
+import { cn } from "@/lib/utils";
 
 export function TimelineItem({
   item,
@@ -129,10 +130,16 @@ function TimelineMessage({
 
 function TimelineActivityItem({ item }: { readonly item: TimelineActivity }) {
   return (
-    <div className={`timeline-activity timeline-activity--${item.tone ?? "neutral"}`}>
+    <div
+      className={cn(
+        "timeline-activity flex flex-wrap items-baseline gap-1.5 text-[13px] text-muted-soft",
+        `timeline-activity--${item.tone ?? "neutral"}`,
+        item.tone === "error" && "text-error-ink",
+      )}
+    >
       <span className="timeline-activity__label">{item.label}</span>
-      {item.detail ? <span className="timeline-activity__detail">{item.detail}</span> : null}
-      {item.metadata ? <span className="timeline-activity__meta">{item.metadata}</span> : null}
+      {item.detail ? <span className="timeline-activity__detail text-muted-soft">{item.detail}</span> : null}
+      {item.metadata ? <span className="timeline-activity__meta text-muted-soft">{item.metadata}</span> : null}
     </div>
   );
 }
@@ -323,8 +330,13 @@ function statusLabel(status: "running" | "success" | "error") {
 
 function TimelineTurnMarkerItem({ item }: { readonly item: TimelineTurnMarker }) {
   return (
-    <div className="timeline-turn-marker" data-testid="timeline-turn-marker">
-      <span className="timeline-turn-marker__label">{`用时 ${formatWorkedDuration(item.durationMs)}`}</span>
+    <div
+      className="timeline-turn-marker flex items-center gap-2.5 py-0.5 after:flex-1 after:h-px after:bg-border after:content-[''] before:flex-1 before:h-px before:bg-border before:content-['']"
+      data-testid="timeline-turn-marker"
+    >
+      <span className="timeline-turn-marker__label flex-none text-xs font-medium tracking-[0.01em] text-muted-soft">
+        {`用时 ${formatWorkedDuration(item.durationMs)}`}
+      </span>
     </div>
   );
 }
@@ -347,17 +359,17 @@ function formatWorkedDuration(durationMs: number): string {
 function TimelineSummaryItem({ item }: { readonly item: TimelineSummary }) {
   if (item.presentation === "divider") {
     return (
-      <div className="timeline-summary">
+      <div className="timeline-summary flex items-center gap-2 text-xs text-muted-soft after:flex-1 after:h-px after:bg-border after:content-[''] before:flex-1 before:h-px before:bg-border before:content-['']">
         <span>{item.label}</span>
-        {item.metadata ? <span className="timeline-summary__meta">{item.metadata}</span> : null}
+        {item.metadata ? <span className="timeline-summary__meta text-muted-soft">{item.metadata}</span> : null}
       </div>
     );
   }
 
   return (
-    <div className="timeline-activity timeline-activity--summary">
+    <div className="timeline-activity timeline-activity--summary mt-0.5 flex flex-wrap items-baseline gap-1.5 text-[13px] text-muted-soft">
       <span className="timeline-activity__label">{item.label}</span>
-      {item.metadata ? <span className="timeline-activity__meta">{item.metadata}</span> : null}
+      {item.metadata ? <span className="timeline-activity__meta text-muted-soft">{item.metadata}</span> : null}
     </div>
   );
 }

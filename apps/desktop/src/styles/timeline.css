@@ -7,166 +7,7 @@
  * entrance/streaming motion. Only tokens from tokens.css / base.css are used.
  * ========================================================================== */
 
-.timeline {
-  display: grid;
-  gap: 16px;
-  min-width: 0;
-  width: 100%;
-  /* Constrained measure so prose lines stay readable instead of floating on a
-   * too-wide canvas. Column is centered; rows keep their own inner caps. */
-  max-width: var(--transcript-measure, 768px);
-  margin-inline: auto;
-}
 
-.timeline--virtualized {
-  display: block;
-  position: relative;
-}
-
-.timeline__virtual-row {
-  left: 0;
-  position: absolute;
-  top: 0;
-  width: 100%;
-}
-
-.timeline-pane {
-  width: 100%;
-  min-height: 420px;
-  background: transparent;
-  position: relative;
-  max-height: calc(100vh - 320px);
-  overflow: auto;
-  overflow-anchor: none;
-  /* Programmatic timeline scrolls (opening a thread, jump-to-latest,
-   * transcript-update alignment) drive scrollTop directly. Leaving
-   * `scroll-behavior: smooth` here turned every assignment into a
-   * smooth animation, so opening a thread scrolled from the top to
-   * the bottom in view. We let callers opt into a smooth scroll
-   * explicitly via `pane.scrollTo({ behavior: "smooth" })`. */
-  scroll-behavior: auto;
-}
-
-/* Row wrapper holding the scrolling transcript and the right context rail. It
- * takes over the vertical flex growth the pane used to own, so the pane keeps
- * its own bounded height + internal scroll while the rail sits beside it. */
-.timeline-surface {
-  display: flex;
-  flex: 1 1 auto;
-  min-height: 0;
-  min-width: 0;
-  gap: 12px;
-  /* Track the reading area's own width so the rail can drop out before it would
-   * squeeze the transcript below its 768px measure, independent of viewport or
-   * sidebar width. */
-  container-type: inline-size;
-  container-name: timeline-surface;
-}
-
-.timeline-pane--thread {
-  flex: 1 1 auto;
-  min-height: 0;
-  min-width: 0;
-  max-height: none;
-}
-
-.timeline-context-rail {
-  flex: 0 0 auto;
-  width: 132px;
-  align-self: stretch;
-  min-height: 0;
-  overflow-y: auto;
-  padding: 4px 0 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  border-left: 1px solid var(--line);
-  padding-left: 16px;
-}
-
-.timeline-context-rail__title {
-  color: var(--muted-soft);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 4px 0;
-}
-
-.timeline-context-rail__list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.timeline-context-rail__item {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  width: 100%;
-  padding: 5px 8px;
-  border: none;
-  border-radius: var(--radius-md);
-  background: transparent;
-  color: var(--muted-strong);
-  font: inherit;
-  font-size: 12px;
-  line-height: 1.4;
-  text-align: left;
-  cursor: pointer;
-}
-
-.timeline-context-rail__item:hover {
-  background: var(--surface-muted);
-  color: var(--ink);
-}
-
-.timeline-context-rail__index {
-  flex-shrink: 0;
-  color: var(--muted-soft);
-  font-variant-numeric: tabular-nums;
-  font-size: 11px;
-}
-
-.timeline-context-rail__text {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-/* The rail lives in the outer margin beside the reading column. It only earns
- * its space once the surface can hold the 768px measure, a classic 15px macOS
- * scrollbar, the 12px gap, and the 132px rail (927px total). */
-@container timeline-surface (max-width: 926px) {
-  .timeline-context-rail {
-    display: none;
-  }
-}
-
-.timeline-empty {
-  color: var(--muted);
-  font-size: 14px;
-  padding: 8px 0 12px;
-}
-
-.timeline-jump {
-  position: sticky;
-  bottom: 12px;
-  margin: 18px auto 0;
-  display: block;
-  padding: 10px 14px;
-  border-radius: var(--radius-pill);
-  border: 1px solid var(--line);
-  background: var(--surface);
-  box-shadow: var(--shadow-lg);
-  color: var(--text-strong);
-  font-size: 13px;
-  font-weight: 600;
-}
 
 /* ---- Entrance / streaming motion --------------------------------------- */
 
@@ -181,9 +22,6 @@
   }
 }
 
-.timeline:not(.timeline--virtualized) > * {
-  animation: timeline-enter var(--motion-slow) var(--ease-out) both;
-}
 
 /* ---- Messages ----------------------------------------------------------- */
 
@@ -336,33 +174,6 @@
   font-weight: 520;
 }
 
-/* ---- Activity ----------------------------------------------------------- */
-
-.timeline-activity {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 6px;
-  color: var(--muted-soft);
-  font-size: 13px;
-}
-
-.timeline-activity--error {
-  color: var(--error-ink);
-}
-
-.timeline-activity--summary {
-  margin-top: 2px;
-}
-
-.timeline-activity__label {
-  color: inherit;
-}
-
-.timeline-activity__detail,
-.timeline-activity__meta {
-  color: var(--muted-soft);
-}
 
 /* ---- Tool calls --------------------------------------------------------- */
 
@@ -581,91 +392,8 @@
   font-size: 12px;
 }
 
-/* ---- Summary divider ---------------------------------------------------- */
-
-.timeline-summary {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--muted-soft);
-  font-size: 12px;
 }
 
-.timeline-summary::before,
-.timeline-summary::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background: var(--line);
-}
-
-.timeline-summary__meta {
-  color: var(--muted-soft);
-}
-
-/* ---- Turn timing marker ------------------------------------------------- */
-
-.timeline-turn-marker {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 2px 0;
-}
-
-.timeline-turn-marker::before,
-.timeline-turn-marker::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background: var(--line);
-}
-
-.timeline-turn-marker__label {
-  flex-shrink: 0;
-  color: var(--muted-soft);
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0.01em;
-}
-
-/* ---- Loading skeleton --------------------------------------------------- */
-
-.transcript-skeleton {
-  display: grid;
-  gap: 16px;
-  padding: 4px 0;
-}
-
-.transcript-skeleton__row {
-  display: grid;
-  gap: 8px;
-}
-
-.transcript-skeleton__row--user {
-  justify-items: end;
-}
-
-.transcript-skeleton__row--tool {
-  padding-top: 2px;
-}
-
-.skeleton-line {
-  height: 12px;
-  border-radius: var(--radius-sm);
-  background: linear-gradient(
-    90deg,
-    var(--overlay-subtle) 0%,
-    var(--overlay-hover) 50%,
-    var(--overlay-subtle) 100%
-  );
-  background-size: 200% 100%;
-  animation: skeleton-shimmer 1.4s ease-in-out infinite;
-}
-
-.skeleton-line--tool {
-  height: 20px;
-  border-radius: var(--radius-md);
-}
 
 @keyframes skeleton-shimmer {
   from {
@@ -676,45 +404,6 @@
   }
 }
 
-/* ---- Empty state -------------------------------------------------------- */
-
-.transcript-empty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 4px;
-  padding: 64px 24px;
-}
-
-.transcript-empty__glyph {
-  width: 40px;
-  height: 40px;
-  display: grid;
-  place-items: center;
-  border-radius: var(--radius-pill);
-  background: var(--accent-tint-bg);
-  color: var(--accent);
-  margin-bottom: 8px;
-}
-
-.transcript-empty__glyph svg {
-  width: 20px;
-  height: 20px;
-}
-
-.transcript-empty__title {
-  margin: 0;
-  color: var(--text-strong);
-  font-size: 15px;
-  font-weight: 600;
-}
-
-.transcript-empty__hint {
-  margin: 0;
-  color: var(--muted-soft);
-  font-size: 13px;
-}
 
 /* ---- Inline diff -------------------------------------------------------- */
 
@@ -854,12 +543,6 @@
 /* ---- Reduced motion ----------------------------------------------------- */
 
 @media (prefers-reduced-motion: reduce) {
-  .timeline:not(.timeline--virtualized) > *,
-  .skeleton-line,
-  .timeline-tool--running .timeline-tool__status-pip {
-    animation: none;
-  }
-
   .timeline-item__actions {
     transition: opacity var(--motion-fast) var(--ease-out);
     transform: none;
