@@ -47,7 +47,7 @@ test("settings lets the user save an API key for a built-in provider", async () 
 
     const dialog = window.getByTestId("provider-api-key-dialog");
     await expect(dialog).toBeVisible();
-    await dialog.getByLabel("openai API key").fill("test-openai-key");
+    await dialog.getByLabel("openai 的 API 密钥").fill("test-openai-key");
     await dialog.getByRole("button", { name: "设置 API 密钥" }).click();
     await expect(dialog).toHaveCount(0);
 
@@ -56,7 +56,7 @@ test("settings lets the user save an API key for a built-in provider", async () 
     });
     await expect(connectedProviders).toContainText("openai");
     await expect(connectedProviders).toContainText("API 密钥");
-    await expect(connectedProviders.getByRole("button", { name: "管理 API 密钥" })).toBeVisible();
+    await expect(connectedProviders.getByRole("button", { name: "管理", exact: true })).toBeVisible();
 
     await window.getByRole("button", { name: "模型", exact: true }).click();
     const enabledModels = window.locator(".settings-section", {
@@ -102,7 +102,7 @@ test("settings shows environment-configured providers as managed externally", as
     const openAiRow = connectedProviders.locator(".settings-row", {
       has: window.locator(".settings-row__title", { hasText: /^openai$/ }),
     });
-    await expect(openAiRow).toContainText("Environment variable");
+    await expect(openAiRow).toContainText("环境变量");
     await expect(openAiRow.locator(".settings-row__control")).toHaveCount(0);
   } finally {
     await harness.close();

@@ -54,7 +54,7 @@ test("settings lets the user add, edit, and delete an OpenAI-compatible custom e
     await expect(dialog).toBeVisible();
 
     await dialog.getByLabel("供应商 ID").fill("ollama-local");
-    await dialog.getByLabel("Base URL").fill("http://localhost:11434/v1");
+    await dialog.getByLabel("基础 URL").fill("http://localhost:11434/v1");
     await dialog.getByLabel("手动添加模型 ID").fill("llama3.1");
     await dialog.getByRole("button", { name: "添加", exact: true }).click();
 
@@ -65,7 +65,7 @@ test("settings lets the user add, edit, and delete an OpenAI-compatible custom e
       has: window.locator(".settings-row__title", { hasText: /^ollama-local$/ }),
     });
     await expect(entryRow).toContainText("http://localhost:11434/v1");
-    await expect(entryRow).toContainText("1 model");
+    await expect(entryRow).toContainText("1 个模型");
 
     const savedModels = await readModelsJson(agentDir);
     const savedProviders = savedModels.providers as Record<string, Record<string, unknown>>;
@@ -89,7 +89,7 @@ test("settings lets the user add, edit, and delete an OpenAI-compatible custom e
     const editDialog = window.getByTestId("custom-endpoint-dialog");
     await expect(editDialog).toBeVisible();
     await expect(editDialog.getByLabel("供应商 ID")).toBeDisabled();
-    const baseUrlInput = editDialog.getByLabel("Base URL");
+    const baseUrlInput = editDialog.getByLabel("基础 URL");
     await baseUrlInput.fill("http://localhost:8000/v1");
     await editDialog.getByRole("button", { name: "保存修改", exact: true }).click();
     await expect(editDialog).toHaveCount(0);
@@ -257,7 +257,7 @@ test("custom endpoint dialog blocks colliding provider IDs and invalid base URLs
 
     // Switch to a unique ID so ID validation no longer blocks save.
     await dialog.getByLabel("供应商 ID").fill("my-endpoint");
-    await dialog.getByLabel("Base URL").fill("ftp://not-allowed");
+    await dialog.getByLabel("基础 URL").fill("ftp://not-allowed");
     await dialog.getByLabel("手动添加模型 ID").fill("test-model");
     await dialog.getByRole("button", { name: "添加", exact: true }).click();
 

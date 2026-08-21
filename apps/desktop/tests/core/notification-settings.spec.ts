@@ -62,7 +62,7 @@ test("shows turned off and opens System Settings when macOS notifications are de
 
     await expect(window.locator(".settings-view")).toContainText("已关闭");
     await expect(window.locator(".settings-view")).toContainText(
-      "macOS notifications are turned off for pi-gui",
+      "pi-gui 的 macOS 通知已关闭。请在系统设置中开启，以接收后台完成提醒。",
     );
     await expect(window.getByRole("button", { name: "请求 macOS", exact: true })).toHaveCount(0);
     await expect(window.getByRole("button", { name: "打开系统设置", exact: true })).toHaveCount(1);
