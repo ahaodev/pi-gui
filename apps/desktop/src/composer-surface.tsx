@@ -246,7 +246,11 @@ export function ComposerSurface({
         {topNotice}
         {showMentionMenu ? (
           <div className="composer__menus pointer-events-none absolute inset-x-0 bottom-[calc(100%+12px)] z-[4] grid gap-2">
-            <div className="mention-menu" data-testid="mention-menu" onWheel={(event) => event.stopPropagation()}>
+            <div
+              className="mention-menu pointer-events-auto max-h-[320px] overflow-y-auto rounded-md border border-border bg-surface p-1 shadow-md"
+              data-testid="mention-menu"
+              onWheel={(event) => event.stopPropagation()}
+            >
               <MentionMenuSections
                 options={mentionOptions}
                 selectedIndex={selectedMentionIndex}
@@ -259,12 +263,25 @@ export function ComposerSurface({
         {showSlashMenu || (showSlashOptionMenu && selectedSlashCommand) ? (
           <div className="composer__menus pointer-events-none absolute inset-x-0 bottom-[calc(100%+12px)] z-[4] grid gap-2">
             {showSlashMenu ? (
-              <div className="slash-menu" data-testid="slash-menu" onWheel={(event) => event.stopPropagation()}>
-                {slashSections.map((section) => (
-                  <div className="slash-menu__section" key={section.id}>
+              <div
+                className="slash-menu pointer-events-auto relative z-[2] grid max-h-[min(420px,48vh)] gap-1 overflow-y-auto rounded-2xl border border-border bg-surface p-1.5 shadow-lg touch-pan-y [overscroll-behavior:contain] [scrollbar-gutter:stable] [-webkit-overflow-scrolling:touch]"
+                data-testid="slash-menu"
+                onWheel={(event) => event.stopPropagation()}
+              >
+                {slashSections.map((section, sectionIndex) => (
+                  <div
+                    className={cn("slash-menu__section grid gap-0.5", sectionIndex > 0 && "mt-1 border-t border-border pt-1.5")}
+                    key={section.id}
+                  >
                     {section.title ? (
-                      <div className={`slash-menu__section-title slash-menu__section-title--${section.id}`}>
-                        <span className="slash-menu__section-icon" aria-hidden="true">
+                      <div
+                        className={cn(
+                          "slash-menu__section-title inline-flex items-center gap-2 px-2.5 pt-2 pb-1 text-xs font-[560]",
+                          `slash-menu__section-title--${section.id}`,
+                          section.id === "runtime" ? "text-foreground-strong" : section.id === "host" ? "text-muted-strong" : "text-muted-soft",
+                        )}
+                      >
+                        <span className="slash-menu__section-icon inline-grid size-3.5 place-items-center" aria-hidden="true">
                           {section.id === "runtime" ? <SparkIcon /> : <SettingsIcon />}
                         </span>
                         <span>{section.title}</span>
@@ -272,35 +289,39 @@ export function ComposerSurface({
                     ) : null}
                     {section.items.map((command) => (
                       <button
-                        className={`slash-menu__item ${command.section === "runtime" ? "slash-menu__item--skill" : ""} ${selectedSlashCommand?.id === command.id ? "slash-menu__item--active" : ""}`}
+                        className={cn(
+                          "slash-menu__item grid grid-cols-[auto_minmax(0,1fr)] items-center gap-3 rounded-lg px-3 py-2.5 text-left hover:bg-overlay-hover",
+                          command.section === "runtime" && "slash-menu__item--skill items-start py-2",
+                          selectedSlashCommand?.id === command.id && "slash-menu__item--active bg-overlay-hover",
+                        )}
                         key={command.id}
                         type="button"
                         onClick={() => onSelectSlashCommand(command)}
                       >
-                        <span className="slash-menu__icon" aria-hidden="true">
+                        <span className="slash-menu__icon grid size-[18px] place-items-center text-muted-strong [&_svg]:size-[18px]" aria-hidden="true">
                           <SlashCommandIcon command={command} />
                         </span>
                         {command.section === "runtime" ? (
-                          <span className="slash-menu__content slash-menu__content--skill">
-                            <span className="slash-menu__line">
-                              <span className="slash-menu__title">{command.title}</span>
-                              {command.sourceLabel ? <span className="slash-menu__skill-badge">{command.sourceLabel}</span> : null}
+                          <span className="slash-menu__content slash-menu__content--skill grid min-w-0 gap-0.5">
+                            <span className="slash-menu__line flex items-center gap-2.5">
+                              <span className="slash-menu__title text-[13px] font-semibold text-foreground-strong">{command.title}</span>
+                              {command.sourceLabel ? <span className="slash-menu__skill-badge ml-auto text-[10px] font-semibold tracking-[0.08em] text-muted uppercase">{command.sourceLabel}</span> : null}
                               {command.compatibility?.status === "terminal-only" ? (
-                                <span className="slash-menu__skill-badge slash-menu__skill-badge--warning">仅限终端</span>
+                                <span className="slash-menu__skill-badge slash-menu__skill-badge--warning ml-auto text-[10px] font-semibold tracking-[0.08em] text-warning-ink uppercase">仅限终端</span>
                               ) : null}
                             </span>
-                            <span className="slash-menu__description">{command.description}</span>
-                            <span className="slash-menu__meta">
-                              <span className="slash-menu__command slash-menu__command--skill">{command.command}</span>
+                            <span className="slash-menu__description text-xs text-muted-soft">{command.description}</span>
+                            <span className="slash-menu__meta inline-flex min-w-0 items-center gap-2">
+                              <span className="slash-menu__command slash-menu__command--skill font-mono text-[11px] tracking-[0.01em] text-muted">{command.command}</span>
                             </span>
                           </span>
                         ) : (
-                          <span className="slash-menu__content">
-                            <span className="slash-menu__line">
-                              <span className="slash-menu__title">{command.title}</span>
-                              <span className="slash-menu__command">{command.command}</span>
+                          <span className="slash-menu__content grid min-w-0 gap-0.5">
+                            <span className="slash-menu__line flex items-center gap-2.5">
+                              <span className="slash-menu__title text-[13px] font-semibold text-foreground-strong">{command.title}</span>
+                              <span className="slash-menu__command text-xs text-muted-soft">{command.command}</span>
                             </span>
-                            <span className="slash-menu__description">{command.description}</span>
+                            <span className="slash-menu__description text-xs text-muted-soft">{command.description}</span>
                           </span>
                         )}
                       </button>
@@ -310,24 +331,32 @@ export function ComposerSurface({
               </div>
             ) : null}
             {showSlashOptionMenu && selectedSlashCommand ? (
-              <div className="slash-menu slash-menu--options" data-testid="slash-options-menu" onWheel={(event) => event.stopPropagation()}>
-                <div className="slash-menu__search">{selectedSlashCommand.title}</div>
+              <div
+                className="slash-menu slash-menu--options pointer-events-auto relative z-[2] grid max-h-[min(420px,48vh)] gap-0.5 overflow-y-auto rounded-2xl border border-border bg-surface p-1.5 shadow-lg touch-pan-y [overscroll-behavior:contain] [scrollbar-gutter:stable] [-webkit-overflow-scrolling:touch]"
+                data-testid="slash-options-menu"
+                onWheel={(event) => event.stopPropagation()}
+              >
+                <div className="slash-menu__search px-3 py-2.5 text-[13px] font-[560] text-muted-soft">{selectedSlashCommand.title}</div>
                 {slashOptions.length > 0
                   ? slashOptions.map((option) => (
                       <button
-                        className={`slash-menu__option ${selectedSlashOption?.value === option.value ? "slash-menu__option--active" : ""}`}
+                        className={cn(
+                          "slash-menu__option grid grid-cols-[auto_1fr_auto] items-center gap-2.5 rounded-lg px-3 py-2.5 text-left after:h-2 after:w-2 after:rounded-full after:bg-transparent after:content-[''] hover:bg-overlay-hover",
+                          selectedSlashOption?.value === option.value &&
+                            "slash-menu__option--active bg-overlay-hover after:bg-[var(--accent)]",
+                        )}
                         key={option.value}
                         type="button"
                         onClick={() => onSelectSlashOption(option)}
                       >
-                        <span className="slash-menu__option-title">{option.label}</span>
-                        <span className="slash-menu__option-description">{option.description}</span>
+                        <span className="slash-menu__option-title text-sm font-[560] text-foreground-strong">{option.label}</span>
+                        <span className="slash-menu__option-description text-[13px] text-muted-soft">{option.description}</span>
                       </button>
                     ))
                   : slashOptionEmptyState ? (
-                      <div className="slash-menu__empty">
-                        <div className="slash-menu__empty-title">{slashOptionEmptyState.title}</div>
-                        <div className="slash-menu__empty-description">{slashOptionEmptyState.description}</div>
+                      <div className="slash-menu__empty grid gap-1.5 p-3 text-muted-soft">
+                        <div className="slash-menu__empty-title text-sm font-[560] text-foreground-strong">{slashOptionEmptyState.title}</div>
+                        <div className="slash-menu__empty-description text-[13px] leading-[1.4]">{slashOptionEmptyState.description}</div>
                       </div>
                     ) : null}
               </div>
@@ -377,6 +406,7 @@ function MentionMenuSections({
           options={extensionOptions}
           selectedIndex={selectedIndex}
           allOptions={options}
+          isLaterSection={false}
           onSelect={onSelect}
           onEnableExtension={onEnableExtension}
         />
@@ -387,6 +417,7 @@ function MentionMenuSections({
           options={fileOptions}
           selectedIndex={selectedIndex}
           allOptions={options}
+          isLaterSection={extensionOptions.length > 0}
           onSelect={onSelect}
           onEnableExtension={onEnableExtension}
         />
@@ -400,6 +431,7 @@ function MentionMenuSection({
   options,
   selectedIndex,
   allOptions,
+  isLaterSection,
   onSelect,
   onEnableExtension,
 }: {
@@ -407,12 +439,15 @@ function MentionMenuSection({
   readonly options: readonly MentionOption[];
   readonly selectedIndex: number;
   readonly allOptions: readonly MentionOption[];
+  readonly isLaterSection: boolean;
   readonly onSelect: (option: MentionOption) => void;
   readonly onEnableExtension: (option: ExtensionMentionOption) => void;
 }) {
   return (
-    <div className="mention-menu__section">
-      <div className="mention-menu__section-title">{title}</div>
+    <div className={cn("mention-menu__section grid gap-0.5", isLaterSection && "mt-1 border-t border-border pt-1.5")}>
+      <div className="mention-menu__section-title px-2.5 pt-1.5 pb-[3px] text-[11px] font-[650] text-muted-soft uppercase">
+        {title}
+      </div>
       {options.map((option) => (
         <MentionMenuItem
           key={option.id}
@@ -440,10 +475,18 @@ function MentionMenuItem({
   if (option.kind === "extension") {
     return (
       <div
-        className={`mention-menu__item mention-menu__item--extension ${active ? "mention-menu__item--active" : ""} ${option.enabled ? "" : "mention-menu__item--disabled"}`}
+        className={cn(
+          "mention-menu__item mention-menu__item--extension flex w-full justify-between p-0 text-left text-[13px] leading-[1.4]",
+          option.enabled ? "text-foreground" : "mention-menu__item--disabled text-muted",
+          active && "mention-menu__item--active",
+        )}
       >
         <button
-          className="mention-menu__item-main"
+          className={cn(
+            "mention-menu__item-main flex min-w-0 flex-1 cursor-pointer items-center gap-2 border-0 bg-none px-2.5 py-[7px] text-left",
+            "hover:bg-surface-muted",
+            active && "bg-overlay-active",
+          )}
           disabled={option.enabling}
           type="button"
           onClick={() => {
@@ -454,23 +497,25 @@ function MentionMenuItem({
             onEnableExtension(option);
           }}
         >
-          <span className="mention-menu__icon" aria-hidden="true">
+          <span className="mention-menu__icon inline-grid size-4 flex-none place-items-center text-muted-strong" aria-hidden="true">
             <ExtensionIcon />
           </span>
-          <span className="mention-menu__content">
-            <span className="mention-menu__line">
-              <span className="mention-menu__filename">{option.displayName}</span>
+          <span className="mention-menu__content grid min-w-0 gap-px">
+            <span className="mention-menu__line flex min-w-0 items-center gap-2">
+              <span className="mention-menu__filename font-semibold">{option.displayName}</span>
               {option.enabled ? null : (
-                <span className="mention-menu__badge">{option.enabling ? "启用中" : "已禁用"}</span>
+                <span className="mention-menu__badge text-[10px] font-[650] text-muted uppercase">
+                  {option.enabling ? "启用中" : "已禁用"}
+                </span>
               )}
             </span>
-            <span className="mention-menu__description">{option.description}</span>
+            <span className="mention-menu__description text-xs text-muted-soft">{option.description}</span>
           </span>
         </button>
         {option.enabled ? null : (
           <button
             aria-label={`启用 ${option.displayName}`}
-            className="mention-menu__enable"
+            className="mention-menu__enable mr-1.5 flex-none cursor-pointer rounded-sm border border-border bg-surface px-2 py-1 text-xs font-semibold text-foreground-strong hover:bg-surface-muted"
             disabled={option.enabling}
             type="button"
             onClick={() => onEnableExtension(option)}
@@ -487,16 +532,19 @@ function MentionMenuItem({
   const namePart = lastSlash >= 0 ? option.filePath.slice(lastSlash + 1) : option.filePath;
   return (
     <button
-      className={`mention-menu__item ${active ? "mention-menu__item--active" : ""}`}
+      className={cn(
+        "mention-menu__item flex w-full cursor-pointer items-center gap-2 rounded-xs border-0 bg-none px-2.5 py-1.5 text-left text-[13px] leading-[1.4] text-foreground hover:bg-surface-muted",
+        active && "mention-menu__item--active bg-overlay-active",
+      )}
       type="button"
       onClick={() => onSelect(option)}
     >
-      <span className="mention-menu__icon" aria-hidden="true">
+      <span className="mention-menu__icon inline-grid size-4 flex-none place-items-center text-muted-strong" aria-hidden="true">
         <FileIcon />
       </span>
-      <span className="mention-menu__file">
-        {dirPart ? <span className="mention-menu__dirname">{dirPart}</span> : null}
-        <span className="mention-menu__filename">{namePart}</span>
+      <span className="mention-menu__file min-w-0 font-mono">
+        {dirPart ? <span className="mention-menu__dirname text-muted-soft">{dirPart}</span> : null}
+        <span className="mention-menu__filename font-semibold">{namePart}</span>
       </span>
     </button>
   );
