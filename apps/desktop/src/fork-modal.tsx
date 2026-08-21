@@ -55,7 +55,7 @@ export function ForkModal({
       <div
         aria-modal="true"
         className={cn(
-          "tree-modal tree-modal--compact grid max-h-[min(760px,calc(100vh-48px))] gap-3.5 overflow-hidden rounded-[var(--radius-panel)] border border-border bg-surface p-[22px] shadow-[var(--shadow-xl)]",
+          "tree-modal tree-modal--compact grid max-h-[min(760px,calc(100vh-48px))] gap-3.5 overflow-hidden rounded-[var(--radius-panel)] border border-border bg-surface p-[22px] shadow-[var(--shadow-xl)] [.enable-transparency_&]:[backdrop-filter:var(--glass-blur)_var(--glass-saturation)]",
           "w-[min(520px,100%)]",
         )}
         data-testid="fork-modal"
@@ -126,7 +126,7 @@ export function ForkModal({
             </button>
           </div>
 
-          <div className="tree-modal__footer flex items-center justify-between gap-3">
+          <div className="tree-modal__footer flex items-center justify-between gap-3 max-[980px]:flex-col max-[980px]:items-stretch">
             <div className="tree-modal__hint text-[13px] leading-[1.6] text-muted-strong">
               {environment === "worktree"
                 ? "将创建新的工作树，分叉后的对话在其中打开。"

@@ -27,7 +27,7 @@ const settingsRowTitleClass = "settings-row__title text-[14px] font-[590] text-f
 const settingsRowDescriptionClass = "settings-row__description text-[13px] leading-[1.4] text-muted-soft break-anywhere";
 const settingsRowControlClass = "settings-row__control shrink-0";
 const settingsFieldClass = "settings-field grid gap-1.5 text-[13px] font-[560] text-muted-soft";
-const settingsFieldHeaderClass = "settings-field__header flex items-center justify-between gap-3";
+const settingsFieldHeaderClass = "settings-field__header flex items-center justify-between gap-3 max-[700px]:flex-col max-[700px]:items-stretch max-[700px]:gap-2";
 const settingsDisclosureBodyClass = "settings-disclosure__body mt-3 grid gap-3";
 const settingsListClass = "settings-list grid gap-2.5";
 

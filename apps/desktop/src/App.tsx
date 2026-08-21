@@ -598,7 +598,7 @@ export default function App() {
       ? snapshot.activeView
       : null;
   const mainClassName = [
-    "main",
+    "main min-h-0 bg-background",
     sidePanelMode ? "main--with-side-panel" : "",
     sidePanelMode ? "main--with-diff" : "",
     isTerminalVisibleForSelectedThread ? "main--with-terminal" : "",
@@ -885,8 +885,8 @@ export default function App() {
               onSubmit={newThread.startThread}
             />
           ) : (
-            <section className="canvas canvas--empty">
-              <div className="empty-panel">
+            <section className="canvas canvas--empty grid content-center overflow-auto px-7 pt-5 pb-0 max-[980px]:px-[18px]">
+              <div className="empty-panel mx-auto grid w-[min(760px,100%)] gap-2">
                 <div className="session-header__eyebrow">工作区</div>
                 <h1>打开文件夹以开始</h1>
                 <p>创建新对话前，请先添加一个项目文件夹。</p>
@@ -895,17 +895,17 @@ export default function App() {
           )
         ) : selectedWorkspace && selectedSession ? (
           <>
-            <section className="canvas canvas--thread">
-              <div className="conversation conversation--thread">
-                <div className="chat-header">
-                  <div className="chat-header__eyebrow">
+            <section className="canvas canvas--thread flex min-h-0 min-w-0 flex-col overflow-hidden px-7 pt-5 pb-0 max-[980px]:px-[18px]">
+              <div className="conversation conversation--thread mx-auto flex w-[min(927px,100%)] min-h-0 min-w-0 flex-1 flex-col">
+                <div className="chat-header mb-[18px] grid gap-1">
+                  <div className="chat-header__eyebrow text-xs font-[560] tracking-[0.06em] text-muted-subtle uppercase">
                     {selectedWorkspace.kind === "worktree"
                       ? `${rootWorkspace?.name ?? selectedWorkspace.name} · ${selectedWorktree?.name ?? selectedWorkspace.branchName ?? "工作树"}`
                       : `${selectedWorkspace.name} · 本地`}
                   </div>
-                  <div className="chat-header__row">
-                    <h1 className="chat-header__title">{displayedSessionTitle}</h1>
-                    <div className="chat-header__status">
+                  <div className="chat-header__row flex items-baseline justify-between gap-3 max-[980px]:flex-col max-[980px]:items-stretch">
+                    <h1 className="chat-header__title m-0 text-lg leading-[1.15] font-[610] tracking-[-0.03em] text-foreground-strong">{displayedSessionTitle}</h1>
+                    <div className="chat-header__status flex-none text-[13px] font-[520] text-muted-soft">
                       {selectedSession.status === "running" ? runningLabel : formatRelativeTime(selectedSession.updatedAt)}
                     </div>
                   </div>
@@ -1031,8 +1031,8 @@ export default function App() {
             ) : null}
           </>
         ) : selectedWorkspace ? (
-          <section className="canvas canvas--empty">
-            <div className="empty-panel">
+          <section className="canvas canvas--empty grid content-center overflow-auto px-7 pt-5 pb-0 max-[980px]:px-[18px]">
+            <div className="empty-panel mx-auto grid w-[min(760px,100%)] gap-2">
               <div className="session-header__eyebrow">工作区</div>
               <h1>{selectedWorkspace.name}</h1>
               <p>为这个文件夹创建对话，之后可以从侧边栏在不同会话之间切换。</p>
@@ -1048,8 +1048,8 @@ export default function App() {
             </div>
           </section>
         ) : (
-          <section className="canvas canvas--empty">
-            <div className="empty-panel">
+          <section className="canvas canvas--empty grid content-center overflow-auto px-7 pt-5 pb-0 max-[980px]:px-[18px]">
+            <div className="empty-panel mx-auto grid w-[min(760px,100%)] gap-2">
               <div className="session-header__eyebrow">工作区</div>
               <h1>打开文件夹以开始</h1>
               <p>添加项目文件夹，在其下分组会话，并从侧边栏在不同对话之间切换。</p>

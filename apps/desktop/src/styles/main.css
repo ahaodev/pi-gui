@@ -1,14 +1,18 @@
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
+/* =============================================================================
+ * App-shell layout state machine — final residue of the shadcn/ui migration.
+ *
+ * The `.main` grid and its state classes (.main--with-side-panel,
+ * .main--with-terminal, .main--with-startup-diagnostics,
+ * .main--terminal-takeover) plus the child panel placement rules are kept as
+ * CSS: the states live in App.tsx and atomizing them would require threading
+ * conditional layout classes through every child component (topbar, composer,
+ * diff panel, terminal, startup diagnostics). All presentational classes
+ * (canvas, conversation, chat-header, empty-panel, view-header, glass effects,
+ * responsive stacking) were atomized to Tailwind utilities in the elements.
+ *
+ * Also kept: thread-search <mark> styles (className set programmatically in
+ * use-thread-search.ts) and the shadcn Dialog overlay override.
+ * ========================================================================== */
 
 .main {
   background: var(--main);
@@ -59,91 +63,6 @@
   grid-template-rows: auto auto minmax(0, 1fr);
 }
 
-.canvas {
-  padding: 20px 28px 0;
-  overflow: auto;
-}
-
-.canvas--thread {
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-  min-width: 0;
-  overflow: hidden;
-}
-
-.conversation {
-  width: min(920px, 100%);
-  margin: 0 auto;
-}
-
-.conversation--thread {
-  display: flex;
-  flex: 1 1 auto;
-  min-height: 0;
-  min-width: 0;
-  flex-direction: column;
-  /* Preserve the 768px transcript measure beside the prompt rail when macOS
-   * uses classic 15px scrollbars instead of overlay scrollbars. */
-  width: min(927px, 100%);
-}
-
-.conversation--composer {
-  position: relative;
-  display: grid;
-  gap: 12px;
-}
-
-.chat-header {
-  display: grid;
-  gap: 4px;
-  margin-bottom: 18px;
-}
-
-.chat-header__eyebrow {
-  color: var(--muted-subtle);
-  font-size: 12px;
-  font-weight: 560;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.chat-header__row {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.chat-header__title {
-  margin: 0;
-  color: var(--text-strong);
-  font-size: 18px;
-  font-weight: 610;
-  letter-spacing: -0.03em;
-  line-height: 1.15;
-}
-
-.chat-header__status {
-  flex: 0 0 auto;
-  color: var(--muted-soft);
-  font-size: 13px;
-  font-weight: 520;
-}
-
-.empty-panel {
-  display: grid;
-  gap: 8px;
-  width: min(760px, 100%);
-  margin: 0 auto;
-}
-
-.empty-panel__meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
 .main--with-side-panel > .diff-panel {
   grid-column: 2;
   grid-row: 2 / -1;
@@ -168,71 +87,6 @@
   grid-row: 3 / -1;
 }
 
-.icon-button--active {
-  color: var(--accent);
-}
-
-.enable-transparency .composer__surface,
-.enable-transparency .tree-modal,
-.enable-transparency .slash-menu,
-.enable-transparency .mention-menu,
-.enable-transparency .secondary-surface__sidebar {
-  backdrop-filter: var(--glass-blur) var(--glass-saturation);
-}
-
-.enable-transparency .topbar {
-  background: var(--surface-glass) !important;
-  backdrop-filter: var(--glass-blur) var(--glass-saturation);
-}
-
-.enable-transparency .composer {
-  background: transparent !important;
-}
-
-.canvas--empty {
-  display: grid;
-  align-content: center;
-}
-
-.canvas--new-thread {
-  align-content: stretch;
-}
-
-.view-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: var(--space-4);
-  margin-bottom: var(--space-5);
-}
-
-.view-header__title {
-  margin: 0;
-  color: var(--text-strong);
-  font-size: var(--text-xl);
-  font-weight: var(--font-semibold);
-  letter-spacing: var(--tracking-tight);
-}
-
-.view-header__body {
-  margin: var(--space-1-5) 0 0;
-  max-width: 640px;
-  color: var(--muted-strong);
-  font-size: var(--text-base);
-  line-height: var(--leading-normal);
-}
-
-.view-header__actions {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-}
-
-.empty-panel--compact {
-  width: 100%;
-  margin: 0;
-}
-
 @media (max-width: 980px) {
   .main--with-side-panel {
     grid-template-columns: 1fr;
@@ -244,58 +98,6 @@
     max-height: 420px;
     border-top: 1px solid var(--border);
     border-left: 0;
-  }
-
-  .topbar,
-  .composer,
-  .canvas {
-    padding-left: 18px;
-    padding-right: 18px;
-  }
-
-  .topbar,
-  .composer__bar,
-  .chat-header__row,
-  .view-header,
-  .tree-modal__footer {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .topbar__actions {
-    justify-content: flex-start;
-  }
-
-  .skills-layout {
-    grid-template-columns: 1fr;
-  }
-
-  .skills-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* Very narrow: settings/skills rows stack so the label text keeps a usable
-   width instead of collapsing to one character per line beside the control. */
-@media (max-width: 700px) {
-  .secondary-surface {
-    grid-template-columns: 168px minmax(0, 1fr);
-  }
-
-  .secondary-surface__content {
-    padding: var(--space-6) var(--space-4) var(--space-5);
-  }
-
-  .settings-row,
-  .settings-field__header,
-  .skill-detail__header {
-    flex-direction: column;
-    align-items: stretch;
-    gap: var(--space-2);
-  }
-
-  .settings-row__actions {
-    justify-content: flex-start;
   }
 }
 

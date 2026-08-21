@@ -42,7 +42,7 @@ export function SettingsNotificationsSection({
                 : "pi-gui 的 macOS 通知已关闭。请打开系统设置重新开启。"
             }
           >
-            <div className="settings-row__actions flex flex-wrap justify-end gap-2">
+            <div className="settings-row__actions flex flex-wrap justify-end gap-2 max-[700px]:justify-start">
               {showAskMacOs ? (
                 <Button
                   variant="secondary"

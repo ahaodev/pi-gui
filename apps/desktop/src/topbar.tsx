@@ -72,7 +72,7 @@ export function Topbar(props: TopbarProps) {
 
   return (
     <header
-      className="topbar flex items-center justify-between gap-3 border-b border-border bg-card px-4 py-2 [-webkit-app-region:drag]"
+      className="topbar flex items-center justify-between gap-3 border-b border-border bg-card px-4 py-2 [-webkit-app-region:drag] max-[980px]:flex-col max-[980px]:items-stretch max-[980px]:px-[18px] [.enable-transparency_&]:[background:var(--surface-glass)]! [.enable-transparency_&]:[backdrop-filter:var(--glass-blur)_var(--glass-saturation)]"
       data-testid="topbar"
       onDoubleClick={handleDoubleClick}
     >
@@ -148,7 +148,7 @@ export function Topbar(props: TopbarProps) {
         ) : null}
       </div>
 
-      <div className="topbar__actions flex items-center gap-2">
+      <div className="topbar__actions flex items-center gap-2 max-[980px]:justify-start">
         <TopbarActionButton
           active={terminalVisible}
           disabled={!terminalAvailable}

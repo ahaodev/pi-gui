@@ -149,7 +149,7 @@ export function ComposerSurface({
   return (
     <div
       className={cn(
-        "composer__surface relative w-full overflow-visible rounded-[var(--radius-4xl)] border px-3.5 pt-3 pb-[11px] transition-[border-color,box-shadow,background-color] duration-[var(--motion-base)] ease-[var(--ease-out)]",
+        "composer__surface relative w-full overflow-visible rounded-[var(--radius-4xl)] border px-3.5 pt-3 pb-[11px] transition-[border-color,box-shadow,background-color] duration-[var(--motion-base)] ease-[var(--ease-out)] [.enable-transparency_&]:[backdrop-filter:var(--glass-blur)_var(--glass-saturation)]",
         isDragActive
           ? "border-[var(--focus-ring-border)] bg-accent-tint shadow-[var(--focus-ring),var(--shadow-md)]"
           : "border-[var(--theme-control-border,var(--line))] bg-[var(--theme-control-bg,var(--surface))] shadow-[0_0_0_1px_var(--theme-focus-ring,transparent),var(--shadow-md)]",
@@ -247,7 +247,7 @@ export function ComposerSurface({
         {showMentionMenu ? (
           <div className="composer__menus pointer-events-none absolute inset-x-0 bottom-[calc(100%+12px)] z-[4] grid gap-2">
             <div
-              className="mention-menu pointer-events-auto max-h-[320px] overflow-y-auto rounded-md border border-border bg-surface p-1 shadow-md"
+              className="mention-menu pointer-events-auto max-h-[320px] overflow-y-auto rounded-md border border-border bg-surface p-1 shadow-md [.enable-transparency_&]:[backdrop-filter:var(--glass-blur)_var(--glass-saturation)]"
               data-testid="mention-menu"
               onWheel={(event) => event.stopPropagation()}
             >
@@ -264,7 +264,7 @@ export function ComposerSurface({
           <div className="composer__menus pointer-events-none absolute inset-x-0 bottom-[calc(100%+12px)] z-[4] grid gap-2">
             {showSlashMenu ? (
               <div
-                className="slash-menu pointer-events-auto relative z-[2] grid max-h-[min(420px,48vh)] gap-1 overflow-y-auto rounded-2xl border border-border bg-surface p-1.5 shadow-lg touch-pan-y [overscroll-behavior:contain] [scrollbar-gutter:stable] [-webkit-overflow-scrolling:touch]"
+                className="slash-menu pointer-events-auto relative z-[2] grid max-h-[min(420px,48vh)] gap-1 overflow-y-auto rounded-2xl border border-border bg-surface p-1.5 shadow-lg touch-pan-y [overscroll-behavior:contain] [scrollbar-gutter:stable] [-webkit-overflow-scrolling:touch] [.enable-transparency_&]:[backdrop-filter:var(--glass-blur)_var(--glass-saturation)]"
                 data-testid="slash-menu"
                 onWheel={(event) => event.stopPropagation()}
               >

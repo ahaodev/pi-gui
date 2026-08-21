@@ -1,14 +1,13 @@
 /* =============================================================================
- * Shell layout + residuals for the shadcn/ui migration.
+ * Shell layout state machine — final residue of the shadcn/ui migration.
  *
- * The sidebar surface itself (top bar rows, workspace/session lists, menus,
- * rename forms) is styled with Tailwind utilities in `src/sidebar.tsx` and
- * `src/topbar.tsx`. What remains here is:
- *   - `.shell` grid layout, CSS variables, and responsive drawer behavior
- *     (still consumed by `App.tsx`);
- *   - glass (backdrop-filter) effects for transparency mode;
- *   - `.icon-button`, still consumed by surfaces that have not been migrated
- *     to the shadcn `Button` component yet.
+ * The `.shell` grid (sidebar + main columns) and its state classes
+ * (.shell--loading, .shell--sidebar-collapsed) plus the responsive drawer
+ * behavior are kept as CSS: the states live in App.tsx, the CSS variables
+ * (--sidebar-width, --titlebar-toggle-*) are consumed by topbar.css, and the
+ * narrow-window drawer (absolute overlay sidebar) is a layout behavior, not
+ * component styling. The sidebar surface itself is styled with utilities in
+ * `src/sidebar.tsx` (including the transparency glass effect).
  * ========================================================================== */
 
 .shell {
@@ -38,42 +37,6 @@
   grid-template-columns: minmax(0, 1fr);
 }
 
-.sidebar,
-.main {
-  min-height: 0;
-}
-
-.enable-transparency .sidebar {
-  backdrop-filter: var(--glass-blur) var(--glass-saturation);
-}
-
-.icon-button {
-  border: 1px solid transparent;
-  transition:
-    background var(--motion-base) var(--ease-out),
-    border-color var(--motion-base) var(--ease-out),
-    color var(--motion-base) var(--ease-out);
-}
-
-.icon-button {
-  width: 28px;
-  height: 28px;
-  border-radius: var(--radius-md);
-  display: grid;
-  place-items: center;
-  color: var(--muted-strong);
-}
-
-.icon-button:hover:not(:disabled) {
-  background: var(--theme-control-hover-bg, var(--overlay-hover));
-  border-color: var(--theme-control-border, var(--border-heavy));
-}
-
-.icon-button:disabled {
-  opacity: 0.45;
-  cursor: default;
-}
-
 @media (max-width: 1180px) {
   /* Scope to the expanded shell: `.shell--sidebar-collapsed` has the same
      specificity as `.shell`, so an unscoped rule here would win by source
@@ -100,9 +63,4 @@
     z-index: 40;
     box-shadow: var(--shadow-xl);
   }
-}
-
-/* Transparency mode re-enables the sidebar backdrop blur in dark. */
-.enable-transparency.dark .sidebar {
-  backdrop-filter: var(--glass-blur) var(--glass-saturation);
 }

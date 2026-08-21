@@ -285,7 +285,7 @@ export function TreeModal({
     >
       <div
         aria-modal="true"
-        className="tree-modal grid w-[min(860px,100%)] max-h-[min(760px,calc(100vh-48px))] gap-4 overflow-hidden rounded-[var(--radius-panel)] border border-border bg-surface p-[22px] shadow-[var(--shadow-xl)]"
+        className="tree-modal grid w-[min(860px,100%)] max-h-[min(760px,calc(100vh-48px))] gap-4 overflow-hidden rounded-[var(--radius-panel)] border border-border bg-surface p-[22px] shadow-[var(--shadow-xl)] [.enable-transparency_&]:[backdrop-filter:var(--glass-blur)_var(--glass-saturation)]"
         data-testid="tree-modal"
         ref={dialogRef}
         role="dialog"
@@ -412,7 +412,7 @@ export function TreeModal({
               )}
             </div>
 
-            <div className="tree-modal__footer flex items-center justify-between gap-3">
+            <div className="tree-modal__footer flex items-center justify-between gap-3 max-[980px]:flex-col max-[980px]:items-stretch">
               <div className="tree-modal__hint text-[13px] leading-[1.6] text-muted-strong">
                 选择用户消息会重新在输入框中打开它；选择其他节点则直接跳转到该位置。
               </div>
@@ -495,7 +495,7 @@ export function TreeModal({
               />
             ) : null}
 
-            <div className="tree-modal__footer flex items-center justify-between gap-3">
+            <div className="tree-modal__footer flex items-center justify-between gap-3 max-[980px]:flex-col max-[980px]:items-stretch">
               <div className="tree-modal__hint text-[13px] leading-[1.6] text-muted-strong">
                 {submitting
                   ? "正在切换分支……"

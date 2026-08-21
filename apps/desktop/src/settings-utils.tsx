@@ -94,7 +94,7 @@ export function filterModels(
  */
 
 const settingsGroupClass = "settings-group rounded-[18px] border border-border bg-surface";
-const settingsRowClass = "settings-row flex items-center justify-between gap-6 px-[18px] py-3.5";
+const settingsRowClass = "settings-row flex items-center justify-between gap-6 px-[18px] py-3.5 max-[700px]:flex-col max-[700px]:items-stretch max-[700px]:gap-2";
 export const settingsRowSeparatorClass = "border-t border-border first:border-t-0";
 const settingsRowLabel = "settings-row__label min-w-0 flex-1";
 const settingsRowTitle = "settings-row__title text-[14px] font-[590] text-foreground-strong";

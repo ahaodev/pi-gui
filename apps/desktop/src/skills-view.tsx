@@ -41,8 +41,8 @@ export function SkillsView({
 
   if (!workspace) {
     return (
-      <section className="canvas canvas--empty">
-        <div className="empty-panel">
+      <section className="canvas canvas--empty grid content-center overflow-auto px-7 pt-5 pb-0 max-[980px]:px-[18px]">
+        <div className="empty-panel mx-auto grid w-[min(760px,100%)] gap-2">
           <div className="session-header__eyebrow">技能</div>
           <h1>选择工作区</h1>
           <p>技能来自所选工作区及用户级技能目录。</p>
@@ -52,16 +52,16 @@ export function SkillsView({
   }
 
   return (
-    <section className="canvas">
+    <section className="canvas overflow-auto px-7 pt-5 pb-0 max-[980px]:px-[18px]">
       <div className="conversation skills-view mx-auto w-[min(1120px,100%)] pb-6">
-        <header className="view-header">
+        <header className="view-header flex items-start justify-between gap-4 mb-5 max-[980px]:flex-col max-[980px]:items-stretch">
           <div>
-            <h1 className="view-header__title">技能</h1>
-            <p className="view-header__body">
+            <h1 className="view-header__title m-0 text-xl font-semibold tracking-[-0.03em] text-foreground-strong">技能</h1>
+            <p className="view-header__body mt-1.5 mb-0 max-w-[640px] text-sm leading-[1.5] text-muted-strong">
               为 pi 提供工作区专属能力与可复用工作流。
             </p>
           </div>
-          <div className="view-header__actions">
+          <div className="view-header__actions flex items-center gap-2">
             <button className="button button--secondary" type="button" onClick={onRefresh}>
               <RefreshIcon />
               <span>刷新</span>
@@ -99,8 +99,8 @@ export function SkillsView({
           />
         </div>
 
-        <div className="skills-layout grid grid-cols-[minmax(0,1.1fr)_minmax(320px,0.9fr)] items-start gap-4">
-          <div className="skills-grid grid grid-cols-2 items-start gap-3" data-testid="skills-list">
+        <div className="skills-layout grid grid-cols-[minmax(0,1.1fr)_minmax(320px,0.9fr)] items-start gap-4 max-[980px]:grid-cols-1">
+          <div className="skills-grid grid grid-cols-2 items-start gap-3 max-[980px]:grid-cols-1" data-testid="skills-list">
             {filteredSkills.length === 0 ? (
               <SkillsEmptyState message="刷新发现结果，或为这个工作区创建新技能。" />
             ) : (
@@ -143,7 +143,7 @@ export function SkillsView({
           <div className="skill-detail sticky top-0 grid gap-3.5 rounded-xl border border-[var(--border-default)] bg-surface p-4">
             {selectedSkill ? (
               <>
-                <div className="skill-detail__header flex items-start justify-between gap-3">
+                <div className="skill-detail__header flex items-start justify-between gap-3 max-[700px]:flex-col max-[700px]:items-stretch max-[700px]:gap-2">
                   <div>
                     <h2 className="m-0 text-[22px] font-[630] text-foreground-strong">{titleCase(selectedSkill.name)}</h2>
                     <div className="skill-detail__slash mt-1.5 text-[13px] text-muted-soft">{selectedSkill.slashCommand}</div>

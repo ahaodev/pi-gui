@@ -80,7 +80,7 @@ export function SettingsView({
     section !== "appearance"
   ) {
     return (
-      <section className="canvas canvas--empty overflow-auto px-7 pt-5 pb-0">
+      <section className="canvas canvas--empty grid content-center overflow-auto px-7 pt-5 pb-0 max-[980px]:px-[18px]">
         <div className="empty-panel">
           <div className="session-header__eyebrow">设置</div>
           <h1>选择工作区</h1>
@@ -91,9 +91,9 @@ export function SettingsView({
   }
 
   return (
-    <section className="canvas overflow-auto px-7 pt-5 pb-0">
+    <section className="canvas overflow-auto px-7 pt-5 pb-0 max-[980px]:px-[18px]">
       <div className="settings-view mx-auto w-full max-w-[1120px] pb-6">
-        <header className="view-header mb-5 flex items-start justify-between gap-4">
+        <header className="view-header mb-5 flex items-start justify-between gap-4 max-[980px]:flex-col max-[980px]:items-stretch">
           <div>
             <h1 className="view-header__title m-0 text-[20px] font-semibold tracking-[-0.03em] text-foreground-strong">
               {sectionTitle(section)}

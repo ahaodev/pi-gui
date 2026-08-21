@@ -25,8 +25,8 @@ export function SecondarySurface({
   children,
 }: SecondarySurfaceProps) {
   return (
-    <div className="secondary-surface grid h-screen min-h-0 grid-cols-[232px_minmax(0,1fr)] bg-window" data-testid={testId}>
-      <aside className="secondary-surface__sidebar grid content-start gap-4 border-r border-[var(--border-default,transparent)] bg-sidebar px-3 pt-8 pb-4">
+    <div className="secondary-surface grid h-screen min-h-0 grid-cols-[232px_minmax(0,1fr)] bg-window max-[700px]:grid-cols-[168px_minmax(0,1fr)]" data-testid={testId}>
+      <aside className="secondary-surface__sidebar grid content-start gap-4 border-r border-[var(--border-default,transparent)] bg-sidebar px-3 pt-8 pb-4 [.enable-transparency_&]:[backdrop-filter:var(--glass-blur)_var(--glass-saturation)]">
         <button
           className="secondary-surface__back inline-flex w-fit items-center gap-2 rounded-md px-2 py-1 -ml-2 text-[12px] font-[500] text-muted-strong transition-colors duration-[0.15s] ease-out hover:bg-overlay-hover hover:text-foreground-strong"
           type="button"
@@ -57,7 +57,7 @@ export function SecondarySurface({
           </nav>
         ) : null}
       </aside>
-      <main className="secondary-surface__content min-w-0 overflow-auto px-7 pt-8 pb-6">{children}</main>
+      <main className="secondary-surface__content min-w-0 overflow-auto px-7 pt-8 pb-6 max-[700px]:px-4 max-[700px]:pt-6 max-[700px]:pb-5">{children}</main>
     </div>
   );
 }

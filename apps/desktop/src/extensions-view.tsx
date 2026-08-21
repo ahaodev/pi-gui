@@ -61,8 +61,8 @@ export function ExtensionsView({
 
   if (!workspace) {
     return (
-      <section className="canvas canvas--empty">
-        <div className="empty-panel">
+      <section className="canvas canvas--empty grid content-center overflow-auto px-7 pt-5 pb-0 max-[980px]:px-[18px]">
+        <div className="empty-panel mx-auto grid w-[min(760px,100%)] gap-2">
           <div className="session-header__eyebrow">扩展</div>
           <h1>选择工作区</h1>
           <p>扩展来自所选工作区及用户级扩展目录。</p>
@@ -72,16 +72,16 @@ export function ExtensionsView({
   }
 
   return (
-    <section className="canvas">
+    <section className="canvas overflow-auto px-7 pt-5 pb-0 max-[980px]:px-[18px]">
       <div className="conversation skills-view mx-auto w-[min(1120px,100%)] pb-6">
-        <header className="view-header">
+        <header className="view-header flex items-start justify-between gap-4 mb-5 max-[980px]:flex-col max-[980px]:items-stretch">
           <div>
-            <h1 className="view-header__title">扩展</h1>
-            <p className="view-header__body">
+            <h1 className="view-header__title m-0 text-xl font-semibold tracking-[-0.03em] text-foreground-strong">扩展</h1>
+            <p className="view-header__body mt-1.5 mb-0 max-w-[640px] text-sm leading-[1.5] text-muted-strong">
               查看并管理这个工作区的一等运行时扩展。
             </p>
           </div>
-          <div className="view-header__actions">
+          <div className="view-header__actions flex items-center gap-2">
             <button className="button button--secondary" type="button" onClick={onRefresh}>
               <RefreshIcon />
               <span>刷新</span>
@@ -101,8 +101,8 @@ export function ExtensionsView({
           />
         </div>
 
-        <div className="skills-layout grid grid-cols-[minmax(0,1.1fr)_minmax(320px,0.9fr)] items-start gap-4">
-          <div className="skills-grid grid grid-cols-2 items-start gap-3" data-testid="extensions-list">
+        <div className="skills-layout grid grid-cols-[minmax(0,1.1fr)_minmax(320px,0.9fr)] items-start gap-4 max-[980px]:grid-cols-1">
+          <div className="skills-grid grid grid-cols-2 items-start gap-3 max-[980px]:grid-cols-1" data-testid="extensions-list">
             {filteredExtensions.length === 0 ? (
               <ExtensionsEmptyState message="刷新运行时发现，以加载工作区与用户级扩展。" />
             ) : (
@@ -148,7 +148,7 @@ export function ExtensionsView({
           <div className="skill-detail sticky top-0 grid gap-3.5 rounded-xl border border-[var(--border-default)] bg-surface p-4">
             {selectedExtension ? (
               <>
-                <div className="skill-detail__header flex items-start justify-between gap-3">
+                <div className="skill-detail__header flex items-start justify-between gap-3 max-[700px]:flex-col max-[700px]:items-stretch max-[700px]:gap-2">
                   <div>
                     <h2 className="m-0 text-[22px] font-[630] text-foreground-strong">{selectedExtension.displayName}</h2>
                     <div className="skill-detail__slash mt-1.5 text-[13px] text-muted-soft">{selectedExtension.sourceInfo.source}</div>

@@ -208,8 +208,7 @@ body {
 .loading-card p,
 .empty-state p,
 .session-header p,
-.empty-panel p,
-.message p {
+.empty-panel p {
   margin: 0;
   color: var(--muted);
   line-height: 1.5;
@@ -299,28 +298,28 @@ body {
   height: 18px;
 }
 
-.meta-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1-5);
-  border-radius: var(--radius-pill);
-  padding: var(--space-1-5) var(--space-2-5);
-  font-size: var(--text-sm);
-  font-weight: var(--font-medium);
+.icon-button {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-md);
+  display: grid;
+  place-items: center;
   color: var(--muted-strong);
-  background: var(--surface-glass);
-  border: 1px solid var(--line);
+  border: 1px solid transparent;
+  transition:
+    background var(--motion-base) var(--ease-out),
+    border-color var(--motion-base) var(--ease-out),
+    color var(--motion-base) var(--ease-out);
 }
 
-.enable-transparency .meta-chip {
-  backdrop-filter: var(--glass-blur) var(--glass-saturation);
+.icon-button:hover:not(:disabled) {
+  background: var(--theme-control-hover-bg, var(--overlay-hover));
+  border-color: var(--theme-control-border, var(--border-heavy));
 }
 
-.meta-chip--path {
-  max-width: min(520px, 100%);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.icon-button:disabled {
+  opacity: 0.45;
+  cursor: default;
 }
 
 /* Tokenized focus ring for interactive elements. */

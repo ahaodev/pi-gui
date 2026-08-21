@@ -118,8 +118,8 @@ export function ComposerPanel({
   const primaryActionIsStop = selectedSession.status === "running" && !hasComposerInput;
 
   return (
-    <footer className="composer bg-[linear-gradient(180deg,transparent_0%,var(--main)_54%)] px-7 pt-[18px] pb-6">
-      <div className="conversation conversation--composer">
+    <footer className="composer max-[980px]:px-[18px] [.enable-transparency_&]:[background:transparent]! bg-[linear-gradient(180deg,transparent_0%,var(--main)_54%)] px-7 pt-[18px] pb-6">
+      <div className="conversation conversation--composer relative mx-auto grid w-[min(920px,100%)] gap-3">
         <ComposerSurface
           lastError={lastError}
           activeSlashCommand={activeSlashCommand}

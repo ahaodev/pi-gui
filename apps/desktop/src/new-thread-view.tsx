@@ -131,8 +131,8 @@ export function NewThreadView({
 
   if (!workspace) {
     return (
-      <section className="canvas canvas--empty">
-        <div className="empty-panel">
+      <section className="canvas canvas--empty grid content-center overflow-auto px-7 pt-5 pb-0 max-[980px]:px-[18px]">
+        <div className="empty-panel mx-auto grid w-[min(760px,100%)] gap-2">
           <div className="session-header__eyebrow">新建对话</div>
           <h1>打开文件夹以开始</h1>
           <p>请先从侧边栏选择一个仓库，再开始本地或基于工作树的对话。</p>
@@ -142,7 +142,7 @@ export function NewThreadView({
   }
 
   return (
-    <section className="canvas canvas--new-thread">
+    <section className="canvas canvas--new-thread overflow-auto px-7 pt-5 pb-0 max-[980px]:px-[18px]">
       <div className="new-thread grid min-h-[calc(100vh-164px)] content-center gap-5">
         <div className="new-thread__hero grid justify-items-center gap-2 text-center">
           <div className="new-thread__logo grid size-11 place-items-center [&_svg]:block [&_svg]:size-11" data-testid="new-thread-logo">
@@ -171,7 +171,7 @@ export function NewThreadView({
         </div>
 
         <div className="new-thread__composer composer mx-auto w-full max-w-[820px]">
-          <div className="conversation conversation--composer">
+          <div className="conversation conversation--composer relative mx-auto grid w-full gap-3">
             <ComposerSurface
               lastError={lastError}
               activeSlashCommand={activeSlashCommand}

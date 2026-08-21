@@ -267,7 +267,7 @@ export function Sidebar(props: SidebarProps) {
     : undefined;
 
   return (
-    <aside className="sidebar grid min-h-0 grid-rows-[auto_1fr] overflow-hidden border-r border-border bg-sidebar">
+    <aside className="sidebar grid min-h-0 grid-rows-[auto_1fr] overflow-hidden border-r border-border bg-sidebar [.enable-transparency_&]:[backdrop-filter:var(--glass-blur)_var(--glass-saturation)]">
       <div className="sidebar__top px-3 py-2.5 pt-[52px]">
         <Button
           type="button"
