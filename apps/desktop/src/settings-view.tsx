@@ -81,7 +81,7 @@ export function SettingsView({
   ) {
     return (
       <section className="canvas canvas--empty grid content-center overflow-auto px-7 pt-5 pb-0 max-[980px]:px-[18px]">
-        <div className="empty-panel">
+        <div className="empty-panel mx-auto grid w-[min(760px,100%)] gap-2">
           <div className="session-header__eyebrow">设置</div>
           <h1>选择工作区</h1>
           <p>供应商与技能设置需要选择工作区。</p>
