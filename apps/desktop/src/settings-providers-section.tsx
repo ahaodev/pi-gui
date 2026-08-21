@@ -2,7 +2,17 @@ import { useEffect, useMemo, useState } from "react";
 import type { RuntimeSnapshot } from "@pi-gui/session-driver/runtime-types";
 import type { CustomProviderConfig } from "./ipc";
 import { SettingsCustomEndpointsSection } from "./settings-custom-endpoints-section";
-import { filterProviders, ProviderRow, SettingsGroup } from "./settings-utils";
+import {
+  filterProviders,
+  ProviderRow,
+  settingsButtonClass,
+  settingsFieldControlClass,
+  settingsWarningClass,
+  SettingsGroup,
+} from "./settings-utils";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 
 interface SettingsProvidersSectionProps {
   readonly runtime?: RuntimeSnapshot;
@@ -13,6 +23,12 @@ interface SettingsProvidersSectionProps {
   readonly onSaveCustomProvider: (config: CustomProviderConfig) => Promise<string | undefined>;
   readonly onDeleteCustomProvider: (providerId: string) => Promise<string | undefined>;
 }
+
+const settingsDisclosureClass = "settings-disclosure px-[18px] py-3.5";
+const settingsDisclosureSummaryClass =
+  "settings-disclosure__summary flex cursor-pointer list-none items-center justify-between gap-3 text-[13px] font-semibold text-foreground-strong [&::-webkit-details-marker]:hidden";
+const settingsDisclosureBodyClass = "settings-disclosure__body mt-3 grid gap-3";
+const settingsListClass = "settings-list grid gap-2.5";
 
 export function SettingsProvidersSection({
   runtime,
@@ -93,8 +109,10 @@ export function SettingsProvidersSection({
             />
           ))
         ) : (
-          <div className="settings-row">
-            <span className="settings-row__description">尚未连接任何供应商。</span>
+          <div className="settings-row flex items-center justify-between gap-6 px-[18px] py-3.5 border-t border-border first:border-t-0">
+            <span className="settings-row__description text-[13px] leading-[1.4] text-muted-soft break-anywhere">
+              尚未连接任何供应商。
+            </span>
           </div>
         )}
       </SettingsGroup>
@@ -118,24 +136,25 @@ export function SettingsProvidersSection({
       />
 
       <SettingsGroup title="全部供应商" description="浏览完整供应商列表。">
-        <details className="settings-disclosure">
-          <summary className="settings-disclosure__summary">
+        <details className={settingsDisclosureClass}>
+          <summary className={settingsDisclosureSummaryClass}>
             <span>浏览全部供应商</span>
             <span>{filteredProviders.length}</span>
           </summary>
-          <div className="settings-disclosure__body">
-            <input
+          <div className={settingsDisclosureBodyClass}>
+            <Input
               aria-label="搜索供应商"
-              className="settings-search"
+              className={`settings-search ${settingsFieldControlClass}`}
               placeholder="搜索供应商"
               value={providerQuery}
               onChange={(event) => setProviderQuery(event.target.value)}
             />
-            <div className="settings-list">
+            <div className={settingsListClass}>
               {filteredProviders.map((provider) => (
                 <ProviderRow
                   key={provider.id}
                   provider={provider}
+                  separator={false}
                   onLoginProvider={onLoginProvider}
                   onLogoutProvider={onLogoutProvider}
                   onConfigureApiKey={(entry) => setApiKeyProviderId(entry.id)}
@@ -146,93 +165,95 @@ export function SettingsProvidersSection({
         </details>
       </SettingsGroup>
 
-      {apiKeyProvider ? (
-        <ProviderApiKeyDialog
-          provider={apiKeyProvider}
-          draft={apiKeyDraft}
-          error={apiKeyError}
-          pending={apiKeyPending}
-          onChangeDraft={setApiKeyDraft}
-          onClose={closeApiKeyDialog}
-          onRemove={apiKeyProvider.authSource === "auth_file" ? handleRemoveApiKey : undefined}
-          onSave={handleSaveApiKey}
-        />
-      ) : null}
-    </>
-  );
-}
-
-function ProviderApiKeyDialog({
-  provider,
-  draft,
-  error,
-  pending,
-  onChangeDraft,
-  onClose,
-  onRemove,
-  onSave,
-}: {
-  readonly provider: RuntimeSnapshot["providers"][number];
-  readonly draft: string;
-  readonly error?: string;
-  readonly pending: boolean;
-  readonly onChangeDraft: (value: string) => void;
-  readonly onClose: () => void;
-  readonly onRemove?: () => Promise<void>;
-  readonly onSave: () => Promise<void>;
-}) {
-  const title = provider.authSource === "auth_file" ? "管理 API 密钥" : "设置 API 密钥";
-  const body =
-    provider.authSource === "auth_file"
-      ? `替换或删除 ${provider.name} 已保存的 API 密钥。`
-      : `为 ${provider.name} 在本地保存一个 API 密钥。`;
-
-  return (
-    <div className="extension-dialog-backdrop">
-      <div className="extension-dialog" data-testid="provider-api-key-dialog">
-        <div className="extension-dialog__title">{title}</div>
-        <p className="extension-dialog__body">{body}</p>
-        <input
-          aria-label={`${provider.name} 的 API 密钥`}
-          autoFocus
-          className="settings-search"
-          disabled={pending}
-          placeholder="输入 API 密钥"
-          type="password"
-          value={draft}
-          onChange={(event) => onChangeDraft(event.target.value)}
-          onKeyDown={(event) => {
-            if (event.key === "Escape") {
-              event.preventDefault();
-              onClose();
-              return;
-            }
-            if (event.key === "Enter" && draft.trim()) {
-              event.preventDefault();
-              void onSave();
-            }
-          }}
-        />
-        {error ? <p className="extension-dialog__body settings-warning">{error}</p> : null}
-        <div className="extension-dialog__actions">
-          <button className="button button--secondary" disabled={pending} type="button" onClick={onClose}>
-            取消
-          </button>
-          {onRemove ? (
-            <button className="button button--secondary" disabled={pending} type="button" onClick={() => void onRemove()}>
-              移除已保存的密钥
-            </button>
-          ) : null}
-          <button
-            className="button"
-            disabled={pending || draft.trim().length === 0}
-            type="button"
-            onClick={() => void onSave()}
+      <Dialog
+        open={Boolean(apiKeyProvider)}
+        onOpenChange={(open) => {
+          if (!open) {
+            closeApiKeyDialog();
+          }
+        }}
+      >
+        {apiKeyProvider ? (
+          <DialogContent
+            className="max-w-[560px] gap-3.5 rounded-[22px] border-border bg-surface p-[22px] text-foreground-strong shadow-xl"
+            data-testid="provider-api-key-dialog"
+            onEscapeKeyDown={(event) => {
+              if (apiKeyPending) {
+                event.preventDefault();
+              }
+            }}
+            onPointerDownOutside={(event) => {
+              if (apiKeyPending) {
+                event.preventDefault();
+              }
+            }}
           >
-            {provider.authSource === "auth_file" ? "保存密钥" : "设置 API 密钥"}
-          </button>
-        </div>
-      </div>
-    </div>
+            <DialogHeader className="gap-2.5 text-left">
+              <DialogTitle className="text-[20px] font-[630] tracking-tight">
+                {apiKeyProvider.authSource === "auth_file" ? "管理 API 密钥" : "设置 API 密钥"}
+              </DialogTitle>
+              <DialogDescription className="text-[14px] leading-[1.65] text-muted-strong">
+                {apiKeyProvider.authSource === "auth_file"
+                  ? `替换或删除 ${apiKeyProvider.name} 已保存的 API 密钥。`
+                  : `为 ${apiKeyProvider.name} 在本地保存一个 API 密钥。`}
+              </DialogDescription>
+            </DialogHeader>
+            <Input
+              aria-label={`${apiKeyProvider.name} 的 API 密钥`}
+              autoFocus
+              className={settingsFieldControlClass}
+              disabled={apiKeyPending}
+              placeholder="输入 API 密钥"
+              type="password"
+              value={apiKeyDraft}
+              onChange={(event) => setApiKeyDraft(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === "Escape") {
+                  event.preventDefault();
+                  closeApiKeyDialog();
+                  return;
+                }
+                if (event.key === "Enter" && apiKeyDraft.trim()) {
+                  event.preventDefault();
+                  void handleSaveApiKey();
+                }
+              }}
+            />
+            {apiKeyError ? <p className={`m-0 ${settingsWarningClass}`}>{apiKeyError}</p> : null}
+            <div className="flex flex-wrap justify-end gap-2">
+              <Button
+                variant="secondary"
+                className={settingsButtonClass}
+                disabled={apiKeyPending}
+                type="button"
+                onClick={closeApiKeyDialog}
+              >
+                取消
+              </Button>
+              {apiKeyProvider.authSource === "auth_file" ? (
+                <Button
+                  variant="secondary"
+                  className={settingsButtonClass}
+                  disabled={apiKeyPending}
+                  type="button"
+                  onClick={() => void handleRemoveApiKey()}
+                >
+                  移除已保存的密钥
+                </Button>
+              ) : null}
+              <Button
+                variant="default"
+                className={settingsButtonClass}
+                disabled={apiKeyPending || apiKeyDraft.trim().length === 0}
+                type="button"
+                onClick={() => void handleSaveApiKey()}
+              >
+                {apiKeyProvider.authSource === "auth_file" ? "保存密钥" : "设置 API 密钥"}
+              </Button>
+            </div>
+          </DialogContent>
+        ) : null}
+      </Dialog>
+    </>
   );
 }

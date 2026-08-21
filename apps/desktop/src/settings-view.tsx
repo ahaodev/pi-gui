@@ -80,7 +80,7 @@ export function SettingsView({
     section !== "appearance"
   ) {
     return (
-      <section className="canvas canvas--empty">
+      <section className="canvas canvas--empty overflow-auto px-7 pt-5 pb-0">
         <div className="empty-panel">
           <div className="session-header__eyebrow">设置</div>
           <h1>选择工作区</h1>
@@ -91,18 +91,20 @@ export function SettingsView({
   }
 
   return (
-    <section className="canvas">
-      <div className="conversation settings-view">
-        <header className="view-header">
+    <section className="canvas overflow-auto px-7 pt-5 pb-0">
+      <div className="settings-view mx-auto w-full max-w-[1120px] pb-6">
+        <header className="view-header mb-5 flex items-start justify-between gap-4">
           <div>
-            <h1 className="view-header__title">{sectionTitle(section)}</h1>
-            <p className="view-header__body">
+            <h1 className="view-header__title m-0 text-[20px] font-semibold tracking-[-0.03em] text-foreground-strong">
+              {sectionTitle(section)}
+            </h1>
+            <p className="view-header__body mt-1.5 mb-0 max-w-[640px] text-[14px] leading-[1.5] text-muted-strong">
               {sectionDescription(section, workspace?.name ?? "此工作区")}
             </p>
           </div>
         </header>
 
-        <div className="settings-grid">
+        <div className="settings-grid grid gap-6">
           {section === "appearance" ? (
             <SettingsAppearanceSection
               themeMode={themeMode}

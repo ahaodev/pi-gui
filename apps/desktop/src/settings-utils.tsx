@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import type { RuntimeSettingsSnapshot, RuntimeSnapshot } from "@pi-gui/session-driver/runtime-types";
+import { Button } from "@/components/ui/button";
 
 export type SettingsSection = "appearance" | "general" | "providers" | "models" | "notifications";
 
@@ -10,10 +11,6 @@ export const THINKING_LEVELS: NonNullable<RuntimeSettingsSnapshot["defaultThinki
   "xhigh",
   "max",
 ];
-
-export function settingsPill(active: boolean): string {
-  return `settings-pill${active ? " settings-pill--active" : ""}`;
-}
 
 export function labelForThinking(level: NonNullable<RuntimeSettingsSnapshot["defaultThinkingLevel"]>): string {
   switch (level) {
@@ -90,7 +87,42 @@ export function filterModels(
   );
 }
 
-/* ── Layout components ────────────────────────────────── */
+/* ── Layout components ──────────────────────────────────
+ * The settings surface is a list of bordered groups whose rows are
+ * separated by hairlines. `separator` marks rows that sit directly inside
+ * a group (rows rendered in loose lists, e.g. model checklists, opt out).
+ */
+
+const settingsGroupClass = "settings-group rounded-[18px] border border-border bg-surface";
+const settingsRowClass = "settings-row flex items-center justify-between gap-6 px-[18px] py-3.5";
+export const settingsRowSeparatorClass = "border-t border-border first:border-t-0";
+const settingsRowLabel = "settings-row__label min-w-0 flex-1";
+const settingsRowTitle = "settings-row__title text-[14px] font-[590] text-foreground-strong";
+const settingsRowDescription = "settings-row__description text-[13px] leading-[1.4] text-muted-soft break-anywhere";
+const settingsRowControl = "settings-row__control shrink-0";
+const settingsRowValue = "settings-row__value text-[13px] text-muted-soft break-anywhere";
+export const settingsHintClass = "settings-hint text-[13px] text-muted-soft italic";
+export const settingsWarningClass = "settings-warning text-[13px] text-warning";
+
+/**
+ * Faithful translation of base.css `.button` (the look settings surfaces used
+ * before the shadcn migration) expressed as utilities for shadcn `Button`.
+ */
+export const settingsButtonClass =
+  "h-9 rounded-[10px] border border-transparent bg-surface px-[13px] text-[14px] font-semibold text-foreground-strong shadow-none transition-all duration-[0.15s] ease-out hover:border-[var(--surface-overlay-border,transparent)] hover:bg-accent hover:text-foreground-strong";
+
+/** Faithful translation of base.css `.settings-select` / `.settings-search` / `.settings-text-input`. */
+export const settingsFieldControlClass =
+  "w-full max-w-[420px] min-h-10 rounded-[12px] border border-border bg-surface px-3 py-2.5 text-[14px] text-foreground-strong";
+
+/**
+ * Faithful translation of base.css `.settings-pill` (off) / `.settings-pill--active` (on)
+ * for shadcn `ToggleGroupItem` and static pill spans.
+ */
+export const settingsPillItemClass =
+  "settings-pill h-auto min-w-0 rounded-full border border-[var(--theme-control-border,var(--line))] bg-[var(--theme-control-bg,var(--surface-muted))] px-3 py-2 text-[13px] font-[560] text-muted-strong shadow-none data-[state=on]:border-[var(--theme-selection-border,var(--accent-tint-border))] data-[state=on]:bg-[var(--theme-selection-bg,var(--accent-tint-bg))] data-[state=on]:text-[var(--theme-selection-ink,var(--text-strong))]";
+export const settingsPillActiveClass =
+  "settings-pill settings-pill--active rounded-full border border-[var(--theme-selection-border,var(--accent-tint-border))] bg-[var(--theme-selection-bg,var(--accent-tint-bg))] px-3 py-2 text-[13px] font-[560] text-[var(--theme-selection-ink,var(--text-strong))]";
 
 export function SettingsGroup({
   title,
@@ -102,10 +134,10 @@ export function SettingsGroup({
   readonly children: ReactNode;
 }) {
   return (
-    <div className="settings-section">
-      {title ? <h3 className="settings-section__title">{title}</h3> : null}
-      {description ? <p className="settings-section__description">{description}</p> : null}
-      <div className="settings-group">{children}</div>
+    <div className="settings-section grid gap-2">
+      {title ? <h3 className={`settings-section__title text-[16px] font-semibold`}>{title}</h3> : null}
+      {description ? <p className={`settings-section__description text-[13px] text-muted-soft`}>{description}</p> : null}
+      <div className={settingsGroupClass}>{children}</div>
     </div>
   );
 }
@@ -114,30 +146,32 @@ export function SettingsRow({
   title,
   description,
   children,
+  separator = true,
 }: {
   readonly title: string;
   readonly description?: string;
   readonly children?: ReactNode;
+  readonly separator?: boolean;
 }) {
   return (
-    <div className="settings-row">
-      <div className="settings-row__label">
-        <div className="settings-row__title">{title}</div>
-        {description ? <div className="settings-row__description">{description}</div> : null}
+    <div className={`${settingsRowClass} ${separator ? settingsRowSeparatorClass : ""}`}>
+      <div className={settingsRowLabel}>
+        <div className={settingsRowTitle}>{title}</div>
+        {description ? <div className={settingsRowDescription}>{description}</div> : null}
       </div>
-      {children ? <div className="settings-row__control">{children}</div> : null}
+      {children ? <div className={settingsRowControl}>{children}</div> : null}
     </div>
   );
 }
 
 export function SettingsInfoRow({ label, value }: { readonly label: string; readonly value: string }) {
   return (
-    <div className="settings-row">
-      <div className="settings-row__label">
-        <div className="settings-row__title">{label}</div>
+    <div className={`${settingsRowClass} ${settingsRowSeparatorClass}`}>
+      <div className={settingsRowLabel}>
+        <div className={settingsRowTitle}>{label}</div>
       </div>
-      <div className="settings-row__control">
-        <span className="settings-row__value">{value}</span>
+      <div className={settingsRowControl}>
+        <span className={settingsRowValue}>{value}</span>
       </div>
     </div>
   );
@@ -148,29 +182,32 @@ export function ProviderRow({
   onLoginProvider,
   onLogoutProvider,
   onConfigureApiKey,
+  separator = true,
 }: {
   readonly provider: RuntimeSnapshot["providers"][number];
   readonly onLoginProvider: (providerId: string) => void;
   readonly onLogoutProvider: (providerId: string) => void;
   readonly onConfigureApiKey: (provider: RuntimeSnapshot["providers"][number]) => void;
+  readonly separator?: boolean;
 }) {
   const action = resolveProviderAction(provider, onLoginProvider, onLogoutProvider, onConfigureApiKey);
   return (
-    <div className="settings-row">
-      <div className="settings-row__label">
-        <div className="settings-row__title">{provider.name}</div>
-        <div className="settings-row__description">{describeProviderStatus(provider)}</div>
+    <div className={`${settingsRowClass} ${separator ? settingsRowSeparatorClass : ""}`}>
+      <div className={settingsRowLabel}>
+        <div className={settingsRowTitle}>{provider.name}</div>
+        <div className={settingsRowDescription}>{describeProviderStatus(provider)}</div>
       </div>
       {action ? (
-        <div className="settings-row__control">
-          <button
-            className="button button--secondary"
+        <div className={settingsRowControl}>
+          <Button
+            variant="secondary"
+            className={settingsButtonClass}
             disabled={action.disabled}
             type="button"
             onClick={action.onClick}
           >
             {action.label}
-          </button>
+          </Button>
         </div>
       ) : null}
     </div>

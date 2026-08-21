@@ -257,10 +257,11 @@ export function SecondarySurfaces({
   if (activeView === "skills") {
     return (
       <SecondarySurface onBack={onBack} testId="skills-surface" title="技能">
-        <div className="surface-toolbar">
-          <label className="surface-toolbar__field">
+        <div className="surface-toolbar mb-4 flex justify-end">
+          <label className="surface-toolbar__field grid gap-1.5 text-[12px] font-[500] text-muted-soft">
             <span>工作区</span>
             <select
+              className="min-w-60 rounded-[10px] border border-[var(--border-default,transparent)] bg-surface px-3 py-2 text-foreground-strong"
               value={skillsWorkspace?.id ?? ""}
               onChange={(event) => onSelectSkillsWorkspace(event.target.value)}
             >
@@ -298,10 +299,11 @@ export function SecondarySurfaces({
   if (activeView === "extensions") {
     return (
       <SecondarySurface onBack={onBack} testId="extensions-surface" title="扩展">
-        <div className="surface-toolbar">
-          <label className="surface-toolbar__field">
+        <div className="surface-toolbar mb-4 flex justify-end">
+          <label className="surface-toolbar__field grid gap-1.5 text-[12px] font-[500] text-muted-soft">
             <span>工作区</span>
             <select
+              className="min-w-60 rounded-[10px] border border-[var(--border-default,transparent)] bg-surface px-3 py-2 text-foreground-strong"
               value={extensionsWorkspace?.id ?? ""}
               onChange={(event) => onSelectExtensionsWorkspace(event.target.value)}
             >
@@ -341,10 +343,11 @@ export function SecondarySurfaces({
     >
       {settingsSection === "providers" ||
       (settingsSection === "models" && snapshot.modelSettingsScopeMode === "per-repo") ? (
-        <div className="surface-toolbar">
-          <label className="surface-toolbar__field">
+        <div className="surface-toolbar mb-4 flex justify-end">
+          <label className="surface-toolbar__field grid gap-1.5 text-[12px] font-[500] text-muted-soft">
             <span>工作区</span>
             <select
+              className="min-w-60 rounded-[10px] border border-[var(--border-default,transparent)] bg-surface px-3 py-2 text-foreground-strong"
               value={settingsWorkspace?.id ?? ""}
               onChange={(event) => onSelectSettingsWorkspace(event.target.value)}
             >

@@ -1,6 +1,8 @@
 import type { DesktopNotificationPermissionStatus } from "./ipc";
 import type { NotificationPreferences } from "./desktop-state";
-import { SettingsGroup, SettingsRow } from "./settings-utils";
+import { settingsButtonClass, SettingsGroup, SettingsRow } from "./settings-utils";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface SettingsNotificationsSectionProps {
   readonly notificationPreferences: NotificationPreferences;
@@ -29,7 +31,7 @@ export function SettingsNotificationsSection({
     <>
       <SettingsGroup title="系统" description="macOS 决定 pi-gui 能否显示桌面通知。">
         <SettingsRow title="macOS 通知权限" description={statusDescription}>
-          <span className="settings-row__value">{statusLabel}</span>
+          <span className="settings-row__value text-[13px] text-muted-soft break-anywhere">{statusLabel}</span>
         </SettingsRow>
         {showRecoveryActions ? (
           <SettingsRow
@@ -40,26 +42,28 @@ export function SettingsNotificationsSection({
                 : "pi-gui 的 macOS 通知已关闭。请打开系统设置重新开启。"
             }
           >
-            <div className="settings-row__actions">
+            <div className="settings-row__actions flex flex-wrap justify-end gap-2">
               {showAskMacOs ? (
-                <button
-                  className="button button--secondary"
+                <Button
+                  variant="secondary"
+                  className={settingsButtonClass}
                   disabled={notificationPermissionPending}
                   type="button"
                   onClick={onRequestNotificationPermission}
                 >
                   请求 macOS
-                </button>
+                </Button>
               ) : null}
               {showOpenSystemSettings ? (
-                <button
-                  className="button button--secondary"
+                <Button
+                  variant="secondary"
+                  className={settingsButtonClass}
                   disabled={notificationPermissionPending}
                   type="button"
                   onClick={onOpenSystemNotificationSettings}
                 >
                   打开系统设置
-                </button>
+                </Button>
               ) : null}
             </div>
           </SettingsRow>
@@ -68,27 +72,24 @@ export function SettingsNotificationsSection({
 
       <SettingsGroup title="应用内提醒" description="开启 macOS 权限后，选择哪些后台事件触发提醒。">
         <SettingsRow title="后台完成" description="后台会话完成时通知。">
-          <input
+          <Checkbox
             aria-label="后台完成"
             checked={notificationPreferences.backgroundCompletion}
-            type="checkbox"
-            onChange={(event) => onSetNotificationPreferences({ backgroundCompletion: event.target.checked })}
+            onCheckedChange={(checked) => onSetNotificationPreferences({ backgroundCompletion: checked === true })}
           />
         </SettingsRow>
         <SettingsRow title="后台失败" description="后台会话失败时通知。">
-          <input
+          <Checkbox
             aria-label="后台失败"
             checked={notificationPreferences.backgroundFailure}
-            type="checkbox"
-            onChange={(event) => onSetNotificationPreferences({ backgroundFailure: event.target.checked })}
+            onCheckedChange={(checked) => onSetNotificationPreferences({ backgroundFailure: checked === true })}
           />
         </SettingsRow>
         <SettingsRow title="需要输入或批准" description="需要输入才能继续时通知。">
-          <input
+          <Checkbox
             aria-label="需要输入或批准"
             checked={notificationPreferences.attentionNeeded}
-            type="checkbox"
-            onChange={(event) => onSetNotificationPreferences({ attentionNeeded: event.target.checked })}
+            onCheckedChange={(checked) => onSetNotificationPreferences({ attentionNeeded: checked === true })}
           />
         </SettingsRow>
       </SettingsGroup>

@@ -1,7 +1,16 @@
 import { useEffect, useState } from "react";
 import type { RuntimeSnapshot } from "@pi-gui/session-driver/runtime-types";
 import type { ModelSettingsScopeMode } from "./desktop-state";
-import { SettingsGroup, SettingsInfoRow, SettingsRow } from "./settings-utils";
+import {
+  settingsFieldControlClass,
+  settingsPillItemClass,
+  SettingsGroup,
+  SettingsInfoRow,
+  SettingsRow,
+} from "./settings-utils";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Toggle } from "@/components/ui/toggle";
 
 interface SettingsGeneralSectionProps {
   readonly runtime?: RuntimeSnapshot;
@@ -42,37 +51,34 @@ export function SettingsGeneralSection({
         />
         <SettingsInfoRow label="已发现的技能" value={String(runtime?.skills.length ?? 0)} />
         <SettingsRow title="模型设置范围" description="选择模型默认值应用于全局还是按仓库。">
-          <div className="settings-pill-row">
-            <button
-              className={`settings-pill${modelSettingsScopeMode === "app-global" ? " settings-pill--active" : ""}`}
-              type="button"
-              aria-pressed={modelSettingsScopeMode === "app-global"}
-              onClick={() => onSetModelSettingsScopeMode("app-global")}
+          <div className="settings-pill-row flex flex-wrap gap-2">
+            <Toggle
+              className={settingsPillItemClass}
+              pressed={modelSettingsScopeMode === "app-global"}
+              onPressedChange={() => onSetModelSettingsScopeMode("app-global")}
             >
               应用全局
-            </button>
-            <button
-              className={`settings-pill${modelSettingsScopeMode === "per-repo" ? " settings-pill--active" : ""}`}
-              type="button"
-              aria-pressed={modelSettingsScopeMode === "per-repo"}
-              onClick={() => onSetModelSettingsScopeMode("per-repo")}
+            </Toggle>
+            <Toggle
+              className={settingsPillItemClass}
+              pressed={modelSettingsScopeMode === "per-repo"}
+              onPressedChange={() => onSetModelSettingsScopeMode("per-repo")}
             >
               按仓库
-            </button>
+            </Toggle>
           </div>
         </SettingsRow>
         <SettingsRow title="启用技能斜杠命令" description="在输入框中保持技能斜杠命令可用。">
-          <input
+          <Checkbox
             aria-label="启用技能斜杠命令"
             checked={runtime?.settings.enableSkillCommands ?? true}
-            type="checkbox"
-            onChange={(event) => onToggleSkillCommands(event.target.checked)}
+            onCheckedChange={(checked) => onToggleSkillCommands(checked === true)}
           />
         </SettingsRow>
         <SettingsRow title="集成终端的 Shell" description="留空则使用默认登录 Shell。">
-          <input
+          <Input
             aria-label="集成终端的 Shell"
-            className="settings-text-input"
+            className={`settings-text-input ${settingsFieldControlClass}`}
             placeholder="/bin/zsh"
             spellCheck={false}
             type="text"
