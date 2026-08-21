@@ -107,20 +107,28 @@ export const settingsWarningClass = "settings-warning text-[13px] text-warning";
 /**
  * Faithful translation of base.css `.button` (the look settings surfaces used
  * before the shadcn migration) expressed as utilities for shadcn `Button`.
+ * `!` marks properties that override shadcn internals (rounded-md,
+ * bg-secondary/bg-primary, px-4, font-medium, text-primary-foreground,
+ * hover:bg-*): plain utilities on top of a component's own classes tiebreak
+ * by stylesheet order, so intentional overrides must be explicit.
  */
 export const settingsButtonClass =
-  "h-9 rounded-[10px] border border-transparent bg-surface px-[13px] text-[14px] font-semibold text-foreground-strong shadow-none transition-all duration-[0.15s] ease-out hover:border-[var(--surface-overlay-border,transparent)] hover:bg-accent hover:text-foreground-strong";
+  "h-9 rounded-[10px]! border border-transparent bg-surface! px-[13px]! text-[14px]! font-semibold! text-foreground-strong! shadow-none transition-all duration-[0.15s] ease-out hover:border-[var(--surface-overlay-border,transparent)] hover:bg-accent! hover:text-foreground-strong!";
 
 /** Faithful translation of base.css `.settings-select` / `.settings-search` / `.settings-text-input`. */
 export const settingsFieldControlClass =
-  "w-full max-w-[420px] min-h-10 rounded-[12px] border border-border bg-surface px-3 py-2.5 text-[14px] text-foreground-strong";
+  "w-full max-w-[420px] min-h-10 rounded-[12px]! border border-border! bg-surface! px-3 py-2.5! text-[14px]! text-foreground-strong shadow-none!";
 
 /**
  * Faithful translation of base.css `.settings-pill` (off) / `.settings-pill--active` (on)
- * for shadcn `ToggleGroupItem` and static pill spans.
+ * for shadcn `Toggle` and static pill spans. The `!` overrides are required:
+ * shadcn's Toggle ships its own rounded-md / h-9 / min-w-9 / bg-transparent /
+ * font-medium / hover:bg-muted / data-[state=on]:bg-accent classes that would
+ * otherwise tiebreak by stylesheet order. The explicit hover classes freeze
+ * the original no-hover look.
  */
 export const settingsPillItemClass =
-  "settings-pill h-auto min-w-0 rounded-full border border-[var(--theme-control-border,var(--line))] bg-[var(--theme-control-bg,var(--surface-muted))] px-3 py-2 text-[13px] font-[560] text-muted-strong shadow-none data-[state=on]:border-[var(--theme-selection-border,var(--accent-tint-border))] data-[state=on]:bg-[var(--theme-selection-bg,var(--accent-tint-bg))] data-[state=on]:text-[var(--theme-selection-ink,var(--text-strong))]";
+  "settings-pill h-auto! min-w-0! rounded-full! border border-[var(--theme-control-border,var(--line))]! bg-[var(--theme-control-bg,var(--surface-muted))]! px-3 py-2 text-[13px]! font-[560]! text-muted-strong! shadow-none hover:data-[state=off]:bg-[var(--theme-control-bg,var(--surface-muted))]! hover:data-[state=off]:text-muted-strong! hover:data-[state=on]:bg-[var(--theme-selection-bg,var(--accent-tint-bg))]! hover:data-[state=on]:text-[var(--theme-selection-ink,var(--text-strong))]! data-[state=on]:border-[var(--theme-selection-border,var(--accent-tint-border))]! data-[state=on]:bg-[var(--theme-selection-bg,var(--accent-tint-bg))]! data-[state=on]:text-[var(--theme-selection-ink,var(--text-strong))]!";
 export const settingsPillActiveClass =
   "settings-pill settings-pill--active rounded-full border border-[var(--theme-selection-border,var(--accent-tint-border))] bg-[var(--theme-selection-bg,var(--accent-tint-bg))] px-3 py-2 text-[13px] font-[560] text-[var(--theme-selection-ink,var(--text-strong))]";
 

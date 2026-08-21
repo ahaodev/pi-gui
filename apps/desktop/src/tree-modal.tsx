@@ -380,10 +380,11 @@ export function TreeModal({
                       </button>
                       <button
                         className={cn(
-                          "tree-row__content block min-w-0 flex-1 cursor-pointer rounded-lg border border-transparent bg-transparent px-1.5 py-[3px] text-left",
-                          "hover:border-[var(--border-heavy)] hover:bg-overlay-subtle",
+                          "tree-row__content block min-w-0 flex-1 cursor-pointer rounded-lg border px-1.5 py-[3px] text-left",
                           "focus-visible:border-[var(--focus-ring-border)] focus-visible:shadow-[var(--focus-ring)] focus-visible:outline-none",
-                          isSelected && "border-accent-tint-border bg-accent-tint-strong shadow-[inset_3px_0_0_var(--accent-rail)]",
+                          isSelected
+                            ? "border-accent-tint-border bg-accent-tint-strong shadow-[inset_3px_0_0_var(--accent-rail)]"
+                            : "border-transparent hover:border-[var(--border-heavy)] hover:bg-overlay-subtle",
                         )}
                         data-tree-selected={isSelected ? "true" : undefined}
                         data-testid={`tree-row-${row.node.id}`}
@@ -401,7 +402,7 @@ export function TreeModal({
                           }
                         }}
                       >
-                        <span className={cn("tree-row__line block whitespace-pre-wrap break-words font-mono text-xs leading-[1.55] text-muted-strong", isSelected && "font-[560] text-foreground-strong")}>
+                        <span className={cn("tree-row__line block whitespace-pre-wrap break-words font-mono text-xs leading-[1.55]", isSelected ? "font-[560] text-foreground-strong" : "text-muted-strong")}>
                           {buildTreeRowLine(row, currentLeafId)}
                         </span>
                       </button>
@@ -440,9 +441,11 @@ export function TreeModal({
             <div className="tree-summary-options grid gap-2.5">
               <button
                 className={cn(
-                  "tree-summary-option grid cursor-pointer gap-1 rounded-3xl border border-border bg-surface-muted py-3.5 px-[15px] text-left",
+                  "tree-summary-option grid cursor-pointer gap-1 rounded-3xl border py-3.5 px-[15px] text-left",
                   "hover:border-line-strong hover:bg-overlay-hover",
-                  summaryMode === "none" && "tree-summary-option--selected border-accent-tint-border bg-accent-tint",
+                  summaryMode === "none"
+                    ? "tree-summary-option--selected border-accent-tint-border bg-accent-tint"
+                    : "border-border bg-surface-muted",
                 )}
                 type="button"
                 onClick={() => setSummaryMode("none")}
@@ -452,9 +455,11 @@ export function TreeModal({
               </button>
               <button
                 className={cn(
-                  "tree-summary-option grid cursor-pointer gap-1 rounded-3xl border border-border bg-surface-muted py-3.5 px-[15px] text-left",
+                  "tree-summary-option grid cursor-pointer gap-1 rounded-3xl border py-3.5 px-[15px] text-left",
                   "hover:border-line-strong hover:bg-overlay-hover",
-                  summaryMode === "summary" && "tree-summary-option--selected border-accent-tint-border bg-accent-tint",
+                  summaryMode === "summary"
+                    ? "tree-summary-option--selected border-accent-tint-border bg-accent-tint"
+                    : "border-border bg-surface-muted",
                 )}
                 type="button"
                 onClick={() => setSummaryMode("summary")}
@@ -464,9 +469,11 @@ export function TreeModal({
               </button>
               <button
                 className={cn(
-                  "tree-summary-option grid cursor-pointer gap-1 rounded-3xl border border-border bg-surface-muted py-3.5 px-[15px] text-left",
+                  "tree-summary-option grid cursor-pointer gap-1 rounded-3xl border py-3.5 px-[15px] text-left",
                   "hover:border-line-strong hover:bg-overlay-hover",
-                  summaryMode === "custom" && "tree-summary-option--selected border-accent-tint-border bg-accent-tint",
+                  summaryMode === "custom"
+                    ? "tree-summary-option--selected border-accent-tint-border bg-accent-tint"
+                    : "border-border bg-surface-muted",
                 )}
                 type="button"
                 onClick={() => setSummaryMode("custom")}

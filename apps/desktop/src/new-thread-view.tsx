@@ -14,12 +14,16 @@ import { ComposerSurface } from "./composer-surface";
 import { ModelOnboardingNoticeBanner } from "./model-onboarding-notice";
 import type { ModelOnboardingState, ModelOnboardingSettingsSection } from "./model-onboarding";
 import { ModelSelector } from "./model-selector";
-import { Toggle } from "@/components/ui/toggle";
 
-const environmentToggleClass =
-  "new-thread__environment h-auto min-w-0 rounded-full border border-border bg-surface-muted px-[11px] py-[7px] text-[13px] font-[560] text-muted-strong shadow-none hover:bg-surface-muted hover:text-muted-strong data-[state=on]:border-line-strong data-[state=on]:bg-accent-tint data-[state=on]:text-foreground-strong";
+const environmentButtonClass = (active: boolean) =>
+  [
+    "new-thread__environment cursor-pointer rounded-full border px-[11px] py-[7px] text-[13px] font-[560]",
+    active
+      ? "new-thread__environment--active border-line-strong bg-accent-tint text-foreground-strong"
+      : "border-border bg-surface-muted text-muted-strong",
+  ].join(" ");
 
-export { environmentToggleClass };
+export { environmentButtonClass };
 
 interface NewThreadViewProps {
   readonly workspaces: readonly WorkspaceRecord[];
@@ -269,20 +273,22 @@ function NewThreadComposerFooter({
         <div className="composer__footer-row">
           <div className="composer__hint new-thread__hint flex flex-wrap items-center gap-2.5 text-[12px] text-muted-soft">
             <div className="new-thread__environment-group inline-flex gap-2">
-              <Toggle
-                className={environmentToggleClass}
-                pressed={environment === "local"}
-                onPressedChange={() => onSelectEnvironment("local")}
+              <button
+                aria-pressed={environment === "local"}
+                className={environmentButtonClass(environment === "local")}
+                type="button"
+                onClick={() => onSelectEnvironment("local")}
               >
                 <span>本地</span>
-              </Toggle>
-              <Toggle
-                className={environmentToggleClass}
-                pressed={environment === "worktree"}
-                onPressedChange={() => onSelectEnvironment("worktree")}
+              </button>
+              <button
+                aria-pressed={environment === "worktree"}
+                className={environmentButtonClass(environment === "worktree")}
+                type="button"
+                onClick={() => onSelectEnvironment("worktree")}
               >
                 <span>工作树</span>
-              </Toggle>
+              </button>
             </div>
             <span className="new-thread__hint-separator text-muted-soft">·</span>
             <ModelSelector

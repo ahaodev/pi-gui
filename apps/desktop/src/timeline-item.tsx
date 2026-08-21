@@ -132,9 +132,9 @@ function TimelineActivityItem({ item }: { readonly item: TimelineActivity }) {
   return (
     <div
       className={cn(
-        "timeline-activity flex flex-wrap items-baseline gap-1.5 text-[13px] text-muted-soft",
+        "timeline-activity flex flex-wrap items-baseline gap-1.5 text-[13px]",
         `timeline-activity--${item.tone ?? "neutral"}`,
-        item.tone === "error" && "text-error-ink",
+        item.tone === "error" ? "text-error-ink" : "text-muted-soft",
       )}
     >
       <span className="timeline-activity__label">{item.label}</span>
@@ -169,16 +169,20 @@ function TimelineToolCallItem({
   };
 
   const pipClass = cn(
-    "timeline-tool__status-pip size-1.5 flex-none rounded-full bg-muted-soft",
-    item.status === "success" && "bg-success",
-    item.status === "error" && "bg-destructive",
-    item.status === "running" && "bg-[var(--accent)] animate-[timeline-pip-pulse_1.4s_var(--ease-in-out)_infinite]",
+    "timeline-tool__status-pip size-1.5 flex-none rounded-full",
+    item.status === "success"
+      ? "bg-success"
+      : item.status === "error"
+        ? "bg-destructive"
+        : item.status === "running"
+          ? "bg-[var(--accent)] animate-[timeline-pip-pulse_1.4s_var(--ease-in-out)_infinite]"
+          : "bg-muted-soft",
   );
 
   return (
     <article className={cn("timeline-tool grid max-w-full min-w-0 gap-0.5 p-0", `timeline-tool--${item.status}`)}>
       <div className="timeline-tool__header-row flex items-center gap-1.5">
-        <span className={cn("timeline-tool__glyph inline-flex size-4 flex-none items-center justify-center text-muted-soft [&_svg]:size-3.5", item.status === "error" && "text-destructive")} aria-hidden="true">
+        <span className={cn("timeline-tool__glyph inline-flex size-4 flex-none items-center justify-center [&_svg]:size-3.5", item.status === "error" ? "text-destructive" : "text-muted-soft")} aria-hidden="true">
           {toolGlyph(item.toolName)}
         </span>
         <button
@@ -193,7 +197,7 @@ function TimelineToolCallItem({
               <ChevronRightIcon />
             </span>
           ) : null}
-          <span className={cn("timeline-tool__label text-[13px] leading-[1.45] text-muted-strong", item.status === "error" && "text-error-ink")}>
+          <span className={cn("timeline-tool__label text-[13px] leading-[1.45]", item.status === "error" ? "text-error-ink" : "text-muted-strong")}>
             {compactLabel}
           </span>
           {inlineDetail ? <span className="timeline-tool__detail min-w-0 text-xs leading-[1.45] text-error-ink wrap-anywhere">{inlineDetail}</span> : null}

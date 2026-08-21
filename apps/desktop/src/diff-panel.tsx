@@ -371,9 +371,11 @@ export function DiffPanel({
             return (
               <button
                 className={[
-                  "file-workbench__context flex min-w-[92px] max-w-[160px] items-center justify-between gap-2 rounded-md border border-border bg-surface-muted px-2 py-[7px] text-xs text-muted-strong",
+                  "file-workbench__context flex min-w-[92px] max-w-[160px] items-center justify-between gap-2 rounded-md border px-2 py-[7px] text-xs",
                   "[&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis [&>span]:whitespace-nowrap",
-                  isActive ? "file-workbench__context--active border-[var(--accent)] bg-accent-tint text-[var(--accent)]" : "",
+                  isActive
+                    ? "file-workbench__context--active border-[var(--accent)] bg-accent-tint text-[var(--accent)]"
+                    : "border-border bg-surface-muted text-muted-strong",
                 ].filter(Boolean).join(" ")}
                 key={context.workspace.id}
                 type="button"
@@ -480,8 +482,8 @@ export function DiffPanel({
                             />
                             <button
                               className={[
-                                "diff-panel__file-name flex min-w-0 flex-1 cursor-pointer items-center gap-1.5 border-0 bg-transparent px-3 py-1.5 text-left text-[13px] font-mono text-foreground hover:bg-surface-muted",
-                                isReviewed ? "text-muted-soft line-through" : "",
+                                "diff-panel__file-name flex min-w-0 flex-1 cursor-pointer items-center gap-1.5 border-0 bg-transparent px-3 py-1.5 text-left text-[13px] font-mono hover:bg-surface-muted",
+                                isReviewed ? "text-muted-soft line-through" : "text-foreground",
                               ].filter(Boolean).join(" ")}
                               type="button"
                               onClick={() => {

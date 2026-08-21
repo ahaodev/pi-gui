@@ -75,6 +75,8 @@
 
   /* App design-token vocabulary (tokens.css / base.css) as color utilities. */
   --color-window: var(--window);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
   --color-sidebar: var(--sidebar);
   --color-foreground-strong: var(--text-strong);
   --color-muted-strong: var(--muted-strong);

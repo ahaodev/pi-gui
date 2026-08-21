@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
 import type { NewThreadEnvironment } from "./desktop-state";
 import { trapDialogFocus } from "./dialog-focus";
-import { Toggle } from "@/components/ui/toggle";
-import { environmentToggleClass } from "./new-thread-view";
+import { environmentButtonClass } from "./new-thread-view";
 import { cn } from "@/lib/utils";
 
 interface ForkModalProps {
@@ -105,28 +104,26 @@ export function ForkModal({
           ) : null}
 
           <div className="new-thread__environment-group inline-flex gap-2" role="radiogroup" aria-label="分叉环境">
-            <Toggle
-              className={environmentToggleClass}
+            <button
               aria-pressed={environment === "local"}
+              className={environmentButtonClass(environment === "local")}
               data-testid="fork-environment-local"
-              pressed={environment === "local"}
               type="button"
               onClick={() => setEnvironment("local")}
             >
               <span>相同工作树</span>
-            </Toggle>
-            <Toggle
-              className={environmentToggleClass}
+            </button>
+            <button
               aria-pressed={environment === "worktree"}
+              className={environmentButtonClass(environment === "worktree")}
               data-testid="fork-environment-worktree"
               disabled={!canUseWorktree}
-              pressed={environment === "worktree"}
               title={canUseWorktree ? undefined : "该工作区无法创建工作树。"}
               type="button"
               onClick={() => setEnvironment("worktree")}
             >
               <span>新工作树</span>
-            </Toggle>
+            </button>
           </div>
 
           <div className="tree-modal__footer flex items-center justify-between gap-3">

@@ -268,7 +268,7 @@ function CustomEndpointDialog({ mode, existingProviderIds, onClose, onSave }: Cu
 
   return (
     <DialogContent
-      className="max-w-[560px] gap-3.5 rounded-[22px] border-border bg-surface p-[22px] text-foreground-strong shadow-xl"
+      className="max-w-[560px]! gap-3.5! rounded-[22px]! border-border! bg-surface! p-[22px]! text-foreground-strong! shadow-xl!"
       data-testid="custom-endpoint-dialog"
       onEscapeKeyDown={(event) => {
         if (savePending) {
@@ -281,11 +281,11 @@ function CustomEndpointDialog({ mode, existingProviderIds, onClose, onSave }: Cu
         }
       }}
     >
-      <DialogHeader className="gap-2.5 text-left">
-        <DialogTitle className="text-[20px] font-[630] tracking-tight">
+      <DialogHeader className="gap-2.5! text-left!">
+        <DialogTitle className="text-[20px]! font-[630]! tracking-tight">
           {isEdit ? "编辑自定义端点" : "添加自定义端点"}
         </DialogTitle>
-        <DialogDescription className="text-[14px] leading-[1.65] text-muted-strong">
+        <DialogDescription className="text-[14px]! leading-[1.65]! text-muted-strong!">
           配置一个 OpenAI 兼容服务器。端点与 API 密钥将以明文保存在
           <code> ~/.pi/agent/models.json</code>。
         </DialogDescription>

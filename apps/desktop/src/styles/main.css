@@ -632,3 +632,12 @@ mark.thread-find-active {
   border-radius: var(--radius-2xs);
   padding: 0 1px;
 }
+
+/* shadcn Dialog overrides — the overlay is rendered automatically by
+   DialogContent (no className hook), so the original extension-dialog
+   backdrop look is restored here. Non-layered, so it beats the
+   component's layered bg-black/50 utility deterministically. */
+[data-slot="dialog-overlay"] {
+  background: rgba(24, 31, 44, 0.26);
+  backdrop-filter: blur(6px);
+}

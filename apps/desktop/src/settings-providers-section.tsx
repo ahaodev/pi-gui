@@ -175,7 +175,7 @@ export function SettingsProvidersSection({
       >
         {apiKeyProvider ? (
           <DialogContent
-            className="max-w-[560px] gap-3.5 rounded-[22px] border-border bg-surface p-[22px] text-foreground-strong shadow-xl"
+            className="max-w-[560px]! gap-3.5! rounded-[22px]! border-border! bg-surface! p-[22px]! text-foreground-strong! shadow-xl!"
             data-testid="provider-api-key-dialog"
             onEscapeKeyDown={(event) => {
               if (apiKeyPending) {
@@ -188,11 +188,11 @@ export function SettingsProvidersSection({
               }
             }}
           >
-            <DialogHeader className="gap-2.5 text-left">
-              <DialogTitle className="text-[20px] font-[630] tracking-tight">
+            <DialogHeader className="gap-2.5! text-left!">
+              <DialogTitle className="text-[20px]! font-[630]! tracking-tight">
                 {apiKeyProvider.authSource === "auth_file" ? "管理 API 密钥" : "设置 API 密钥"}
               </DialogTitle>
-              <DialogDescription className="text-[14px] leading-[1.65] text-muted-strong">
+              <DialogDescription className="text-[14px]! leading-[1.65]! text-muted-strong!">
                 {apiKeyProvider.authSource === "auth_file"
                   ? `替换或删除 ${apiKeyProvider.name} 已保存的 API 密钥。`
                   : `为 ${apiKeyProvider.name} 在本地保存一个 API 密钥。`}
