@@ -1,6 +1,6 @@
 node_modules/
 .turbo/
-plans/
+docs/plans/
 dist/
 build/
 out/
