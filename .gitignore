@@ -16,6 +16,7 @@ tmp-chat-parity.png
 tmp-latest-design.png
 tmp-sample-design.png
 .idea
+package-lock.json
 # Vite dev build artifacts
 *.js
 *.css
@@ -29,3 +30,4 @@ index.html
 # Vite hashed build output (anywhere)
 *-[A-Za-z0-9][A-Za-z0-9][A-Za-z0-9][A-Za-z0-9][A-Za-z0-9][A-Za-z0-9][A-Za-z0-9][A-Za-z0-9].js
 *-[A-Za-z0-9][A-Za-z0-9][A-Za-z0-9][A-Za-z0-9][A-Za-z0-9][A-Za-z0-9][A-Za-z0-9][A-Za-z0-9].css
+
