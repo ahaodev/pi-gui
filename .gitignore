@@ -15,7 +15,7 @@ test-results/
 tmp-chat-parity.png
 tmp-latest-design.png
 tmp-sample-design.png
-
+.idea
 # Vite dev build artifacts
 *.js
 *.css
