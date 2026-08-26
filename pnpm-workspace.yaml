@@ -3,11 +3,11 @@ packages:
   - packages/*
   - video
 
-onlyBuiltDependencies:
-  - electron
-  - electron-winstaller
-  - esbuild
-  - koffi
-  - node-pty
-  - protobufjs
-  - sharp
+allowBuilds:
+  '@google/genai': false
+  electron: false
+  electron-winstaller: false
+  esbuild: false
+  node-pty: false
+  protobufjs: false
+  sharp: false
