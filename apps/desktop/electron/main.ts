@@ -1391,6 +1391,7 @@ app.whenReady().then(async () => {
       terminalFocusedWebContentsIds.delete(event.sender.id);
     }
   });
+  ipcMain.handle(desktopIpc.readClipboardText, () => clipboard.readText());
   ipcMain.handle(desktopIpc.getNotificationPermissionStatus, () =>
     notificationPermissionService?.getCurrentStatus() ?? Promise.resolve("unknown"),
   );

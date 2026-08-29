@@ -179,6 +179,36 @@ export function TerminalPanel({
   }, [api]);
 
   useEffect(() => {
+    const panelElement = panelRef.current;
+    if (!api || !panelElement) {
+      return undefined;
+    }
+    // Route the platform paste shortcut into the xterm ourselves. On non-mac
+    // platforms xterm consumes Ctrl+V as the SYN control character and cancels
+    // the browser default paste, so clipboard text would never reach the pty;
+    // this capture-phase listener fires before the xterm's own textarea
+    // handler and pastes through the same bracketed-paste path. (On macOS the
+    // same handler keeps Cmd+V behavior identical.)
+    const handlePanelKeyDown = (event: globalThis.KeyboardEvent) => {
+      const commandModifier = api.platform === "darwin" ? event.metaKey : event.ctrlKey;
+      if (!commandModifier || event.shiftKey || event.key.toLowerCase() !== "v") {
+        return;
+      }
+      event.preventDefault();
+      event.stopPropagation();
+      void api.readClipboardText().then((text) => {
+        if (text) {
+          terminalRef.current?.paste(text);
+        }
+      });
+    };
+    panelElement.addEventListener("keydown", handlePanelKeyDown, true);
+    return () => {
+      panelElement.removeEventListener("keydown", handlePanelKeyDown, true);
+    };
+  }, [api]);
+
+  useEffect(() => {
     const container = containerRef.current;
     if (!api || !container || !activeSession) {
       return undefined;

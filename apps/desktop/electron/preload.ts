@@ -243,6 +243,7 @@ contextBridge.exposeInMainWorld("piApp", {
     subscribeIpc(desktopIpc.terminalExit, listener),
   onTerminalError: (listener: (event: TerminalErrorEvent) => void) =>
     subscribeIpc(desktopIpc.terminalError, listener),
+  readClipboardText: () => ipcRenderer.invoke(desktopIpc.readClipboardText) as Promise<string>,
   getNotificationPermissionStatus: () =>
     ipcRenderer.invoke(desktopIpc.getNotificationPermissionStatus) as Promise<DesktopNotificationPermissionStatus>,
   requestNotificationPermission: () =>
