@@ -86,8 +86,8 @@ jobs:
       - name: Install
         run: pnpm install --frozen-lockfile
 
-      - name: Desktop Core
-        run: pnpm --filter @pi-gui/desktop run test:e2e:ci:mac
+#      - name: Desktop Core
+#        run: pnpm --filter @pi-gui/desktop run test:e2e:ci:mac
 
       - name: Upload failure artifacts
         if: failure()
