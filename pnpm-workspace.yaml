@@ -4,12 +4,22 @@ packages:
   - video
 
 # Dependencies allowed to run install scripts (postinstall, etc.).
-# pnpm 10+ skips these by default; electron's postinstall downloads the
-# runtime binary, node-pty/sharp need native builds, esbuild verifies its
-# platform binary, and electron-winstaller prepares its NSIS templates.
-onlyBuiltDependencies:
-  - electron
-  - electron-winstaller
-  - esbuild
-  - node-pty
-  - sharp
+#
+# pnpm 11 replaced the old onlyBuiltDependencies/neverBuiltDependencies lists
+# with this boolean map, and `strictDepBuilds` now defaults to true: any
+# dependency with a build script that nobody has explicitly ruled on fails the
+# install with ERR_PNPM_IGNORED_BUILDS (exit 1), not just a warning. Run
+# `pnpm approve-builds`, or add entries here, when a new dependency appears.
+#
+# electron's postinstall downloads the runtime binary; node-pty and sharp need
+# native builds; esbuild verifies its platform binary; electron-winstaller
+# prepares its NSIS templates. @google/genai and protobufjs only print a
+# sponsorship notice, but still need an explicit verdict.
+allowBuilds:
+  '@google/genai': true
+  electron: true
+  electron-winstaller: true
+  esbuild: true
+  node-pty: true
+  protobufjs: true
+  sharp: true
