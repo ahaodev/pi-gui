@@ -168,6 +168,16 @@ test("supports keyboard shortcuts, slash menus, and topbar controls through the 
     expect(appRegions.topbar).toBe("drag");
     expect(appRegions.actionButton).toBe("no-drag");
 
+    // Background-mode windows stay hidden, and a hidden window ignores maximize
+    // requests on Linux. Surface the window before exercising the title-bar
+    // double-click (real users always have a visible window) so the IPC toggle
+    // can take effect on every platform.
+    await harness.electronApp.evaluate(({ BrowserWindow }) => {
+      const maximizeTarget = BrowserWindow.getAllWindows()[0];
+      maximizeTarget?.show();
+      maximizeTarget?.focus();
+    });
+
     const maximizedBefore = await harness.electronApp.evaluate(({ BrowserWindow }) => {
       return BrowserWindow.getAllWindows()[0]?.isMaximized() ?? false;
     });
@@ -227,6 +237,16 @@ test("dark mode keeps the send button visible before and after typing", async ()
       .toBeGreaterThan(3);
 
     await window.getByTestId("composer").fill("make the arrow visible");
+    // The composer hydration after a session switch can race a fill issued
+    // immediately after selecting the row (the persisted empty draft wins the
+    // round trip and resets the textarea), so retry until the draft registers
+    // in the app state before asserting the send button.
+    await expect
+      .poll(async () => {
+        await window.getByTestId("composer").fill("make the arrow visible");
+        return (await getDesktopState(window)).composerDraft;
+      })
+      .toBe("make the arrow visible");
     await expect(sendButton).toBeEnabled();
     await expect
       .poll(async () => {

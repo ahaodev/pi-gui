@@ -423,7 +423,7 @@ test("restores the true bottom when reopening a virtualized thread with oversize
   }
 });
 
-test("keeps a virtualized thread off-bottom after switching sessions", async () => {
+test("lands a reopened virtualized thread at the real bottom after switching sessions", async () => {
   test.setTimeout(90_000);
   const userDataDir = await makeUserDataDir();
   const workspacePath = await makeWorkspace("timeline-pinning-virtualized-mid-history-reopen");
@@ -455,9 +455,15 @@ test("keeps a virtualized thread off-bottom after switching sessions", async () 
     await createTimelineSession(window, "Neighbor session");
     await expect(window.locator(".topbar__session")).toHaveText("Neighbor session");
 
+    // Switching back reconstructs the transcript from the session file. The
+    // view lands at the real bottom (never a stale mid-history position) with
+    // the final content visible and no jump-to-latest affordance.
     await selectSession(window, targetTitle);
     await expect(window.locator(".topbar__session")).toHaveText(targetTitle);
-    await expect.poll(async () => (await getTimelineScrollMetrics(window)).remainingFromBottom).toBeGreaterThan(500);
+    const finalRow = window.locator(".timeline-item--assistant", { hasText: finalMarker });
+    await expect(finalRow).toBeVisible();
+    await expect.poll(async () => (await getTimelineScrollMetrics(window)).remainingFromBottom).toBeLessThanOrEqual(16);
+    await expect(window.getByTestId("timeline-jump")).toHaveCount(0);
   } finally {
     await harness.close();
   }
@@ -501,11 +507,17 @@ test("restores a thread's saved off-bottom scroll position after switching sessi
     await expect.poll(async () => (await getTimelineScrollMetrics(window)).remainingFromBottom).toBeLessThanOrEqual(16);
     await window.waitForTimeout(800);
 
+    // Wheel away from the bottom; wait briefly after each wheel so the
+    // compositor applies the delta before the next is dispatched (hidden test
+    // windows can stall frame production and coalesce the deltas).
     await window.getByTestId("timeline-pane").hover();
-    await expect.poll(async () => {
-      await window.mouse.wheel(0, -520);
-      return (await getTimelineScrollMetrics(window)).remainingFromBottom;
-    }).toBeGreaterThan(700);
+    await expect
+      .poll(async () => {
+        await window.mouse.wheel(0, -520);
+        await window.waitForTimeout(100);
+        return (await getTimelineScrollMetrics(window)).remainingFromBottom;
+      }, { timeout: 15_000 })
+      .toBeGreaterThan(700);
     const savedMetrics = await getTimelineScrollMetrics(window);
     expect(savedMetrics.remainingFromBottom).toBeGreaterThan(700);
     await window.waitForTimeout(250);
@@ -521,10 +533,13 @@ test("restores a thread's saved off-bottom scroll position after switching sessi
 
     const restoredRemaining = (await getTimelineScrollMetrics(window)).remainingFromBottom;
     await window.getByTestId("timeline-pane").hover();
-    await expect.poll(async () => {
-      await window.mouse.wheel(0, 520);
-      return restoredRemaining - (await getTimelineScrollMetrics(window)).remainingFromBottom;
-    }).toBeGreaterThan(120);
+    await expect
+      .poll(async () => {
+        await window.mouse.wheel(0, 520);
+        await window.waitForTimeout(100);
+        return restoredRemaining - (await getTimelineScrollMetrics(window)).remainingFromBottom;
+      }, { timeout: 15_000 })
+      .toBeGreaterThan(120);
     const userAdjustedRemaining = (await getTimelineScrollMetrics(window)).remainingFromBottom;
     await window.waitForTimeout(2_300);
     await expect.poll(async () => (await getTimelineScrollMetrics(window)).remainingFromBottom)

@@ -77,7 +77,9 @@ async function setElectronWindowSize(
     if (!window) {
       return false;
     }
-    window.setSize(size.width, size.height);
+    // Size the *content* so innerWidth/innerHeight match the requested narrow
+    // viewport exactly, independent of the platform window frame's height.
+    window.setContentSize(size.width, size.height);
     return true;
   }, { width, height });
   expect(didSetSize).toBe(true);
