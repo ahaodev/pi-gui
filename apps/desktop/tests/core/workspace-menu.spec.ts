@@ -47,7 +47,7 @@ test("supports workspace rename and remove from the sidebar menu", async () => {
     window.once("dialog", (dialog) => {
       void dialog.accept();
     });
-    await window.getByRole("button", { name: "Workspace actions for Renamed workspace" }).click();
+    await window.getByRole("button", { name: "工作区操作：Renamed workspace" }).click();
     await window.getByRole("button", { name: "移除" }).click();
 
     await expect.poll(async () => {

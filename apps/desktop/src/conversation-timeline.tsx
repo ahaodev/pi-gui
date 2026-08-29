@@ -192,7 +192,11 @@ export function ConversationTimeline({
       const paneRect = pane.getBoundingClientRect();
       const targetRect = target.getBoundingClientRect();
       const nextTop = Math.max(0, pane.scrollTop + (targetRect.top - paneRect.top) - SCROLL_TO_PADDING_PX);
-      pane.scrollTo({ top: nextTop, behavior: "smooth" });
+      // Direct assignment, not scrollTo(): a smooth scroll races the
+      // bottom-pinning engine, which snaps the view back while the animation
+      // is still in flight (long rails never reach their target), and in
+      // hidden test windows the animation never advances at all.
+      pane.scrollTop = nextTop;
       return true;
     };
 
@@ -320,7 +324,7 @@ function TimelineContextRail({
 }) {
   return (
     <nav
-      className="timeline-context-rail flex w-[132px] flex-none flex-col gap-1.5 self-stretch min-h-0 overflow-y-auto border-l border-border pt-1 pb-3 pl-4 @max-[926px]:hidden"
+      className="timeline-context-rail flex w-[132px] flex-none flex-col gap-1.5 self-stretch min-h-0 overflow-y-auto border-l border-border pt-1 pb-3 pl-4 @max-[927px]:hidden"
       data-testid="timeline-context-rail"
       aria-label="本对话中的提示词"
     >

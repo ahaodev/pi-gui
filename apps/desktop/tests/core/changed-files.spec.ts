@@ -112,7 +112,7 @@ test("shows Git status as unavailable without losing reviewed files", async () =
     await expect(diffPanel.getByTestId("changed-files-unavailable")).toHaveText(
       "此工作区的 Git 状态不可用。",
     );
-    await expect(diffPanel.locator(".file-workbench__section-header")).toContainText(/unavailable/i);
+    await expect(diffPanel.locator(".file-workbench__section-header")).toContainText("不可用");
     await expect(diffPanel.getByText("没有变更", { exact: true })).toHaveCount(0);
     await expect
       .poll(() => window.evaluate((key) => globalThis.localStorage.getItem(key), storageKey))

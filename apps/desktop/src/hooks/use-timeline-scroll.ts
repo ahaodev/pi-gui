@@ -4,7 +4,15 @@ import { VIRTUALIZATION_THRESHOLD } from "../conversation-timeline";
 
 export type SidePanelMode = "changes" | "files";
 
-const TIMELINE_SCROLL_INTENT_WINDOW_MS = 750;
+// How long a deliberate timeline scroll (pointer/wheel on the pane, rail jump,
+// jump-to-latest) suppresses the bottom-pinning engine. 750ms is too tight:
+// Chromium coalesces scroll events to the render frame, and in hidden test
+// windows the compositor can stall frame production for ~1s, so a rail jump's
+// scroll event arrives after the window has already expired and the engine
+// snaps the view back to the bottom. 3000ms covers the stalled-compositor
+// case while still being short enough that an idle user at the bottom keeps
+// getting content changes pinned into view.
+const TIMELINE_SCROLL_INTENT_WINDOW_MS = 3000;
 const TIMELINE_NEAR_BOTTOM_PX = 32;
 
 interface TimelineOffBottomState {

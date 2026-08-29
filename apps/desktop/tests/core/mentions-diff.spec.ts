@@ -83,7 +83,7 @@ test("toggles the diff panel from the keyboard shortcut and renders changed file
     await expect(topbarActions.getByLabel("切换终端")).toBeVisible();
     await expect(topbarActions.getByLabel("切换变更")).toBeVisible();
     await expect(topbarActions.getByLabel("切换文件")).toBeVisible();
-    await expect(topbarActions.getByLabel(/prompt navigation/i)).toBeVisible();
+    await expect(topbarActions.getByLabel(/提示导航/)).toBeVisible();
     await expect(topbarActions.getByLabel(/Evidence|Workbench|Open folder/i)).toHaveCount(0);
 
     const diffPanel = window.locator(".diff-panel");

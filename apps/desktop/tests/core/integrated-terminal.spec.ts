@@ -91,7 +91,7 @@ test("opens a workspace terminal with persistent output, tabs, and takeover cont
     await expect(window.getByTestId("integrated-terminal")).not.toHaveClass(/terminal-panel--takeover/);
     await expect(window.getByTestId("composer")).toBeVisible();
 
-    await window.getByLabel(/Close Terminal/).last().click();
+    await window.getByLabel(/关闭/).last().click();
     await expect(window.getByTestId("terminal-tab")).toHaveCount(2);
   } finally {
     await harness.close();
