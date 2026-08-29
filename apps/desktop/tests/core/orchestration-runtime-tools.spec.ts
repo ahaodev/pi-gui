@@ -125,7 +125,7 @@ test("create_child_thread returns after a slow worker starts, before its turn co
     );
     expect(child?.status).toBe("running");
     const childRunningIndicator = window.locator(
-      `.session-row[data-session-id="${child?.childSessionId}"] [data-sidebar-indicator="running"]`,
+      `.session-row[data-session-id="${child?.childSessionId}"][data-sidebar-indicator="running"]`,
     );
     await expect(childRunningIndicator).toBeVisible();
     if (proofDir) {
