@@ -127,7 +127,7 @@ test("uses machine-safe status arguments and returns typed failures", async () =
     state: "unavailable",
     error: {
       code: "git-status-invalid",
-      message: "Git returned an unreadable changed-file status.",
+      message: "Git 返回了无法读取的变更文件状态。",
     },
   });
 });

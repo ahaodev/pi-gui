@@ -168,6 +168,8 @@
     "@types/react-dom": "^19.1.0",
     "@vitejs/plugin-react": "^4.3.4",
     "app-builder-bin": "5.0.0-alpha.12",
+    "app-builder-lib": "26.8.1",
+    "builder-util": "26.8.1",
     "cross-env": "^7.0.3",
     "electron": "37.10.3",
     "electron-builder": "^26.8.1",
