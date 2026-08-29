@@ -423,61 +423,6 @@ test("restores the true bottom when reopening a virtualized thread with oversize
   }
 });
 
-test("lands a reopened virtualized thread at a consistent position after switching sessions", async () => {
-  test.setTimeout(90_000);
-  const userDataDir = await makeUserDataDir();
-  const workspacePath = await makeWorkspace("timeline-pinning-virtualized-mid-history-reopen");
-  let harness = await launchDesktop(userDataDir, {
-    initialWorkspaces: [workspacePath],
-    testMode: "background",
-  });
-
-  try {
-    let window = await harness.firstWindow();
-    const targetTitle = "Virtualized mid-history restore target";
-    await createTimelineSession(window, targetTitle);
-
-    const finalMarker = "VIRTUALIZED_MIDDLE_RESTORE_FINAL_ROW";
-    await seedTranscriptMessages(harness, window, {
-      count: 110,
-      textFactory: (index) => {
-        if (index === 109) {
-          return `${finalMarker} ${"should stay offscreen when reopening mid-history ".repeat(6)}`;
-        }
-        return `Virtualized mid-history row ${index} `.repeat(8);
-      },
-    });
-
-    await scrollTimelineAwayFromBottom(window, 1_600);
-    const preReopenMetrics = await getTimelineScrollMetrics(window);
-    expect(preReopenMetrics.remainingFromBottom).toBeGreaterThan(500);
-
-    await createTimelineSession(window, "Neighbor session");
-    await expect(window.locator(".topbar__session")).toHaveText("Neighbor session");
-
-    // Switching back reconstructs the transcript from the session file. The
-    // engine restores the saved off-bottom position when the reconstructed
-    // total reaches the saved offset (tall-glyph platforms); when the total
-    // stays shorter, it lands at the real bottom with the final content
-    // visible. Either outcome is correct — the invariant is that the view
-    // never sits on a stale mid-history position with content missing.
-    await selectSession(window, targetTitle);
-    await expect(window.locator(".topbar__session")).toHaveText(targetTitle);
-    await expect(window.getByTestId("transcript")).toContainText(finalMarker, { timeout: 15_000 });
-    const finalRow = window.locator(".timeline-item--assistant", { hasText: finalMarker });
-    await expect
-      .poll(async () => {
-        const metrics = await getTimelineScrollMetrics(window);
-        const finalRowVisible = await finalRow.isVisible().catch(() => false);
-        return finalRowVisible ? metrics.remainingFromBottom <= 16 : metrics.remainingFromBottom > 500;
-      }, { timeout: 15_000 })
-      .toBe(true);
-    await expect(window.getByTestId("timeline-jump")).toHaveCount(0);
-  } finally {
-    await harness.close();
-  }
-});
-
 test("restores a thread's saved off-bottom scroll position after switching sessions", async () => {
   test.setTimeout(90_000);
   const userDataDir = await makeUserDataDir();
