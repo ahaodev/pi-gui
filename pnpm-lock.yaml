@@ -300,6 +300,12 @@ importers:
       app-builder-bin:
         specifier: 5.0.0-alpha.12
         version: 5.0.0-alpha.12
+      app-builder-lib:
+        specifier: 26.8.1
+        version: 26.8.1(dmg-builder@26.8.1)(electron-builder-squirrel-windows@26.8.1)(supports-color@8.1.1)
+      builder-util:
+        specifier: 26.8.1
+        version: 26.8.1(supports-color@8.1.1)
       cross-env:
         specifier: ^7.0.3
         version: 7.0.3

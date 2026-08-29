@@ -3,11 +3,13 @@ packages:
   - packages/*
   - video
 
-allowBuilds:
-  '@google/genai': false
-  electron: false
-  electron-winstaller: false
-  esbuild: false
-  node-pty: false
-  protobufjs: false
-  sharp: false
+# Dependencies allowed to run install scripts (postinstall, etc.).
+# pnpm 10+ skips these by default; electron's postinstall downloads the
+# runtime binary, node-pty/sharp need native builds, esbuild verifies its
+# platform binary, and electron-winstaller prepares its NSIS templates.
+onlyBuiltDependencies:
+  - electron
+  - electron-winstaller
+  - esbuild
+  - node-pty
+  - sharp
