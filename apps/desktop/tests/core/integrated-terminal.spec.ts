@@ -43,6 +43,10 @@ test("opens a workspace terminal with persistent output, tabs, and takeover cont
     await expect(terminal.locator(".xterm-rows")).toContainText("PI_TERMINAL_OK", { timeout: 15_000 });
     await expect(terminal.locator(".xterm-rows")).toContainText(basename(workspacePath), { timeout: 15_000 });
 
+    // Move focus out of the terminal first: while the xterm owns the input
+    // loop, the app deliberately leaves Ctrl+J to the pty instead of toggling
+    // the panel.
+    await window.getByTestId("composer").click();
     await window.keyboard.press(desktopShortcut("J"));
     await expect(terminal).toHaveCount(0);
     await window.keyboard.press(desktopShortcut("J"));

@@ -166,7 +166,7 @@ interface PromptTemplateAdapter {
   readonly filePath?: string;
 }
 
-const NEW_THREAD_PLACEHOLDER_TITLE = "New thread";
+const NEW_THREAD_PLACEHOLDER_TITLE = "新建对话";
 
 interface SkillAdapter {
   readonly name: string;
