@@ -26,7 +26,7 @@ const settingsDisclosureClass = "settings-disclosure px-[18px] py-3.5";
 const settingsDisclosureSummaryClass =
   "settings-disclosure__summary flex cursor-pointer list-none items-center justify-between gap-3 text-[13px] font-semibold text-foreground-strong [&::-webkit-details-marker]:hidden";
 const settingsDisclosureBodyClass = "settings-disclosure__body mt-3 grid gap-3";
-const settingsListClass = "settings-list grid gap-2.5";
+const settingsListClass = "settings-list grid max-h-[280px] gap-2.5 overflow-y-auto pr-1.5";
 const settingsToggleRowClass =
   "settings-toggle settings-toggle--row flex items-center gap-2.5 rounded-[12px] border border-border bg-surface-muted p-[11px_12px] text-[14px] text-foreground-strong";
 const settingsOptionClass =
