@@ -270,7 +270,7 @@ function NewThreadComposerFooter({
   return (
     <>
       <div className="composer__footer">
-        <div className="composer__footer-row">
+        <div className="composer__footer-row flex w-full items-center justify-between gap-4">
           <div className="composer__hint new-thread__hint flex flex-wrap items-center gap-2.5 text-[12px] text-muted-soft">
             <div className="new-thread__environment-group inline-flex gap-2">
               <button
@@ -306,7 +306,7 @@ function NewThreadComposerFooter({
             />
           </div>
 
-          <div className="composer__actions">
+          <div className="composer__actions flex items-center gap-2">
             <input
               ref={fileInputRef}
               hidden

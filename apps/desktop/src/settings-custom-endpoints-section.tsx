@@ -29,7 +29,7 @@ const settingsRowControlClass = "settings-row__control shrink-0";
 const settingsFieldClass = "settings-field grid gap-1.5 text-[13px] font-[560] text-muted-soft";
 const settingsFieldHeaderClass = "settings-field__header flex items-center justify-between gap-3 max-[700px]:flex-col max-[700px]:items-stretch max-[700px]:gap-2";
 const settingsDisclosureBodyClass = "settings-disclosure__body mt-3 grid gap-3";
-const settingsListClass = "settings-list grid gap-2.5";
+const settingsListClass = "settings-list grid max-h-[240px] gap-2.5 overflow-y-auto pr-1.5";
 
 export function SettingsCustomEndpointsSection({
   existingProviderIds,
@@ -216,13 +216,16 @@ function CustomEndpointDialog({ mode, existingProviderIds, onClose, onSave }: Cu
     setProbeCandidates(result.models);
   };
 
-  const toggleModel = (id: string, contextWindow?: number) => {
+  const setModelChecked = (id: string, checked: boolean, contextWindow?: number) => {
     setModels((current) => {
       const existing = current.find((model) => model.id === id);
-      if (existing) {
+      if (checked && !existing) {
+        return [...current, contextWindow !== undefined ? { id, contextWindow } : { id }];
+      }
+      if (!checked && existing) {
         return current.filter((model) => model.id !== id);
       }
-      return [...current, contextWindow !== undefined ? { id, contextWindow } : { id }];
+      return current;
     });
   };
 
@@ -360,7 +363,7 @@ function CustomEndpointDialog({ mode, existingProviderIds, onClose, onSave }: Cu
         <ModelChecklist
           probed={probeCandidates}
           selected={models}
-          onToggle={toggleModel}
+          onCheckedChange={setModelChecked}
           onManualAdd={handleManualAdd}
           disabled={savePending}
         />
@@ -391,12 +394,12 @@ function CustomEndpointDialog({ mode, existingProviderIds, onClose, onSave }: Cu
 interface ModelChecklistProps {
   readonly probed: readonly string[];
   readonly selected: readonly CustomProviderModelConfig[];
-  readonly onToggle: (id: string, contextWindow?: number) => void;
+  readonly onCheckedChange: (id: string, checked: boolean, contextWindow?: number) => void;
   readonly onManualAdd: (id: string) => void;
   readonly disabled: boolean;
 }
 
-function ModelChecklist({ probed, selected, onToggle, onManualAdd, disabled }: ModelChecklistProps) {
+function ModelChecklist({ probed, selected, onCheckedChange, onManualAdd, disabled }: ModelChecklistProps) {
   const [manualDraft, setManualDraft] = useState("");
   const selectedIds = useMemo(() => new Set(selected.map((model) => model.id)), [selected]);
   const knownIds = useMemo(() => new Set([...probed, ...selected.map((model) => model.id)]), [probed, selected]);
@@ -421,7 +424,7 @@ function ModelChecklist({ probed, selected, onToggle, onManualAdd, disabled }: M
                   aria-label={`启用 ${id}`}
                   checked={selectedIds.has(id)}
                   disabled={disabled}
-                  onCheckedChange={() => onToggle(id)}
+                  onCheckedChange={(checked) => onCheckedChange(id, checked === true)}
                 />
                 <span className={settingsRowTitleClass}>{id}</span>
               </label>
